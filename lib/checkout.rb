@@ -1,5 +1,7 @@
 require "checkout/configuration"
 require "checkout/api_resource"
+require "checkout/data/capture_payment"
+require "checkout/data/payment_request_source"
 
 module Checkout
   class << self

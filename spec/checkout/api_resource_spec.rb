@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-RSpec.describe ApiResource do
-  let(:api_resource) { ApiResource.new }
+RSpec.describe Checkout::ApiResource do
+  let(:api_resource) { Checkout::ApiResource.new }
 
   it "has the expected connection configuration" do
     expect(api_resource.checkout_connection.data[:host]).to eql("test.com")
   end
 
   describe "#request_payments" do
-    let(:payment_request_source) { PaymentRequestSource.new }
+    let(:payment_request_source) { Checkout::PaymentRequestSource.new }
     let(:data) { { mock: true } }
 
     it "sends a POST request with correct params" do
@@ -24,7 +24,7 @@ RSpec.describe ApiResource do
   end
 
   describe "#capture_payment" do
-    let(:capture_payment) { CapturePayment.new }
+    let(:capture_payment) { Checkout::CapturePayment.new }
 
     it "sends a POST request with correct params" do
       capture_payment.id = 1

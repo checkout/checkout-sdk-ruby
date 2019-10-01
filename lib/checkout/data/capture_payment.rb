@@ -1,4 +1,4 @@
-class CapturePayment
+class Checkout::CapturePayment
   attr_accessor :id, :amount, :reference, :metadata
 
   def data

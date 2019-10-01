@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-RSpec.describe PaymentRequestSource do
-  let(:payment_request_source) { PaymentRequestSource.new }
+RSpec.describe Checkout::PaymentRequestSource do
+  let(:payment_request_source) { Checkout::PaymentRequestSource.new }
   let(:type) { "card" }
   let(:card_number) { "4242424242424242" }
   let(:card_expiry_month) { 6 }

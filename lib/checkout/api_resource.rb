@@ -1,6 +1,6 @@
 require "excon"
 
-class ApiResource
+class Checkout::ApiResource
   attr_reader :checkout_connection
 
   def initialize
