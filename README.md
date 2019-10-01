@@ -33,7 +33,7 @@ end
 ## Usage
 
 ```ruby
-p = PaymentRequestSource.new
+p = Checkout::PaymentRequestSource.new
 p.type = "card"
 p.card_number = "4242424242424242"
 p.card_expiry_month = 6
@@ -46,6 +46,6 @@ p.capture = true
 p.threeds_enabled = false
 p.threeds_attempt_n3d = false
 
-r = ApiResource.new
+r = Checkout::ApiResource.new
 r.request_payments(p)
 ```
