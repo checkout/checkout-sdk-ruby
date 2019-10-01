@@ -1,5 +1,10 @@
 require "bundler/setup"
+require "checkout/data/payment_request_source"
+require "checkout/data/capture_payment"
+require "checkout/api_resource"
 require "checkout"
+require "pry"
+
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -10,5 +15,14 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  # Checkout configuration
+  config.before(:all) do
+    Checkout.configure do |config|
+      config.secret_key = "sk_test"
+      config.public_key = "pk_test"
+      config.base_url   = "https://test.com"
+    end
   end
 end
