@@ -45,6 +45,14 @@ p.currency = "GBP"
 p.capture = true
 p.threeds_enabled = false
 p.threeds_attempt_n3d = false
+p.recipient_dob = "1992-04-06"
+p.recipient_account_number = "1234567890"
+p.recipient_zip = "12345"
+p.recipient_last_name = "Elmo"
+p.risk_enabled = true
+p.billing_descriptor_name = "Nancy"
+p.billing_descriptor_city = "Berlin"
+p.processing_mid = "Checkout"
 
 r = Checkout::ApiResource.new
 r.request_payments(p)
