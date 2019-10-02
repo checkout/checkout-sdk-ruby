@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    checkout_sdk (0.1.0)
+    checkout_sdk (0.1.1)
       excon
 
 GEM
