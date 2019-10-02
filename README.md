@@ -7,7 +7,7 @@ You are reading documentation for version: 0.1.0
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'checkout'
+gem 'checkout_sdk'
 ```
 
 And then execute:
