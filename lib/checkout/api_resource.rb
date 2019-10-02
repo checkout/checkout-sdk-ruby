@@ -23,6 +23,10 @@ class Checkout::ApiResource
     post_request("/payments/#{data_object.id}/voids", data_object.data)
   end
 
+  def add_payment_source(data_object)
+    post_request("/sources", data_object.data)
+  end
+
   def get_payment_details(id)
     get("/payments/#{id}")
   end

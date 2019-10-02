@@ -68,6 +68,22 @@ RSpec.describe Checkout::ApiResource do
     end
   end
 
+  describe "#add_payment_source" do
+    let(:payment_source) { Checkout::PaymentSource.new }
+    let(:data) { { mock: true } }
+
+    it "sends a POST request with correct params" do
+      allow(payment_source).to receive(:data).and_return(data)
+
+      expect(api_resource.checkout_connection).to receive(:post)
+        .with({ body:"{\"mock\":true}",
+                headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
+                path:"/sources" })
+
+      api_resource.add_payment_source(payment_source)
+    end
+  end
+
   describe "#get_payment_details" do
     let(:payment_id) { "pay_id" }
 
