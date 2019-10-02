@@ -1,4 +1,4 @@
-class Checkout::RefundPayment
+class CheckoutSdk::RefundPayment
   attr_accessor :id, :amount, :reference, :metadata
 
   def data

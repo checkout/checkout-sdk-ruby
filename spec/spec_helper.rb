@@ -1,12 +1,12 @@
 require "bundler/setup"
-require "checkout/data/payment_request_source"
-require "checkout/data/capture_payment"
-require "checkout/data/refund_payment"
-require "checkout/data/void_payment"
-require "checkout/data/payment_source"
-require "checkout/data/request_token"
-require "checkout/api_resource"
-require "checkout"
+require "checkout_sdk/data/payment_request_source"
+require "checkout_sdk/data/capture_payment"
+require "checkout_sdk/data/refund_payment"
+require "checkout_sdk/data/void_payment"
+require "checkout_sdk/data/payment_source"
+require "checkout_sdk/data/request_token"
+require "checkout_sdk/api_resource"
+require "checkout_sdk"
 require "pry"
 
 
@@ -21,9 +21,9 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  # Checkout configuration
+  # CheckoutSdk configuration
   config.before(:all) do
-    Checkout.configure do |config|
+    CheckoutSdk.configure do |config|
       config.secret_key = "sk_test"
       config.public_key = "pk_test"
       config.base_url   = "https://test.com"

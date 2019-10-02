@@ -1,4 +1,4 @@
-class Checkout::VoidPayment
+class CheckoutSdk::VoidPayment
   attr_accessor :id, :reference, :metadata
 
   def data

@@ -1,4 +1,4 @@
-class Checkout::PaymentRequestSource
+class CheckoutSdk::PaymentRequestSource
   attr_accessor :type, :token, :billing_address_line1, :billing_address_line2, :billing_city, :billing_state,
                 :billing_zip, :billing_country, :phone_country_code, :phone_number, :amount,
                 :currency, :payment_type, :reference, :description, :capture, :capture_on, :customer_id,

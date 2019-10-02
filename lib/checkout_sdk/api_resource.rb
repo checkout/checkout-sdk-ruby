@@ -1,10 +1,10 @@
 require "excon"
 
-class Checkout::ApiResource
+class CheckoutSdk::ApiResource
   attr_reader :checkout_connection
 
   def initialize
-    @checkout_connection = Excon.new("#{Checkout.configuration.base_url}", persistent: true)
+    @checkout_connection = Excon.new("#{CheckoutSdk.configuration.base_url}", persistent: true)
   end
 
   def request_payments(data_object)
@@ -46,14 +46,14 @@ class Checkout::ApiResource
       path: path,
       body: data_object.to_json,
       headers: { "Content-Type" => "application/json",
-                 "Authorization" => "#{Checkout.configuration.secret_key}" }
+                 "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
     )
   end
 
   def get(path)
     checkout_connection.get(
       path: path,
-      headers: { "Authorization" => "#{Checkout.configuration.secret_key}" }
+      headers: { "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
     )
   end
 end

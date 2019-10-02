@@ -1,4 +1,4 @@
-class Checkout::Configuration
+class CheckoutSdk::Configuration
   attr_accessor :secret_key, :public_key, :base_url
 
   def initialize

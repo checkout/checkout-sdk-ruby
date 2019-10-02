@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-RSpec.describe Checkout::ApiResource do
-  let(:api_resource) { Checkout::ApiResource.new }
+RSpec.describe CheckoutSdk::ApiResource do
+  let(:api_resource) { CheckoutSdk::ApiResource.new }
 
   it "has the expected connection configuration" do
     expect(api_resource.checkout_connection.data[:host]).to eql("test.com")
   end
 
   describe "#request_payments" do
-    let(:payment_request_source) { Checkout::PaymentRequestSource.new }
+    let(:payment_request_source) { CheckoutSdk::PaymentRequestSource.new }
     let(:data) { { mock: true } }
 
     it "sends a POST request with correct params" do
@@ -24,7 +24,7 @@ RSpec.describe Checkout::ApiResource do
   end
 
   describe "#capture_payment" do
-    let(:capture_payment) { Checkout::CapturePayment.new }
+    let(:capture_payment) { CheckoutSdk::CapturePayment.new }
 
     it "sends a POST request with correct params" do
       capture_payment.id = 1
@@ -39,7 +39,7 @@ RSpec.describe Checkout::ApiResource do
   end
 
   describe "#refund_payment" do
-    let(:refund_payment) { Checkout::RefundPayment.new }
+    let(:refund_payment) { CheckoutSdk::RefundPayment.new }
 
     it "sends a POST request with correct params" do
       refund_payment.id = 1
@@ -54,7 +54,7 @@ RSpec.describe Checkout::ApiResource do
   end
 
   describe "#void_payment" do
-    let(:void_payment) { Checkout::VoidPayment.new }
+    let(:void_payment) { CheckoutSdk::VoidPayment.new }
 
     it "sends a POST request with correct params" do
       void_payment.id = 1
@@ -69,7 +69,7 @@ RSpec.describe Checkout::ApiResource do
   end
 
   describe "#add_payment_source" do
-    let(:payment_source) { Checkout::PaymentSource.new }
+    let(:payment_source) { CheckoutSdk::PaymentSource.new }
     let(:data) { { mock: true } }
 
     it "sends a POST request with correct params" do
@@ -85,7 +85,7 @@ RSpec.describe Checkout::ApiResource do
   end
 
   describe "#request_token" do
-    let(:request_token) { Checkout::RequestToken.new }
+    let(:request_token) { CheckoutSdk::RequestToken.new }
     let(:data) { { mock: true } }
 
     it "sends a POST request with correct params" do

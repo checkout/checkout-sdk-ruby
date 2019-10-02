@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.describe Checkout::RequestToken do
+RSpec.describe CheckoutSdk::RequestToken do
   let(:type) { "card" }
-  let(:request_token) { Checkout::RequestToken.new }
+  let(:request_token) { CheckoutSdk::RequestToken.new }
   let(:token_data_version) { "EC_v1" }
   let(:token_data_data) { "Base64" }
   let(:token_data_signature) { "Signature" }

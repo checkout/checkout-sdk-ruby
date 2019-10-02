@@ -1,4 +1,4 @@
-class Checkout::RequestToken
+class CheckoutSdk::RequestToken
   attr_accessor :type, :token_data_version, :token_data_data, :token_data_signature,
                 :token_data_header, :token_data_signature, :token_data_protocolVersion,
                 :token_data_signedMessage, :card_number, :card_expiry_month, :card_expiry_year,

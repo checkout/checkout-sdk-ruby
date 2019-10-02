@@ -1,4 +1,4 @@
-# Checkout
+# CheckoutSdk
 
 You are reading documentation for version: 0.1.0
 
@@ -23,7 +23,7 @@ Or install it yourself as:
 API keys must be configured in the gem setup. You can do this anywhere in your application before you make API calls using the gem.
 
 ```ruby
-Checkout.configure do |config|
+CheckoutSdk.configure do |config|
   config.secret_key = ENV['SECRET_KEY']
   config.public_key = ENV['PUBLIC_KEY']
   config.base_url   = ENV['BASE_URL']
@@ -33,7 +33,7 @@ end
 ## Usage
 
 ```ruby
-p = Checkout::PaymentRequestSource.new
+p = CheckoutSdk::PaymentRequestSource.new
 p.type = "card"
 p.card_number = "4242424242424242"
 p.card_expiry_month = 6
@@ -52,9 +52,9 @@ p.recipient_last_name = "Elmo"
 p.risk_enabled = true
 p.billing_descriptor_name = "Nancy"
 p.billing_descriptor_city = "Berlin"
-p.processing_mid = "Checkout"
+p.processing_mid = "CheckoutSdk"
 
-r = Checkout::ApiResource.new
+r = CheckoutSdk::ApiResource.new
 r.request_payments(p)
 ```
 
