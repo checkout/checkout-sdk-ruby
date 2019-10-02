@@ -15,8 +15,8 @@ RSpec.describe Checkout::PaymentRequestSource do
   let(:billing_state) { "Sesame state" }
   let(:billing_zip) { "12345" }
   let(:billing_country) { "Sesame country" }
-  let(:source_phone_country_code) { "+1" }
-  let(:source_phone_number) { "415 555 2671" }
+  let(:phone_country_code) { "+1" }
+  let(:phone_number) { "415 555 2671" }
   let(:id) { "12345678" }
   let(:cvv) { "123" }
   let(:token) { "tok_4gzeau5o2uqubbk6fufs3m7p54" }
@@ -40,8 +40,8 @@ RSpec.describe Checkout::PaymentRequestSource do
         country: billing_country
       },
       phone: {
-        country_code: source_phone_country_code,
-        number: source_phone_number
+        country_code: phone_country_code,
+        number: phone_number
       },
     }
   }
@@ -65,8 +65,8 @@ RSpec.describe Checkout::PaymentRequestSource do
         country: billing_country
       },
       phone: {
-        country_code: source_phone_country_code,
-        number: source_phone_number
+        country_code: phone_country_code,
+        number: phone_number
       },
     }
   }

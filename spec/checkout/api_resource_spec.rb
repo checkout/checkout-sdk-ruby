@@ -84,6 +84,22 @@ RSpec.describe Checkout::ApiResource do
     end
   end
 
+  describe "#request_token" do
+    let(:request_token) { Checkout::RequestToken.new }
+    let(:data) { { mock: true } }
+
+    it "sends a POST request with correct params" do
+      allow(request_token).to receive(:data).and_return(data)
+
+      expect(api_resource.checkout_connection).to receive(:post)
+        .with({ body:"{\"mock\":true}",
+                headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
+                path:"/tokens" })
+
+      api_resource.request_token(request_token)
+    end
+  end
+
   describe "#get_payment_details" do
     let(:payment_id) { "pay_id" }
 

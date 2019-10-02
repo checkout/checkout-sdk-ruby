@@ -27,6 +27,10 @@ class Checkout::ApiResource
     post_request("/sources", data_object.data)
   end
 
+  def request_token(data_object)
+    post_request("/tokens", data_object.data)
+  end
+
   def get_payment_details(id)
     get("/payments/#{id}")
   end
@@ -52,5 +56,4 @@ class Checkout::ApiResource
       headers: { "Authorization" => "#{Checkout.configuration.secret_key}" }
     )
   end
-
 end

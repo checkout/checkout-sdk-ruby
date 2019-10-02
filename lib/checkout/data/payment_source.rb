@@ -1,7 +1,7 @@
 class Checkout::PaymentSource
   attr_accessor :type, :reference, :billing_address_line1, :billing_address_line2,
                 :billing_city, :billing_state, :billing_zip, :billing_country,
-                :source_phone_country_code, :source_phone_number, :customer_id,
+                :phone_country_code, :phone_number, :customer_id,
                 :customer_email, :customer_name, :source_data_first_name,
                 :source_data_last_name, :source_data_account_iban, :source_data_bic,
                 :source_data_billing_descriptor, :source_data_mandate_type
@@ -19,8 +19,8 @@ class Checkout::PaymentSource
         country: billing_country
       },
       phone: {
-        country_code: source_phone_country_code,
-        number: source_phone_number
+        country_code: phone_country_code,
+        number: phone_number
       },
       customer: {
         id: customer_id,

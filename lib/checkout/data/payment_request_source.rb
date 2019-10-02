@@ -1,6 +1,6 @@
 class Checkout::PaymentRequestSource
   attr_accessor :type, :token, :billing_address_line1, :billing_address_line2, :billing_city, :billing_state,
-                :billing_zip, :billing_country, :source_phone_country_code, :source_phone_number, :amount,
+                :billing_zip, :billing_country, :phone_country_code, :phone_number, :amount,
                 :currency, :payment_type, :reference, :description, :capture, :capture_on, :customer_id,
                 :customer_email, :customer_name, :billing_descriptor, :billing_descriptor_name,
                 :billing_descriptor_city, :shipping_address_line1, :shipping_address_line2, :shipping_city,
@@ -96,8 +96,8 @@ class Checkout::PaymentRequestSource
         country: billing_country
       },
       phone: {
-        country_code: source_phone_country_code,
-        number: source_phone_number
+        country_code: phone_country_code,
+        number: phone_number
       },
     }
   end
@@ -120,8 +120,8 @@ class Checkout::PaymentRequestSource
         country: billing_country
       },
       phone: {
-        country_code: source_phone_country_code,
-        number: source_phone_number
+        country_code: phone_country_code,
+        number: phone_number
       },
     }
   end
