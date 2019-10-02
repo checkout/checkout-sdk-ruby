@@ -1,6 +1,8 @@
 require "bundler/setup"
 require "checkout/data/payment_request_source"
 require "checkout/data/capture_payment"
+require "checkout/data/refund_payment"
+require "checkout/data/void_payment"
 require "checkout/api_resource"
 require "checkout"
 require "pry"

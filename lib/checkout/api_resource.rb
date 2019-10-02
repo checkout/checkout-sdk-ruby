@@ -15,6 +15,22 @@ class Checkout::ApiResource
     post_request("/payments/#{data_object.id}/captures", data_object.data)
   end
 
+  def refund_payment(data_object)
+    post_request("/payments/#{data_object.id}/refunds", data_object.data)
+  end
+
+  def void_payment(data_object)
+    post_request("/payments/#{data_object.id}/voids", data_object.data)
+  end
+
+  def get_payment_details(id)
+    get("/payments/#{id}")
+  end
+
+  def get_payment_actions(id)
+    get("/payments/#{id}/actions")
+  end
+
   private
 
   def post_request(path, data_object)
@@ -25,4 +41,12 @@ class Checkout::ApiResource
                  "Authorization" => "#{Checkout.configuration.secret_key}" }
     )
   end
+
+  def get(path)
+    checkout_connection.get(
+      path: path,
+      headers: { "Authorization" => "#{Checkout.configuration.secret_key}" }
+    )
+  end
+
 end
