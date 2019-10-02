@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install checkout
+    $ gem install checkout_sdk
 
 ## Configuration
 
@@ -57,3 +57,7 @@ p.processing_mid = "Checkout"
 r = Checkout::ApiResource.new
 r.request_payments(p)
 ```
+
+## Tests
+
+    $ rspec
