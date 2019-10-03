@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{A Ruby API wrapper for checkout.com.}
   spec.homepage      = "http://checkout.com"
   spec.require_paths = ["lib"]
+  spec.license       = "MIT"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
