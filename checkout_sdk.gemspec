@@ -13,6 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://checkout.com"
   spec.files         = `git ls-files`.split("\n")
   spec.require_paths = ["lib"]
+  spec.license       = "MIT"
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
