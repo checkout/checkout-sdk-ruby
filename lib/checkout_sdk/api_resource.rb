@@ -1,4 +1,5 @@
 require "excon"
+require "multi_json"
 
 class CheckoutSdk::ApiResource
   attr_reader :checkout_connection
@@ -44,7 +45,7 @@ class CheckoutSdk::ApiResource
   def post_request(path, data_object)
     checkout_connection.post(
       path: path,
-      body: data_object.to_json,
+      body: MultiJson.dump(data_object),
       headers: { "Content-Type" => "application/json",
                  "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
     )

@@ -11,11 +11,13 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{A Ruby API wrapper for checkout.com.}
   spec.description   = %q{A Ruby API wrapper for checkout.com.}
   spec.homepage      = "http://checkout.com"
+  spec.files         = `git ls-files`.split("\n")
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "pry"
-  spec.add_dependency "excon"
+  spec.add_development_dependency "pry",  "~> 0.11.3"
+  spec.add_dependency "multi_json", '~> 1.0'
+  spec.add_dependency "excon", "~> 0.66.0"
 end
