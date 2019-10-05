@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    checkout_sdk (0.1.2)
+    checkout_sdk (0.1.4)
       excon (~> 0.66.0)
       multi_json (~> 1.0)
 

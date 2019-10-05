@@ -30,7 +30,7 @@ RSpec.describe CheckoutSdk::ApiResource do
       capture_payment.id = 1
 
       expect(api_resource.checkout_connection).to receive(:post)
-        .with({ body:"{\"amount\":null,\"reference\":null,\"metadata\":null}",
+        .with({ body:"{}",
                 headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
                 path:"/payments/1/captures" })
 
@@ -45,7 +45,7 @@ RSpec.describe CheckoutSdk::ApiResource do
       refund_payment.id = 1
 
       expect(api_resource.checkout_connection).to receive(:post)
-        .with({ body:"{\"amount\":null,\"reference\":null,\"metadata\":null}",
+        .with({ body:"{}",
                 headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
                 path:"/payments/1/refunds" })
 
@@ -60,7 +60,7 @@ RSpec.describe CheckoutSdk::ApiResource do
       void_payment.id = 1
 
       expect(api_resource.checkout_connection).to receive(:post)
-        .with({ body:"{\"reference\":null,\"metadata\":null}",
+        .with({ body:"{}",
                 headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
                 path:"/payments/1/voids" })
 

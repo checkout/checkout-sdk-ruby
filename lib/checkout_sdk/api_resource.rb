@@ -42,10 +42,10 @@ class CheckoutSdk::ApiResource
 
   private
 
-  def post_request(path, data_object)
+  def post_request(path, data)
     checkout_connection.post(
       path: path,
-      body: MultiJson.dump(data_object),
+      body: MultiJson.dump(delete_blank(data)),
       headers: { "Content-Type" => "application/json",
                  "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
     )
@@ -56,5 +56,11 @@ class CheckoutSdk::ApiResource
       path: path,
       headers: { "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
     )
+  end
+
+  def delete_blank(data_hash)
+    data_hash.delete_if do |k, v|
+      (v.respond_to?(:empty?) ? v.empty? : !v) or v.instance_of?(Hash) && delete_blank(v).empty?
+    end
   end
 end
