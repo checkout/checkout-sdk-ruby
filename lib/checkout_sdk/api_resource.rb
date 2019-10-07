@@ -29,7 +29,7 @@ class CheckoutSdk::ApiResource
   end
 
   def request_token(data_object)
-    post_request("/tokens", data_object.data)
+    post_request_public("/tokens", data_object.data)
   end
 
   def get_payment_details(id)
@@ -48,6 +48,15 @@ class CheckoutSdk::ApiResource
       body: MultiJson.dump(delete_blank(data)),
       headers: { "Content-Type" => "application/json",
                  "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
+    )
+  end
+
+  def post_request_public(path, data)
+    checkout_connection.post(
+      path: path,
+      body: MultiJson.dump(delete_blank(data)),
+      headers: { "Content-Type" => "application/json",
+                 "Authorization" => "#{CheckoutSdk.configuration.public_key}" }
     )
   end
 

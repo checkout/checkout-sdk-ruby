@@ -93,7 +93,7 @@ RSpec.describe CheckoutSdk::ApiResource do
 
       expect(api_resource.checkout_connection).to receive(:post)
         .with({ body:"{\"mock\":true}",
-                headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
+                headers:{"Authorization"=>"pk_test", "Content-Type"=>"application/json"},
                 path:"/tokens" })
 
       api_resource.request_token(request_token)
