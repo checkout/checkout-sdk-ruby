@@ -32,6 +32,60 @@ end
 
 ## Usage
 
+#### Source Type: `token`
+A card token can be obtained using one of Checkout.com's JavaScript frontend solutions such as [Frames](https://docs.checkout.com/docs/frames "Frames") or any of the [mobile SDKs](https://docs.checkout.com/docs/sdks#section-mobile-sdk-libraries "Mobile SDKs")
+
+```ruby
+payment_request_source = CheckoutSdk::PaymentRequestSource.new
+payment_request_source.type = "token"
+payment_request_source.token = "tok_..."
+payment_request_source.amount = 2022
+payment_request_source.currency = "GBP"
+
+api_resource = CheckoutSdk::ApiResource.new
+
+# Send API call
+response = api_resource.request_payment(payment_request_source)
+
+# response parsing
+response.data           # => {...}
+response.body           # => "..."
+response.headers        # => {...}
+response.remote_ip      # => "..."
+response.status         # => 200
+response.remote_ip      # => "..."
+response.local_port     # => 51601
+response.local_address  # => "..."
+```
+
+#### Source Type: `id`
+
+```ruby
+payment_request_source = CheckoutSdk::PaymentRequestSource.new
+payment_request_source.type = "id"
+payment_request_source.token = "src_..."
+payment_request_source.amount = 2022
+payment_request_source.currency = "GBP"
+
+api_resource = CheckoutSdk::ApiResource.new
+
+# Send API call
+response = api_resource.request_payment(payment_request_source)
+
+# response parsing
+response.data           # => {...}
+response.body           # => "..."
+response.headers        # => {...}
+response.remote_ip      # => "..."
+response.status         # => 200
+response.remote_ip      # => "..."
+response.local_port     # => 51601
+response.local_address  # => "..."
+```
+
+
+#### Source Type: `card`
+[Fully PCI Compliant](https://docs.checkout.com/docs/pci-compliance) merchants only
 ```ruby
 payment_request_source = CheckoutSdk::PaymentRequestSource.new
 payment_request_source.type = "card"
