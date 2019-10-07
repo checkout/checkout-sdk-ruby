@@ -8,7 +8,7 @@ class CheckoutSdk::ApiResource
     @checkout_connection = Excon.new("#{CheckoutSdk.configuration.base_url}", persistent: true)
   end
 
-  def request_payments(data_object)
+  def request_payment(data_object)
     post_request("/payments", data_object.data)
   end
 

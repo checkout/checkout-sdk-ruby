@@ -42,23 +42,11 @@ payment_request_source.card_name = "Bruce Wayne"
 payment_request_source.card_cvv = "100"
 payment_request_source.amount = 2022
 payment_request_source.currency = "GBP"
-payment_request_source.capture = true
-payment_request_source.threeds_enabled = false
-payment_request_source.threeds_attempt_n3d = false
-payment_request_source.recipient_dob = "1992-04-06"
-payment_request_source.recipient_account_number = "1234567890"
-payment_request_source.recipient_zip = "12345"
-payment_request_source.recipient_last_name = "Elmo"
-payment_request_source.risk_enabled = true
-payment_request_source.billing_descriptor_name = "Nancy"
-payment_request_source.billing_descriptor_city = "Berlin"
-payment_request_source.processing_mid = "CheckoutSdk"
-
 
 api_resource = CheckoutSdk::ApiResource.new
 
 # Send API call
-response = api_resource.request_payments(payment_request_source)
+response = api_resource.request_payment(payment_request_source)
 
 # response parsing
 response.data           # => {...}
