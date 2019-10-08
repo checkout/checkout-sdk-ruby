@@ -1,6 +1,6 @@
 # CheckoutSdk
 
-You are reading documentation for version: 0.1.4
+You are reading documentation for version: 0.2.0
 
 ## Installation
 
@@ -32,6 +32,60 @@ end
 
 ## Usage
 
+#### Source Type: `token`
+A card token can be obtained using one of Checkout.com's JavaScript frontend solutions such as [Frames](https://docs.checkout.com/docs/frames "Frames") or any of the [mobile SDKs](https://docs.checkout.com/docs/sdks#section-mobile-sdk-libraries "Mobile SDKs")
+
+```ruby
+payment_request_source = CheckoutSdk::PaymentRequestSource.new
+payment_request_source.type = "token"
+payment_request_source.token = "tok_..."
+payment_request_source.amount = 2022
+payment_request_source.currency = "GBP"
+
+api_resource = CheckoutSdk::ApiResource.new
+
+# Send API call
+response = api_resource.request_payment(payment_request_source)
+
+# response parsing
+response.data           # => {...}
+response.body           # => "..."
+response.headers        # => {...}
+response.remote_ip      # => "..."
+response.status         # => 200
+response.remote_ip      # => "..."
+response.local_port     # => 51601
+response.local_address  # => "..."
+```
+
+#### Source Type: `id`
+
+```ruby
+payment_request_source = CheckoutSdk::PaymentRequestSource.new
+payment_request_source.type = "id"
+payment_request_source.token = "src_..."
+payment_request_source.amount = 2022
+payment_request_source.currency = "GBP"
+
+api_resource = CheckoutSdk::ApiResource.new
+
+# Send API call
+response = api_resource.request_payment(payment_request_source)
+
+# response parsing
+response.data           # => {...}
+response.body           # => "..."
+response.headers        # => {...}
+response.remote_ip      # => "..."
+response.status         # => 200
+response.remote_ip      # => "..."
+response.local_port     # => 51601
+response.local_address  # => "..."
+```
+
+
+#### Source Type: `card`
+[Fully PCI Compliant](https://docs.checkout.com/docs/pci-compliance) merchants only
 ```ruby
 payment_request_source = CheckoutSdk::PaymentRequestSource.new
 payment_request_source.type = "card"
@@ -42,23 +96,11 @@ payment_request_source.card_name = "Bruce Wayne"
 payment_request_source.card_cvv = "100"
 payment_request_source.amount = 2022
 payment_request_source.currency = "GBP"
-payment_request_source.capture = true
-payment_request_source.threeds_enabled = false
-payment_request_source.threeds_attempt_n3d = false
-payment_request_source.recipient_dob = "1992-04-06"
-payment_request_source.recipient_account_number = "1234567890"
-payment_request_source.recipient_zip = "12345"
-payment_request_source.recipient_last_name = "Elmo"
-payment_request_source.risk_enabled = true
-payment_request_source.billing_descriptor_name = "Nancy"
-payment_request_source.billing_descriptor_city = "Berlin"
-payment_request_source.processing_mid = "CheckoutSdk"
-
 
 api_resource = CheckoutSdk::ApiResource.new
 
 # Send API call
-response = api_resource.request_payments(payment_request_source)
+response = api_resource.request_payment(payment_request_source)
 
 # response parsing
 response.data           # => {...}

@@ -7,7 +7,7 @@ RSpec.describe CheckoutSdk::ApiResource do
     expect(api_resource.checkout_connection.data[:host]).to eql("test.com")
   end
 
-  describe "#request_payments" do
+  describe "#request_payment" do
     let(:payment_request_source) { CheckoutSdk::PaymentRequestSource.new }
     let(:data) { { mock: true } }
 
@@ -19,7 +19,7 @@ RSpec.describe CheckoutSdk::ApiResource do
                 headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
                 path:"/payments" })
 
-      api_resource.request_payments(payment_request_source)
+      api_resource.request_payment(payment_request_source)
     end
   end
 
@@ -93,7 +93,7 @@ RSpec.describe CheckoutSdk::ApiResource do
 
       expect(api_resource.checkout_connection).to receive(:post)
         .with({ body:"{\"mock\":true}",
-                headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
+                headers:{"Authorization"=>"pk_test", "Content-Type"=>"application/json"},
                 path:"/tokens" })
 
       api_resource.request_token(request_token)

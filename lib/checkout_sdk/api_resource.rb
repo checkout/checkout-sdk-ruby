@@ -8,7 +8,7 @@ class CheckoutSdk::ApiResource
     @checkout_connection = Excon.new("#{CheckoutSdk.configuration.base_url}", persistent: true)
   end
 
-  def request_payments(data_object)
+  def request_payment(data_object)
     post_request("/payments", data_object.data)
   end
 
@@ -47,15 +47,23 @@ class CheckoutSdk::ApiResource
       path: path,
       body: MultiJson.dump(delete_blank(data)),
       headers: { "Content-Type" => "application/json",
-                 "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
+                 "Authorization" => key(path) }
     )
   end
 
   def get(path)
     checkout_connection.get(
       path: path,
-      headers: { "Authorization" => "#{CheckoutSdk.configuration.secret_key}" }
+      headers: { "Authorization" => CheckoutSdk.configuration.secret_key }
     )
+  end
+
+  def key(path)
+    if path == "/tokens"
+      CheckoutSdk.configuration.public_key
+    else
+      CheckoutSdk.configuration.secret_key
+    end
   end
 
   def delete_blank(data_hash)
