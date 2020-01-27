@@ -20,5 +20,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry",  "~> 0.11.3"
   spec.add_dependency "multi_json", '~> 1.0'
-  spec.add_dependency "excon", "~> 0.66.0"
+  spec.add_dependency "excon", ">= 0.66", "< 0.72"
 end
