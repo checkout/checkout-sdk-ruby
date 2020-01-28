@@ -1,6 +1,6 @@
 # CheckoutSdk
 
-You are reading documentation for version: 0.2.0
+You are reading documentation for version: 0.2.1
 
 ## Installation
 
