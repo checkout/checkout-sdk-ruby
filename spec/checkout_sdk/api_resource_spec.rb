@@ -9,13 +9,13 @@ RSpec.describe CheckoutSdk::ApiResource do
 
   describe "#request_payment" do
     let(:payment_request_source) { CheckoutSdk::PaymentRequestSource.new }
-    let(:data) { { mock: true } }
+    let(:data) { { mock: true, mockfalse: false, mockzero: 0, mocknil: nil, mockempty: "" } }
 
     it "sends a POST request with correct params" do
       allow(payment_request_source).to receive(:data).and_return(data)
 
       expect(api_resource.checkout_connection).to receive(:post)
-        .with({ body:"{\"mock\":true}",
+        .with({ body:"{\"mock\":true,\"mockfalse\":false,\"mockzero\":0}",
                 headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
                 path:"/payments" })
 

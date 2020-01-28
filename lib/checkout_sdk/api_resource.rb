@@ -68,7 +68,7 @@ class CheckoutSdk::ApiResource
 
   def delete_blank(data_hash)
     data_hash.delete_if do |k, v|
-      (v.respond_to?(:empty?) ? v.empty? : !v) or v.instance_of?(Hash) && delete_blank(v).empty?
+      (v.respond_to?(:empty?) ? v.empty? : v.nil?) or v.instance_of?(Hash) && delete_blank(v).empty?
     end
   end
 end

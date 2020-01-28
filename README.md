@@ -1,6 +1,6 @@
 # CheckoutSdk
 
-You are reading documentation for version: 0.2.0
+You are reading documentation for version: 0.2.1
 
 ## Installation
 
@@ -112,6 +112,20 @@ response.remote_ip      # => "..."
 response.local_port     # => 51601
 response.local_address  # => "..."
 ```
+
+#### NB: Using boolean/falsey values
+```ruby
+# `nil` or empty strings
+payment_request_source.capture = nil
+payment_request_source.capture = ""
+# will be stripped from API call
+
+# but `false`, or 0
+payment_request_source.capture = false
+payment_request_source.capture = 0
+# are retained and sent in request
+```
+See [api_resource_spec](https://github.com/checkout/checkout-sdk-ruby/blob/master/spec/checkout_sdk/api_resource_spec.rb#L10-L24) for details
 
 ## Tests
 
