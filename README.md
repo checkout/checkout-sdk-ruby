@@ -1,8 +1,10 @@
-# CheckoutSdk
+[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-ruby.svg)](https://github.com/checkout/checkout-sdk-ruby/blob/master/LICENSE) [![GitHub release](https://img.shields.io/github/release/checkout/checkout-sdk-ruby.svg)](https://GitHub.com/checkout/checkout-sdk-ruby/releases/)
 
-You are reading documentation for version: 0.2.1
+<p align="center"><img src="https://i.ibb.co/5Mx7ZsS/Screenshot-2020-07-30-at-17-20-31.png" width="20%"></p>
 
-## Installation
+# Checkout.com Ruby SDK
+
+# :rocket: Install
 
 Add this line to your application's Gemfile:
 
@@ -12,13 +14,17 @@ gem 'checkout_sdk'
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install checkout_sdk
+```bash
+$ gem install checkout_sdk
+```
 
-## Configuration
+# :wrench: Configure
 
 API keys must be configured in the gem setup. You can do this anywhere in your application before you make API calls using the gem.
 
@@ -30,7 +36,11 @@ CheckoutSdk.configure do |config|
 end
 ```
 
-## Usage
+# :book: Documentation
+
+You can see the [SDK documentation here](https://checkout.github.io/checkout-sdk-ruby/getting_started/).
+
+# :dash: Quickstart
 
 #### Source Type: `token`
 A card token can be obtained using one of Checkout.com's JavaScript frontend solutions such as [Frames](https://docs.checkout.com/docs/frames "Frames") or any of the [mobile SDKs](https://docs.checkout.com/docs/sdks#section-mobile-sdk-libraries "Mobile SDKs")
@@ -113,20 +123,27 @@ response.local_port     # => 51601
 response.local_address  # => "..."
 ```
 
-#### NB: Using boolean/falsey values
+# :warning: Boolean/falsy values
+
+"nil" or empty strings will be stripped from API calls
+
 ```ruby
-# `nil` or empty strings
+# ignored
 payment_request_source.capture = nil
 payment_request_source.capture = ""
-# will be stripped from API call
+```
 
-# but `false`, or 0
+but "false" or 0 are retained and sent in the request
+
+```ruby
+# sent
 payment_request_source.capture = false
 payment_request_source.capture = 0
-# are retained and sent in request
 ```
-See [api_resource_spec](https://github.com/checkout/checkout-sdk-ruby/blob/master/spec/checkout_sdk/api_resource_spec.rb#L10-L24) for details
+See [api_resource_spec](https://github.com/checkout/checkout-sdk-ruby/blob/master/spec/checkout_sdk/api_resource_spec.rb#L10-L24) for details.
 
-## Tests
+# :rotating_light: Tests
 
-    $ rspec
+```bash
+$ rspec
+```
