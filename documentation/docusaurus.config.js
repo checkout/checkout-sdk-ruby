@@ -1,105 +1,60 @@
 module.exports = {
-  title: 'My Site',
-  tagline: 'The tagline of my site',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
-  favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
-  themeConfig: {
-    navbar: {
-      title: 'My Site',
-      logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
-      },
-      links: [
-        {
-          to: 'docs/',
-          activeBasePath: 'docs',
-          label: 'Docs',
-          position: 'left',
+    title: 'checkout-sdk-ruby',
+    tagline: 'Checkout.com SDK for Ruby',
+    url: 'https://checkout.github.io',
+    baseUrl: '/checkout-sdk-ruby/',
+    favicon: 'img/favicon.png',
+    organizationName: 'checkout', // Usually your GitHub org/user name.
+    projectName: 'checkout-sdk-ruby', // Usually your repo name.
+    themeConfig: {
+        prism: {
+            additionalLanguages: ['ruby', 'bash'],
         },
-        {to: 'blog', label: 'Blog', position: 'left'},
-        {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
-          position: 'right',
+        navbar: {
+            title: 'checkout-sdk-ruby',
+            logo: {
+                alt: 'checkout-sdk-ruby',
+                src: 'img/logo.png',
+            },
+            items: [
+                {
+                    to: 'getting_started',
+                    activeBasePath: 'docs',
+                    label: 'Docs',
+                    position: 'right',
+                },
+                {
+                    href: 'https://github.com/checkout/checkout-sdk-ruby',
+                    label: 'GitHub',
+                    position: 'right',
+                },
+            ],
         },
-      ],
+        footer: {
+            style: 'dark',
+            copyright: `© ${new Date().getFullYear()} Checkout.com    `,
+        },
+        googleAnalytics: {
+            trackingID: 'UA-165971486-1',
+        },
     },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
+    presets: [
+        [
+            '@docusaurus/preset-classic',
             {
-              label: 'Style Guide',
-              to: 'docs/',
+                docs: {
+                    sidebarPath: require.resolve('./sidebars.js'),
+                    routeBasePath: '/',
+                    // editUrl: 'https://github.com/facebook/docusaurus/edit/master/website/'
+                },
+                theme: {
+                    customCss: require.resolve('./src/css/custom.css'),
+                },
             },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: 'blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-    },
-  },
-  presets: [
-    [
-      '@docusaurus/preset-classic',
-      {
-        docs: {
-          // It is recommended to set document id as docs home page (`docs/` path).
-          homePageId: 'doc1',
-          sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
-        },
-        theme: {
-          customCss: require.resolve('./src/css/custom.css'),
-        },
-      },
+        ],
     ],
-  ],
+    plugins: [
+        // Basic usage.
+        require.resolve('@docusaurus/plugin-google-analytics'),
+    ],
 };
