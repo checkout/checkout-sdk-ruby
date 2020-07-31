@@ -1,10 +1,10 @@
 module.exports = {
     title: 'checkout-sdk-ruby',
     tagline: 'Checkout.com SDK for Ruby',
-    url: 'https://checkout.github.io',
+    url: 'https://stephen-gilbert-cko.github.io',
     baseUrl: '/checkout-sdk-ruby/',
     favicon: 'img/favicon.png',
-    organizationName: 'checkout', // Usually your GitHub org/user name.
+    organizationName: 'stephen-gilbert-cko', // Usually your GitHub org/user name.
     projectName: 'checkout-sdk-ruby', // Usually your repo name.
     themeConfig: {
         prism: {
@@ -55,6 +55,6 @@ module.exports = {
     ],
     plugins: [
         // Basic usage.
-        require.resolve('@docusaurus/plugin-google-analytics'),
+        // require.resolve('@docusaurus/plugin-google-analytics'),
     ],
 };
