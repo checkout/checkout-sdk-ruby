@@ -10,13 +10,14 @@ class CheckoutSdk::PaymentRequestSource
                 :success_url, :failure_url, :payment_ip, :recipient_dob, :recipient_account_number,
                 :recipient_zip, :recipient_last_name, :processing_mid, :metadata, :cvv, :id, :card_number,
                 :card_expiry_month, :card_expiry_year, :card_name, :card_cvv, :card_stored, :customer_id,
-                :customer_email
+                :customer_email, :merchant_initiated
 
   def data
     { source: source(type),
       amount: amount,
       currency: currency,
       payment_type: payment_type,
+      merchant_initiated: merchant_initiated,
       reference: reference,
       description: description,
       capture: capture,
