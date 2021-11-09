@@ -33,6 +33,7 @@ CheckoutSdk.configure do |config|
   config.secret_key = ENV['SECRET_KEY']
   config.public_key = ENV['PUBLIC_KEY']
   config.base_url   = ENV['BASE_URL']
+  config.persistent = true|false # default: true
 end
 ```
 

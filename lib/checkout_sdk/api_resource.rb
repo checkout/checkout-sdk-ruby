@@ -5,7 +5,10 @@ class CheckoutSdk::ApiResource
   attr_reader :checkout_connection
 
   def initialize
-    @checkout_connection = Excon.new("#{CheckoutSdk.configuration.base_url}", persistent: true)
+    @checkout_connection = Excon.new(
+      "#{CheckoutSdk.configuration.base_url}",
+      persistent: CheckoutSdk.configuration.persistent
+    )
   end
 
   def request_payment(data_object)
