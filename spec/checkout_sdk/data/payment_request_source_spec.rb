@@ -22,6 +22,7 @@ RSpec.describe CheckoutSdk::PaymentRequestSource do
   let(:token) { "tok_4gzeau5o2uqubbk6fufs3m7p54" }
   let(:customer_id) { "12345678" }
   let(:customer_email) { "elmo@friends.sesame" }
+  let(:processing_channel_id) { "pc_agaeauao2uqabbk6fafs3a7pa4" }
   let(:expected_card_source) {
     {
       type: type,
@@ -120,6 +121,20 @@ RSpec.describe CheckoutSdk::PaymentRequestSource do
         payment_request_source.type = "customer"
 
         expect(get_keys(payment_request_source.data[:source])).to eql(get_keys(expected_customer_source))
+      end
+    end
+
+    it "doesn't contain processing_channel_id if not set" do
+      expect(payment_request_source.data.key?(:processing_channel_id)).to be_falsey
+    end
+
+    context "processing channel id set" do
+      before do
+        payment_request_source.processing_channel_id = processing_channel_id
+      end
+
+      it "adds procesing_channel_id to the request if set" do
+        expect(payment_request_source.data[:processing_channel_id]).to eql(processing_channel_id)
       end
     end
   end

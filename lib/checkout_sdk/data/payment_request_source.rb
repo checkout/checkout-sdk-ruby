@@ -10,7 +10,7 @@ class CheckoutSdk::PaymentRequestSource
                 :success_url, :failure_url, :payment_ip, :recipient_dob, :recipient_account_number,
                 :recipient_zip, :recipient_last_name, :processing_mid, :metadata, :cvv, :id, :card_number,
                 :card_expiry_month, :card_expiry_year, :card_name, :card_cvv, :card_stored, :customer_id,
-                :customer_email, :merchant_initiated
+                :customer_email, :merchant_initiated, :processing_channel_id
 
   def data
     { source: source(type),
@@ -70,7 +70,11 @@ class CheckoutSdk::PaymentRequestSource
         mid: processing_mid
       },
       metadata: metadata
-    }
+    }.tap do |result|
+      if processing_channel_id
+        result[:processing_channel_id] = processing_channel_id
+      end
+    end
   end
 
   private
