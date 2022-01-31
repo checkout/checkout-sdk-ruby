@@ -18,6 +18,7 @@ end
 
 require "checkout_sdk/configuration"
 require "checkout_sdk/api_resource"
+require "checkout_sdk/data/instrument"
 require "checkout_sdk/data/capture_payment"
 require "checkout_sdk/data/payment_request_source"
 require "checkout_sdk/data/payment_source"

@@ -7,6 +7,75 @@ RSpec.describe CheckoutSdk::ApiResource do
     expect(api_resource.checkout_connection.data[:host]).to eql("test.com")
   end
 
+  describe "#create_instrument" do
+    let(:instrument) { CheckoutSdk::Instrument.new }
+    let(:data) { { mock: true, mockfalse: false, mockzero: 0, mocknil: nil, mockempty: "" } }
+
+    it "sends a POST request with correct params" do
+      allow(instrument).to receive(:data).and_return(data)
+
+      expect(api_resource.checkout_connection).to receive(:post)
+        .with({ body:"{\"mock\":true,\"mockfalse\":false,\"mockzero\":0}",
+                headers:{"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
+                path:"/instruments" })
+
+      api_resource.create_instrument(instrument)
+    end
+
+    context "API version 'four'" do
+      before do
+        @original_version = CheckoutSdk.configuration.version
+        CheckoutSdk.configure { |config| config.version = :four }
+      end
+
+      after do
+        CheckoutSdk.configure { |config| config.version = @original_version }
+      end
+
+      it "sends a POST request with correct params" do
+        allow(instrument).to receive(:data).and_return(data)
+
+        expect(api_resource.checkout_connection).to receive(:post)
+          .with({ body:"{\"mock\":true,\"mockfalse\":false,\"mockzero\":0}",
+                  headers:{"Authorization"=>"Bearer sk_test", "Content-Type"=>"application/json"},
+                  path:"/instruments" })
+
+        api_resource.create_instrument(instrument)
+      end
+    end
+  end
+
+  describe "#get_instrument_details" do
+    let(:instrument_id) { "instrument_id" }
+
+    it "sends a Get request with correct params" do
+      expect(api_resource.checkout_connection).to receive(:get)
+        .with({headers: {"Authorization"=>"sk_test"},
+               path: "/instruments/#{instrument_id}"})
+
+      api_resource.get_instrument_details(instrument_id)
+    end
+
+    context "API version 'four'" do
+      before do
+        @original_version = CheckoutSdk.configuration.version
+        CheckoutSdk.configure { |config| config.version = :four }
+      end
+
+      after do
+        CheckoutSdk.configure { |config| config.version = @original_version }
+      end
+
+      it "sends a Get request with correct params" do
+        expect(api_resource.checkout_connection).to receive(:get)
+          .with({headers: {"Authorization"=>"Bearer sk_test"},
+                 path: "/instruments/#{instrument_id}"})
+
+        api_resource.get_instrument_details(instrument_id)
+      end
+    end
+  end
+
   describe "#request_payment" do
     let(:payment_request_source) { CheckoutSdk::PaymentRequestSource.new }
     let(:data) { { mock: true, mockfalse: false, mockzero: 0, mocknil: nil, mockempty: "" } }
