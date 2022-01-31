@@ -1,8 +1,8 @@
 # Payment Method aka "instrument"
-CheckoutSdk::Instrument = Struct.new(:token, :customer, :verify, :currency, keyword_init: true) do
+CheckoutSdk::Instrument = Struct.new(:token, :customer, :requires_verification, :currency, keyword_init: true) do
   # @return [Hash<Symbol>]
   def data
-    if verify
+    if requires_verification
       {
         source: {
           type: 'token',

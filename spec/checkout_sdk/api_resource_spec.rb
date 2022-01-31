@@ -43,6 +43,19 @@ RSpec.describe CheckoutSdk::ApiResource do
         api_resource.create_instrument(instrument)
       end
     end
+
+    context 'submitted for verification purposes' do
+      let(:instrument) { CheckoutSdk::Instrument.new(requires_verification: true, token: 'tkn', customer: 'cus_1') }
+
+      it "sends a POST request with correct params" do
+        expect(api_resource.checkout_connection).to receive(:post)
+          .with({ body: instrument.data.to_json,
+                  headers: {"Authorization"=>"sk_test", "Content-Type"=>"application/json"},
+                  path: "/payments" })
+
+        api_resource.create_instrument(instrument)
+      end
+    end
   end
 
   describe "#get_instrument_details" do

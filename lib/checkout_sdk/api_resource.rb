@@ -17,21 +17,25 @@ class CheckoutSdk::ApiResource
   end
 
   # @param [Instrument] data_object
+  # @param [String, nil] endpoint '/instruments' by default, can be '/payments' for card verification purposes
   # @return [Hash<String>]
-  def create_instrument(data_object, endpoint: '/instruments')
+  def create_instrument(data_object, endpoint: nil)
     unless data_object.is_a?(CheckoutSdk::Instrument)
       raise ArgumentError, "Expected CheckoutSdk::Instrument, got #{data_object.class.name}"
+    end
+
+    unless endpoint
+      endpoint = (data_object.data[:amount] || data_object.data['amount']) ? '/payments' : '/instruments'
     end
 
     unless INSTRUMENT_ENDPOINT_REGEX.match?(endpoint)
       raise ArgumentError, "Expected endpoint to match #{INSTRUMENT_ENDPOINT_REGEX.inspect}"
     end
 
-    post_request('/instruments', data_object.data)
+    post_request(endpoint, data_object.data)
   end
 
-  # @param [String] endpoint '/instruments' by default, can be '/payments' for card verification purposes
-  # @param [String] id @see Instrument
+  # @param [String] id Payment Method ID returned from the gateway
   def get_instrument_details(id)
     get("/instruments/#{id}")
   end
