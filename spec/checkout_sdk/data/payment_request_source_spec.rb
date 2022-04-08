@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe CheckoutSdk::PaymentRequestSource do
-  let(:payment_request_source) { CheckoutSdk::PaymentRequestSource.new }
+  subject(:payment_request_source) { CheckoutSdk::PaymentRequestSource.new }
+
   let(:type) { "card" }
   let(:card_number) { "4242424242424242" }
   let(:card_expiry_month) { 6 }
@@ -120,6 +121,48 @@ RSpec.describe CheckoutSdk::PaymentRequestSource do
         payment_request_source.type = "customer"
 
         expect(get_keys(payment_request_source.data[:source])).to eql(get_keys(expected_customer_source))
+      end
+    end
+
+    describe '3DS' do
+      it 'sets enabled' do
+        payment_request_source.threeds_enabled = true
+        expect(payment_request_source.data['3ds'][:enabled]).to eq(true)
+      end
+
+      it 'sets the attempt_n3d' do
+        payment_request_source.threeds_attempt_n3d = true
+        expect(payment_request_source.data['3ds'][:attempt_n3d]).to eq(true)
+      end
+
+      it 'sets the eci' do
+        payment_request_source.threeds_eci = "05"
+        expect(payment_request_source.data['3ds'][:eci]).to eq('05')
+      end
+
+      it 'sets the cryptogram' do
+        payment_request_source.threeds_cryptogram = "asjdkfhkasjhdfkhasdifkouj"
+        expect(payment_request_source.data['3ds'][:cryptogram]).to eq('asjdkfhkasjhdfkhasdifkouj')
+      end
+
+      it 'sets the xid' do
+        payment_request_source.threeds_xid = "asjdkfhkasjhdfkhasdifkouj"
+        expect(payment_request_source.data['3ds'][:xid]).to eq('asjdkfhkasjhdfkhasdifkouj')
+      end
+
+      it 'sets the version' do
+        payment_request_source.threeds_version = "2.0.0"
+        expect(payment_request_source.data['3ds'][:version]).to eq('2.0.0')
+      end
+
+      it 'sets the exemption' do
+        payment_request_source.threeds_exemption = "secure_corporate_payment"
+        expect(payment_request_source.data['3ds'][:exemption]).to eq('secure_corporate_payment')
+      end
+
+      it 'sets the challenge_indicator' do
+        payment_request_source.threeds_challenge_indicator = "challenge_requested_mandate"
+        expect(payment_request_source.data['3ds'][:challenge_indicator]).to eq('challenge_requested_mandate')
       end
     end
   end
