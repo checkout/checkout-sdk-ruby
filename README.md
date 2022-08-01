@@ -37,14 +37,11 @@ CheckoutSdk.configure do |config|
 end
 ```
 
-# :book: Documentation
-
-You can see the [SDK documentation here](https://checkout.github.io/checkout-sdk-ruby/getting_started/).
-
 # :dash: Quickstart
 
 #### Source Type: `token`
-A card token can be obtained using one of Checkout.com's JavaScript frontend solutions such as [Frames](https://docs.checkout.com/docs/frames "Frames") or any of the [mobile SDKs](https://docs.checkout.com/docs/sdks#section-mobile-sdk-libraries "Mobile SDKs")
+
+A card token can be obtained using one of Checkout.com's JavaScript frontend solutions such as [Frames](https://www.checkout.com/docs/integrate/frames "Frames") or any of the [mobile SDKs](https://www.checkout.com/docs/integrate/sdks#Mobile_SDK_libraries "Mobile SDKs")
 
 ```ruby
 payment_request_source = CheckoutSdk::PaymentRequestSource.new
@@ -94,9 +91,10 @@ response.local_port     # => 51601
 response.local_address  # => "..."
 ```
 
-
 #### Source Type: `card`
+
 [Fully PCI Compliant](https://docs.checkout.com/docs/pci-compliance) merchants only
+
 ```ruby
 payment_request_source = CheckoutSdk::PaymentRequestSource.new
 payment_request_source.type = "card"
@@ -141,6 +139,7 @@ but "false" or 0 are retained and sent in the request
 payment_request_source.capture = false
 payment_request_source.capture = 0
 ```
+
 See [api_resource_spec](https://github.com/checkout/checkout-sdk-ruby/blob/master/spec/checkout_sdk/api_resource_spec.rb#L10-L24) for details.
 
 # :rotating_light: Tests
