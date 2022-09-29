@@ -1,0 +1,31 @@
+AllCops:
+  NewCops: enable
+
+Metrics/AbcSize:
+  Enabled: false
+
+Lint/MissingSuper:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/ModuleLength:
+  Max: 260
+
+Metrics/MethodLength:
+  Max: 25
+
+Metrics/ParameterLists:
+  Max: 10
+
+Style/Documentation:
+  Enabled: false
+
+Style/OpenStructUse:
+  Enabled: false
+
+Naming/MethodName:
+  Exclude:
+    - "**/google_pay_token_data*"
+    - "**/sofort_source*"

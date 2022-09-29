@@ -1,0 +1,54 @@
+name: build-release
+on:
+  push:
+    branches:
+      - beta
+    paths:
+      - lib/checkout_sdk/version.rb
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/beta'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-ruby-and-bundle
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - id: build-and-analyse
+        env:
+          CHECKOUT_PREVIOUS_SECRET_KEY: ${{ secrets.IT_CHECKOUT_PREVIOUS_SECRET_KEY }}
+          CHECKOUT_PREVIOUS_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_PREVIOUS_PUBLIC_KEY }}
+          CHECKOUT_DEFAULT_SECRET_KEY: ${{ secrets.IT_CHECKOUT_DEFAULT_SECRET_KEY }}
+          CHECKOUT_DEFAULT_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_DEFAULT_PUBLIC_KEY }}
+          CHECKOUT_DEFAULT_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_ID }}
+          CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET }}
+          CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID }}
+          CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET }}
+        run: bundle exec rspec spec
+      - id: read-version
+        run: echo "CURRENT_VERSION=$( grep "VERSION"  lib/checkout_sdk/version.rb | awk '{ print $3 }' | tr -d "'")" >> $GITHUB_ENV
+      - id: print-version
+        run: echo "Releasing $CURRENT_VERSION"
+      - id: publish-gem
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          gem build *.gemspec
+          gem push *.gem
+        env:
+          GEM_HOST_API_KEY: "${{secrets.RUBYGEMS_AUTH_TOKEN}}"
+      - id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.CURRENT_VERSION }}
+          release_name: ${{ env.CURRENT_VERSION }}
+          body: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
