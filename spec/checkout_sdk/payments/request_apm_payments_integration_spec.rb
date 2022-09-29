@@ -1,0 +1,327 @@
+RSpec.describe CheckoutSdk::Payments do
+
+  describe '.request_payments (APMs)' do
+    context 'when requesting AfterPay source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::AfterPaySource.new
+        source.account_holder = common_account_holder
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 10
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }.to raise_error(CheckoutSdk::CheckoutApiException)
+      end
+    end
+
+    context 'when requesting AliPay source payment' do
+      it 'type:CN - raises an error' do
+        source = CheckoutSdk::Payments::AlipayPlusSource.alipay_plus_cn_source
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }.to raise_error(CheckoutSdk::CheckoutApiException)
+      end
+    end
+
+    context 'when requesting Bancontact source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::BancontactSource.new
+        source.payment_country = CheckoutSdk::Common::Country::BE
+        source.account_holder_name = Helpers::DataFactory::NAME
+        source.billing_descriptor = 'CKO Demo - bancontact'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Benefit source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::BenefitSource.new
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::BHD
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting EPS source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::EPSSource.new
+        source.purpose = 'test purpose'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Giropay source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::GiropaySource.new
+        source.purpose = 'test purpose'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Ideal source payment' do
+      it 'should request payment correctly' do
+        source = CheckoutSdk::Payments::IdealSource.new
+        source.bic = 'INGBNL2A'
+        source.description = 'ORD50234E89'
+        source.language = 'nl'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 1000
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        response = default_sdk.payments.request_payment(request)
+        expect(response).not_to be nil
+        expect(response.id).not_to be nil
+
+        payment_details = default_sdk.payments.get_payment_details(response.id)
+        expect(payment_details).not_to be nil
+        expect(payment_details.id).to eq response.id
+        expect(payment_details.source.type).to eq CheckoutSdk::Common::PaymentSourceType::IDEAL
+      end
+    end
+
+    context 'when requesting Knet source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::KnetSource.new
+        source.language = 'en'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::KWD
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Mbway source payment' do
+      it 'raises an error (apm_service_unavailable)' do
+        source = CheckoutSdk::Payments::MbwaySource.new
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::GBP
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+      end
+    end
+
+    context 'when requesting MultiBanco source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::MultiBancoSource.new
+        source.payment_country = CheckoutSdk::Common::Country::PT
+        source.account_holder_name = Helpers::DataFactory::NAME
+        source.billing_descriptor = 'CKO Demo - MultiBanco'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting P24 source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::P24Source.new
+        source.payment_country = CheckoutSdk::Common::Country::PL
+        source.account_holder_name = Helpers::DataFactory::NAME
+        source.account_holder_email = generate_random_email
+        source.billing_descriptor = 'CKO Demo - P24'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::PLN
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting PostFinance source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::PostFinanceSource.new
+        source.payment_country = CheckoutSdk::Common::Country::CH
+        source.account_holder_name = Helpers::DataFactory::NAME
+        source.billing_descriptor = 'CKO Demo - PostFinance'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting QPay source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::QPaySource.new
+        source.description = Helpers::DataFactory::DESCRIPTION
+        source.language = 'en'
+        source.quantity = 1
+        source.national_id = '070AYY010BU234M'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::QAR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Sofort source payment' do
+      it 'should request payment correctly' do
+        source = CheckoutSdk::Payments::SofortSource.new
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 1000
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        response = default_sdk.payments.request_payment(request)
+        expect(response).not_to be nil
+        expect(response.id).not_to be nil
+
+        payment_details = default_sdk.payments.get_payment_details(response.id)
+        expect(payment_details).not_to be nil
+        expect(payment_details.id).to eq response.id
+        expect(payment_details.source.type).to eq CheckoutSdk::Common::PaymentSourceType::SOFORT
+      end
+    end
+
+    context 'when requesting StcPay source payment' do
+      it 'raises an error (apm_service_unavailable)' do
+        source = CheckoutSdk::Payments::StcPaySource.new
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::QAR
+        request.amount = 100
+        request.capture = true
+        request.customer = common_customer_request
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException)
+      end
+    end
+
+    context 'when requesting WeChatPay source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::WeChatPaySource.new
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 100
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+  end
+
+end
