@@ -1,150 +1,136 @@
-[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-ruby.svg)](https://github.com/checkout/checkout-sdk-ruby/blob/master/LICENSE) [![GitHub release](https://img.shields.io/github/release/checkout/checkout-sdk-ruby.svg)](https://GitHub.com/checkout/checkout-sdk-ruby/releases/)
-
-<p align="center"><img src="https://i.ibb.co/5Mx7ZsS/Screenshot-2020-07-30-at-17-20-31.png" width="20%"></p>
-
 # Checkout.com Ruby SDK
 
-# :rocket: Install
+![build-status](https://github.com/checkout/checkout-sdk-ruby/workflows/build-master/badge.svg)
+[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-ruby.svg)](https://github.com/checkout/checkout-sdk-ruby/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/checkout/checkout-sdk-ruby.svg)](https://GitHub.com/checkout/checkout-sdk-ruby/releases/)
+[![Gem Version](https://badge.fury.io/rb/checkout_sdk.svg)](https://badge.fury.io/rb/checkout_sdk)
 
-Add this line to your application's Gemfile:
+## Getting started
+
+> **Version 1.0.0 is here!**
+> <br/><br/>
+> We improved the initialization of SDK making it easier to understand the available options. <br/>
+> Now `NAS` accounts are the default instance for the SDK and `ABC` structure was moved to a `previous` prefixes. <br/>
+
+### Gem installer
+
+```sh
+gem install checkout_sdk
+```
+
+### Bundler
+
+Bundler provides a consistent environment for Ruby projects by tracking and installing the exact gems and versions that
+you need.
 
 ```ruby
+source 'https://rubygems.org'
+
 gem 'checkout_sdk'
 ```
 
-And then execute:
+### :rocket: Please check in [GitHub releases](https://github.com/checkout/checkout-sdk-ruby/releases) for all the versions available.
 
-```bash
-$ bundle
-```
+### :book: Checkout our official documentation.
 
-Or install it yourself as:
+* [Official Docs (Default)](https://docs.checkout.com/)
+* [Official Docs (Previous)](https://docs.checkout.com/previous)
 
-```bash
-$ gem install checkout_sdk
-```
+### :books: Check out our official API documentation guide, where you can also find more usage examples.
 
-# :wrench: Configure
+* [API Reference (Default)](https://api-reference.checkout.com/)
+* [API Reference (Previous)](https://api-reference.checkout.com/previous)
 
-API keys must be configured in the gem setup. You can do this anywhere in your application before you make API calls using the gem.
+## How to use the SDK
 
-```ruby
-CheckoutSdk.configure do |config|
-  config.secret_key = ENV['SECRET_KEY']
-  config.public_key = ENV['PUBLIC_KEY']
-  config.base_url   = ENV['BASE_URL']
-  config.persistent = true|false # default: true
-end
-```
+This SDK can be used with two different pair of API keys provided by Checkout. However, using different API keys imply
+using specific API features. </br>
+Please find in the table below the types of keys that can be used within this SDK.
 
-# :book: Documentation
+| Account System | Public Key (example)                    | Secret Key (example)                    |
+|----------------|-----------------------------------------|-----------------------------------------|
+| Default        | pk_pkhpdtvabcf7hdgpwnbhw7r2uic          | sk_m73dzypy7cf3gf5d2xr4k7sxo4e          |
+| Previous       | pk_g650ff27-7c42-4ce1-ae90-5691a188ee7b | sk_gk3517a8-3z01-45fq-b4bd-4282384b0a64 |
 
-You can see the [SDK documentation here](https://checkout.github.io/checkout-sdk-ruby/getting_started/).
+Note: sandbox keys have a `sbox_` or `test_` identifier, for Default and Previous accounts respectively.
 
-# :dash: Quickstart
+If you don't have your own API keys, you can sign up for a test
+account [here](https://www.checkout.com/get-test-account).
 
-#### Source Type: `token`
-A card token can be obtained using one of Checkout.com's JavaScript frontend solutions such as [Frames](https://docs.checkout.com/docs/frames "Frames") or any of the [mobile SDKs](https://docs.checkout.com/docs/sdks#section-mobile-sdk-libraries "Mobile SDKs")
+**PLEASE NEVER SHARE OR PUBLISH YOUR CHECKOUT CREDENTIALS.**
 
-```ruby
-payment_request_source = CheckoutSdk::PaymentRequestSource.new
-payment_request_source.type = "token"
-payment_request_source.token = "tok_..."
-payment_request_source.amount = 2022
-payment_request_source.currency = "GBP"
+### Default
 
-api_resource = CheckoutSdk::ApiResource.new
-
-# Send API call
-response = api_resource.request_payment(payment_request_source)
-
-# response parsing
-response.data           # => {...}
-response.body           # => "..."
-response.headers        # => {...}
-response.remote_ip      # => "..."
-response.status         # => 200
-response.remote_ip      # => "..."
-response.local_port     # => 51601
-response.local_address  # => "..."
-```
-
-#### Source Type: `id`
+Default keys client instantiation can be done as follows:
 
 ```ruby
-payment_request_source = CheckoutSdk::PaymentRequestSource.new
-payment_request_source.type = "id"
-payment_request_source.token = "src_..."
-payment_request_source.amount = 2022
-payment_request_source.currency = "GBP"
-
-api_resource = CheckoutSdk::ApiResource.new
-
-# Send API call
-response = api_resource.request_payment(payment_request_source)
-
-# response parsing
-response.data           # => {...}
-response.body           # => "..."
-response.headers        # => {...}
-response.remote_ip      # => "..."
-response.status         # => 200
-response.remote_ip      # => "..."
-response.local_port     # => 51601
-response.local_address  # => "..."
+api = CheckoutSdk.builder
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_public_key('public_key') # optional, only required for operations related with tokens
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .build
 ```
 
+### Default OAuth
 
-#### Source Type: `card`
-[Fully PCI Compliant](https://docs.checkout.com/docs/pci-compliance) merchants only
-```ruby
-payment_request_source = CheckoutSdk::PaymentRequestSource.new
-payment_request_source.type = "card"
-payment_request_source.card_number = "4242424242424242"
-payment_request_source.card_expiry_month = 6
-payment_request_source.card_expiry_year = 2025
-payment_request_source.card_name = "Bruce Wayne"
-payment_request_source.card_cvv = "100"
-payment_request_source.amount = 2022
-payment_request_source.currency = "GBP"
-
-api_resource = CheckoutSdk::ApiResource.new
-
-# Send API call
-response = api_resource.request_payment(payment_request_source)
-
-# response parsing
-response.data           # => {...}
-response.body           # => "..."
-response.headers        # => {...}
-response.remote_ip      # => "..."
-response.status         # => 200
-response.remote_ip      # => "..."
-response.local_port     # => 51601
-response.local_address  # => "..."
-```
-
-# :warning: Boolean/falsy values
-
-"nil" or empty strings will be stripped from API calls
+The SDK supports client credentials OAuth, when initialized as follows:
 
 ```ruby
-# ignored
-payment_request_source.capture = nil
-payment_request_source.capture = ""
+api = CheckoutSdk.builder
+                 .oauth
+                 .with_authorization_uri('https://access.sandbox.checkout.com/connect/token') # custom authorization URI, optional
+                 .with_client_credentials("client_id", "client_secret")
+                 .with_scopes([CheckoutSdk::OAuthScopes::VAULT, CheckoutSdk::OAuthScopes::GATEWAY]) # array of scopes
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .build
 ```
 
-but "false" or 0 are retained and sent in the request
+### Previous
+
+If your pair of keys matches the previous system type, this is how the SDK should be used:
 
 ```ruby
-# sent
-payment_request_source.capture = false
-payment_request_source.capture = 0
+api = CheckoutSdk.builder
+                 .previous
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_public_key('public_key') # optional, only required for operations related with tokens
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .build
 ```
-See [api_resource_spec](https://github.com/checkout/checkout-sdk-ruby/blob/master/spec/checkout_sdk/api_resource_spec.rb#L10-L24) for details.
 
-# :rotating_light: Tests
+Then just get any client, and start making requests:
 
-```bash
-$ rspec
+```ruby
+request = CheckoutSdk::Payments::PaymentRequest.new
+payment_response = api.payments.request_payment(request)
 ```
+
+## Exception handling
+
+All the API responses that do not fall in the 2** status codes will cause a `CheckoutSdk::CheckoutApiException`. The
+exception
+encapsulates the `http_metadata` and a map of `error_details`, if available.
+
+## Building from source
+
+Once you check out the code from GitHub, the project can be built using gem:
+
+```sh
+gem build checkout_sdk.gemspec
+```
+
+The execution of integration tests require the following environment variables set in your system:
+
+* For default account systems (NAS): `CHECKOUT_DEFAULT_PUBLIC_KEY` & `CHECKOUT_DEFAULT_SECRET_KEY`
+* For default account systems (OAuth): `CHECKOUT_DEFAULT_OAUTH_CLIENT_ID` & `CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET`
+* For Previous account systems (ABC): `CHECKOUT_PREVIOUS_PUBLIC_KEY` & `CHECKOUT_PREVIOUS_SECRET_KEY`
+
+## Code of Conduct
+
+Please refer to [Code of Conduct](CODE_OF_CONDUCT.md)
+
+## Licensing
+
+[MIT](LICENSE.md)

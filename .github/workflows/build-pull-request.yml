@@ -1,0 +1,41 @@
+name: build-pull-request
+
+on:
+  pull_request:
+    branches:
+      - "beta"
+      - "feature/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        ruby-version:
+          [
+            '2.6',
+            '3.1',
+          ]
+    name: Ruby ${{ matrix.ruby-version }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: setup-ruby-and-bundle
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - id: begin-rubocop-scan
+        run: bundle exec rubocop lib
+      - id: build-and-analyse
+        env:
+          CHECKOUT_PREVIOUS_SECRET_KEY: ${{ secrets.IT_CHECKOUT_PREVIOUS_SECRET_KEY }}
+          CHECKOUT_PREVIOUS_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_PREVIOUS_PUBLIC_KEY }}
+          CHECKOUT_DEFAULT_SECRET_KEY: ${{ secrets.IT_CHECKOUT_DEFAULT_SECRET_KEY }}
+          CHECKOUT_DEFAULT_PUBLIC_KEY: ${{ secrets.IT_CHECKOUT_DEFAULT_PUBLIC_KEY }}
+          CHECKOUT_DEFAULT_OAUTH_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_ID }}
+          CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET }}
+          CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID }}
+          CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET }}
+        run: bundle exec rspec spec
