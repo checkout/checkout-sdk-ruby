@@ -1,11 +1,11 @@
-RSpec.describe CheckoutSdk::Previous::Apm::Klarna do
+RSpec.describe CheckoutSdk::Previous::Apm::KlarnaClient do
 
   before(:example) {
     @environment_mock = double('environment')
     @credentials_mock = double('credentials')
     @api_client_mock = double('apì_client')
     @configuration_mock = double('configuration')
-    @klarna_client = CheckoutSdk::Previous::Apm::Klarna::KlarnaClient.new @api_client_mock, @configuration_mock
+    @klarna_client = CheckoutSdk::Previous::Apm::KlarnaClient.new @api_client_mock, @configuration_mock
 
     expect(@environment_mock).to receive(:is_sandbox).and_return(true)
     expect(@configuration_mock).to receive(:environment).and_return(@environment_mock)
@@ -16,7 +16,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::Klarna do
   describe '.create_credit_session' do
     context 'when creating session with valid parameters' do
       it 'creates credit session correctly' do
-        request = CheckoutSdk::Previous::Apm::Klarna::CreditSessionRequest.new
+        request = CheckoutSdk::Previous::Apm::CreditSessionRequest.new
 
         expect(@api_client_mock).to receive(:invoke_post)
                                      .with('klarna-external/credit-sessions',
@@ -45,7 +45,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::Klarna do
   describe '.capture_payment' do
     context 'when capturing valid payment' do
       it 'captures payment' do
-        request = CheckoutSdk::Previous::Apm::Klarna::OrderCaptureRequest.new
+        request = CheckoutSdk::Previous::Apm::OrderCaptureRequest.new
 
         expect(@api_client_mock).to receive(:invoke_post)
                                      .with('klarna-external/orders/payment_id/captures',
