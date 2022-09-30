@@ -1,4 +1,4 @@
-RSpec.describe CheckoutSdk::Previous::Apm::Klarna do
+RSpec.describe CheckoutSdk::Previous::Apm::KlarnaClient do
   describe '.create_credit_session' do
     context 'when creating session with valid parameters' do
       it 'creates credit session correctly' do
@@ -13,7 +13,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::Klarna do
 
     context 'when creating session with invalid parameters' do
       it 'raises an error' do
-        request = CheckoutSdk::Previous::Apm::Klarna::CreditSessionRequest.new
+        request = CheckoutSdk::Previous::Apm::CreditSessionRequest.new
 
         expect { previous_sdk.klarna.create_credit_session request }
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_type]).to eq 'request_invalid' }
@@ -48,7 +48,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::Klarna do
 end
 
 private def get_credit_session_request
-  request = CheckoutSdk::Previous::Apm::Klarna::CreditSessionRequest.new
+  request = CheckoutSdk::Previous::Apm::CreditSessionRequest.new
   request.purchase_country = CheckoutSdk::Common::Country::GB
   request.currency = CheckoutSdk::Common::Currency::GBP
   request.locale = 'en-GB'
@@ -59,7 +59,7 @@ private def get_credit_session_request
 end
 
 private def get_klarna_product
-  klarna_product = CheckoutSdk::Previous::Apm::Klarna::KlarnaProduct.new
+  klarna_product = CheckoutSdk::Previous::Apm::KlarnaProduct.new
   klarna_product.name = 'Brown leather belt'
   klarna_product.quantity = 1
   klarna_product.unit_price = 1000

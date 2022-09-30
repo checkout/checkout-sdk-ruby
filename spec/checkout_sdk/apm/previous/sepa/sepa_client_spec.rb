@@ -1,10 +1,10 @@
-RSpec.describe CheckoutSdk::Previous::Apm::Sepa do
+RSpec.describe CheckoutSdk::Previous::Apm::SepaClient do
 
   before(:example) {
     @credentials_mock = double('credentials')
     @api_client_mock = double('apì_client')
     @configuration_mock = double('configuration')
-    @sepa_client = CheckoutSdk::Previous::Apm::Sepa::SepaClient.new @api_client_mock, @configuration_mock
+    @sepa_client = CheckoutSdk::Previous::Apm::SepaClient.new @api_client_mock, @configuration_mock
 
     expect(@credentials_mock).to receive(:get_authorization).and_return('secret_key')
     expect(@configuration_mock).to receive(:credentials).and_return(@credentials_mock)
