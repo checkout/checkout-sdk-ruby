@@ -13,7 +13,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [CustomerRequest] create_instrument_request
+      # @param [InstrumentRequest] create_instrument_request
       def create(create_instrument_request)
         api_client.invoke_post(INSTRUMENTS, sdk_authorization, create_instrument_request)
       end
