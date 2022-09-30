@@ -3,7 +3,7 @@
 module CheckoutSdk
   module Previous
     # @!attribute klarna
-    #   @return [CheckoutSdk::Previous::Apm::Klarna::KlarnaClient]
+    #   @return [CheckoutSdk::Previous::Apm::KlarnaClient]
     # @!attribute sepa
     #   @return [CheckoutSdk::Previous::Apm::Sepa::SepaClient]
     class CheckoutApi
@@ -13,8 +13,8 @@ module CheckoutSdk
       # @param [CheckoutConfiguration] configuration
       def initialize(configuration)
         api_client = base_api_client configuration
-        @klarna = CheckoutSdk::Previous::Apm::Klarna::KlarnaClient.new api_client, configuration
-        @sepa = CheckoutSdk::Previous::Apm::Sepa::SepaClient.new api_client, configuration
+        @klarna = CheckoutSdk::Previous::Apm::KlarnaClient.new api_client, configuration
+        @sepa = CheckoutSdk::Previous::Apm::SepaClient.new api_client, configuration
       end
 
       private
