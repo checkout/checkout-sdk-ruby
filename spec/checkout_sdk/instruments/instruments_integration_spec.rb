@@ -9,7 +9,7 @@ RSpec.describe CheckoutSdk::Instruments do
         account_holder.billing_address = address
         account_holder.phone = phone
 
-        request = CheckoutSdk::Instruments::InstrumentTokenRequest.new
+        request = CheckoutSdk::Instruments::InstrumentToken.new
         request.token = create_token.token
         request.account_holder = account_holder
 
@@ -32,7 +32,7 @@ RSpec.describe CheckoutSdk::Instruments do
 
     context 'when requesting card token instrument with missing data' do
       it 'raises an error' do
-        request = CheckoutSdk::Instruments::InstrumentTokenRequest.new
+        request = CheckoutSdk::Instruments::InstrumentToken.new
 
         expect { default_sdk.instruments.create(request) }.to raise_error(CheckoutSdk::CheckoutApiException)
       end
@@ -72,7 +72,7 @@ RSpec.describe CheckoutSdk::Instruments do
     end
     context 'when updating card token instrument' do
       it 'should update successfully' do
-        request = CheckoutSdk::Instruments::UpdateInstrumentCardRequest.new
+        request = CheckoutSdk::Instruments::UpdateInstrumentCard.new
         request.expiry_month = 12
         request.expiry_year = 2030
         request.name = "New Name"
@@ -160,7 +160,7 @@ private def create_card_token_instrument
   account_holder.billing_address = address
   account_holder.phone = phone
 
-  request = CheckoutSdk::Instruments::InstrumentTokenRequest.new
+  request = CheckoutSdk::Instruments::InstrumentToken.new
   request.token = create_token.token
   request.account_holder = account_holder
 
