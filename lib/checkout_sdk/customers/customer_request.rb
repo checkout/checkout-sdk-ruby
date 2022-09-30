@@ -11,9 +11,9 @@ module CheckoutSdk
     # @!attribute metadata
     #   @return [Hash{String => Object}]
     # @!attribute default
-    #   @return [String]
+    #   @return [String] - Not available on previous
     # @!attribute instruments
-    #   @return [Array(String)]
+    #   @return [Array(String)] - Not available on previous
     class CustomerRequest
       attr_accessor :email,
                     :name,
