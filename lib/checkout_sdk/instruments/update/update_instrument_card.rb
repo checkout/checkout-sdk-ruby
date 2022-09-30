@@ -12,7 +12,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::AccountHolder]
     # @!attribute customer
     #   @return [CheckoutSdk::Common::UpdateCustomerRequest]
-    class UpdateInstrumentCardRequest < UpdateInstrumentRequest
+    class UpdateInstrumentCard < UpdateInstrument
       attr_accessor :expiry_month,
                     :expiry_year,
                     :name,

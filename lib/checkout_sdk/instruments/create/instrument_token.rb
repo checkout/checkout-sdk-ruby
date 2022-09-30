@@ -8,7 +8,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::AccountHolder]
     # @!attribute customer
     #   @return [CheckoutSdk::Common::CustomerRequest]
-    class InstrumentTokenRequest < InstrumentRequest
+    class InstrumentToken < Instrument
       attr_accessor :token,
                     :account_holder,
                     :customer
