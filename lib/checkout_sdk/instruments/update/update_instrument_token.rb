@@ -4,7 +4,7 @@ module CheckoutSdk
   module Instruments
     # @!attribute token
     #   @return [String]
-    class UpdateInstrumentTokenRequest < UpdateInstrumentRequest
+    class UpdateInstrumentToken < UpdateInstrument
       attr_accessor :token
 
       def initialize

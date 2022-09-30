@@ -28,7 +28,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::BankDetails]
     # @!attribute customer
     #   @return [CheckoutSdk::Common::CustomerRequest]
-    class UpdateInstrumentBankAccountRequest < UpdateInstrumentRequest
+    class InstrumentBankAccount < Instrument
       attr_accessor :account_type,
                     :account_number,
                     :bank_code,

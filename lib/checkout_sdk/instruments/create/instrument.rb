@@ -4,7 +4,7 @@ module CheckoutSdk
   module Instruments
     # @!attribute type
     #   @return [String] {CheckoutSdk::Common::InstrumentType}
-    class UpdateInstrumentRequest
+    class Instrument
       attr_reader :type
 
       # @abstract
