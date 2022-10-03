@@ -4,6 +4,8 @@ module CheckoutSdk
   module Previous
     # @!attribute customers
     #   @return [CheckoutSdk::Customers::CustomerClient]
+    # @!attribute disputes
+    #   @return [CheckoutSdk::Disputes::DisputesClient]
     # @!attribute instruments
     #   @return [CheckoutSdk::Previous::Instruments::InstrumentsClient]
     # @!attribute payments
@@ -16,6 +18,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Previous::Apm::SepaClient]
     class CheckoutApi
       attr_reader :customers,
+                  :disputes,
                   :instruments,
                   :payments,
                   :tokens,
@@ -26,6 +29,7 @@ module CheckoutSdk
       def initialize(configuration)
         api_client = base_api_client configuration
         @customers = CheckoutSdk::Customers::CustomersClient.new api_client, configuration
+        @disputes = CheckoutSdk::Disputes::DisputesClient.new api_client, configuration
         @instruments = CheckoutSdk::Previous::Instruments::InstrumentsClient.new api_client, configuration
         @payments = CheckoutSdk::Previous::Payments::PaymentsClient.new api_client, configuration
         @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration

@@ -50,6 +50,11 @@ module CheckoutSdk
       def upload_file(file_request)
         api_client.submit_file(FILES, sdk_authorization, file_request)
       end
+
+      # @param [String] file_id
+      def get_file_details(file_id)
+        api_client.invoke_get(build_path(FILES, file_id), sdk_authorization)
+      end
     end
   end
 end
