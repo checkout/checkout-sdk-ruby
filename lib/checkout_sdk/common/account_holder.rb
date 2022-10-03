@@ -26,6 +26,8 @@ module CheckoutSdk
     #   @return [AccountHolderIdentification]
     # @!attribute email
     #   @return [String]
+    # @!attribute gender
+    #   @return [String]
     class AccountHolder
       attr_accessor :type,
                     :first_name,
@@ -38,7 +40,8 @@ module CheckoutSdk
                     :billing_address,
                     :phone,
                     :identification,
-                    :email
+                    :email,
+                    :gender
     end
   end
 end

@@ -18,6 +18,9 @@ module CheckoutSdk
     #   @return [ShippingDetails]
     # @!attribute items
     #   @return [Array(Product)]
+    # @!attribute marketplace
+    #   @deprecated Please use {#amount_allocations} instead
+    #   @return [Array(CheckoutSdk::Common::MarketplaceData)]
     # @!attribute amount_allocations
     #   @return [Array(CheckoutSdk::Common::AmountAllocations)]
     # @!attribute processing
@@ -33,6 +36,7 @@ module CheckoutSdk
                     :billing_descriptor,
                     :shipping,
                     :items,
+                    :marketplace,
                     :amount_allocations,
                     :processing,
                     :metadata

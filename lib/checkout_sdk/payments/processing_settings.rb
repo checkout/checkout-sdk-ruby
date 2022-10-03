@@ -48,6 +48,16 @@ module CheckoutSdk
     #   @return [Array(Hash{String => String})]
     # @!attribute airline_data
     #   @return [Array(AirlineData)]
+    # @!attribute otp_value
+    #   @return [String]
+    # @!attribute purchase_country
+    #   @return [String] {CheckoutSdk::Common::Country}
+    # @!attribute custom_payment_method_ids
+    #   @return [Array(String)]
+    # @!attribute shipping_delay
+    #   @return [Integer]
+    # @!attribute shipping_info
+    #   @return [Array(CheckoutSdk::Common::ShippingInfo)]
     # @!attribute dlocal
     #   @return [DLocalProcessingSettings]
     class ProcessingSettings
@@ -74,6 +84,11 @@ module CheckoutSdk
                     :user_action,
                     :set_transaction_context,
                     :airline_data,
+                    :otp_value,
+                    :purchase_country,
+                    :custom_payment_method_ids,
+                    :shipping_delay,
+                    :shipping_info,
                     :dlocal
     end
   end

@@ -47,6 +47,7 @@ module CheckoutSdk
       MBWAY = 'mbway'
       POSTFINANCE = 'postfinance'
       STCPAY = 'stcpay'
+      ALMA = 'alma'
     end
   end
 end
