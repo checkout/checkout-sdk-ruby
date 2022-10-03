@@ -23,11 +23,11 @@ module CheckoutSdk
     # @!attribute this_channel_only
     #   @return [TrueClass, FalseClass]
     # @!attribute entity_ids
-    #   @return [String]
+    #   @return [String] - Not available on Previous.
     # @!attribute sub_entity_ids
-    #   @return [String]
+    #   @return [String] - Not available on Previous.
     # @!attribute payment_mcc
-    #   @return [String]
+    #   @return [String] - Not available on Previous.
     class DisputesQueryFilter
       attr_accessor :limit,
                     :skip,
