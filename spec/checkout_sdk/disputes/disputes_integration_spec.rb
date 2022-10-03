@@ -215,6 +215,28 @@ RSpec.describe CheckoutSdk::Disputes do
       end
     end
   end
+
+  describe '.get_file_details' do
+    context 'when fetching existing file' do
+      subject(:file) { upload_file }
+      it 'returns file details' do
+        response = default_sdk.disputes.get_file_details(file.id)
+
+        assert_response response, %w[id
+                                     filename
+                                     purpose
+                                     size
+                                     uploaded_on]
+      end
+    end
+
+    context 'when fetching inexistant file' do
+      it 'raises an error' do
+        expect { default_sdk.disputes.get_file_details('not_found') }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.http_metadata.status_code).to eq 404 }
+      end
+    end
+  end
 end
 
 private def get_disputes(from: nil, to: nil, status: nil, payment_id: nil)
