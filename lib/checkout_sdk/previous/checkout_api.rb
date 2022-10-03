@@ -10,6 +10,8 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Previous::Instruments::InstrumentsClient]
     # @!attribute payments
     #   @return [CheckoutSdk::Payments::PaymentsClient]
+    # @!attribute sources
+    #   @return [CheckoutSdk::Previous::Sources::SourcesClient]
     # @!attribute tokens
     #   @return [CheckoutSdk::Tokens::TokensClient]
     # @!attribute klarna
@@ -21,6 +23,7 @@ module CheckoutSdk
                   :disputes,
                   :instruments,
                   :payments,
+                  :sources,
                   :tokens,
                   :klarna,
                   :sepa
@@ -32,6 +35,7 @@ module CheckoutSdk
         @disputes = CheckoutSdk::Disputes::DisputesClient.new api_client, configuration
         @instruments = CheckoutSdk::Previous::Instruments::InstrumentsClient.new api_client, configuration
         @payments = CheckoutSdk::Previous::Payments::PaymentsClient.new api_client, configuration
+        @sources = CheckoutSdk::Previous::Sources::SourcesClient.new api_client, configuration
         @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration
         @klarna = CheckoutSdk::Previous::Apm::KlarnaClient.new api_client, configuration
         @sepa = CheckoutSdk::Previous::Apm::SepaClient.new api_client, configuration
