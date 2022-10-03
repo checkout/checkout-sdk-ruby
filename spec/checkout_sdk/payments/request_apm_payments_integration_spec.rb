@@ -322,6 +322,103 @@ RSpec.describe CheckoutSdk::Payments do
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
+
+    context 'when requesting Alma source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::AlmaSource.new
+        source.billing_address = address
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 10
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Klarna source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        source = CheckoutSdk::Payments::KlarnaSource.new
+        source.account_holder = common_account_holder
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 10
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+      end
+    end
+
+    context 'when requesting Paypal source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+        plan = CheckoutSdk::Payments::BillingPlan.new
+        plan.type = CheckoutSdk::Payments::BillingPlanType::CHANNEL_INITIATED_BILLING
+        plan.immutable_shipping_address = false
+        plan.skip_shipping_address = true
+
+        source = CheckoutSdk::Payments::PayPalSource.new
+        source.plan = plan
+
+        product = CheckoutSdk::Payments::Product.new
+        product.name = 'laptop'
+        product.unit_price = 10
+        product.quantity = 1
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.amount = 10
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+        request.items = [product]
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
+
+    context 'when requesting Fawry source payment' do
+      it 'raises an error (payee_not_onboarded)' do
+
+        product = CheckoutSdk::Payments::FawryProduct.new
+        product.product_id = '0123456789'
+        product.quantity = 1
+        product.price = 10
+        product.description = 'Fawry Demo Product'
+
+        source = CheckoutSdk::Payments::FawrySource.new
+        source.description = 'Fawry Demo Payment'
+        source.customer_email = 'bruce@wayne-enterprises.com'
+        source.customer_mobile = '01058375055'
+        source.products = [product]
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EGP
+        request.amount = 10
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+      end
+    end
   end
 
 end

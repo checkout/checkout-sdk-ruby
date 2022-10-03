@@ -2,7 +2,11 @@
 
 module CheckoutSdk
   module Payments
+    # @!attribute plan
+    #   @return [BillingPlan]
     class PayPalSource < PaymentRequestSource
+      attr_accessor :plan
+
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::PAYPAL
       end

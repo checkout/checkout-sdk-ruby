@@ -8,7 +8,7 @@ module CheckoutSdk
       # @!attribute products
       #   @return [Array(KlarnaProduct)]
       # @!attribute shipping_info
-      #   @return [KlarnaShippingInfo]
+      #   @return [CheckoutSdk::Common::ShippingInfo]
       # @!attribute shipping_delay
       #   @return [Integer]
       class Klarna

@@ -46,6 +46,9 @@ module CheckoutSdk
     #   @return [Sender]
     # @!attribute recipient
     #   @return [PaymentRecipient]
+    # @!attribute marketplace
+    #   @deprecated Please use {#amount_allocations} instead
+    #   @return [Array(CheckoutSdk::Common::MarketplaceData)]
     # @!attribute amount_allocations
     #   @return [Array(CheckoutSdk::Common::AmountAllocations)]
     # @!attribute processing
@@ -77,6 +80,7 @@ module CheckoutSdk
                     :payment_ip,
                     :sender,
                     :recipient,
+                    :marketplace,
                     :amount_allocations,
                     :processing,
                     :metadata,

@@ -14,7 +14,7 @@ module CheckoutSdk
       # @!attribute klarna
       #   @return [Klarna]
       # @!attribute shipping_info
-      #   @return [KlarnaShippingInfo]
+      #   @return [CheckoutSdk::Common::ShippingInfo]
       # @!attribute shipping_delay
       #   @return [Integer]
       class OrderCaptureRequest
