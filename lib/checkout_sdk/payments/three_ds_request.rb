@@ -34,6 +34,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute cryptogram_algorithm
     #   @return [String]
+    # @!attribute authentication_id
+    #   @return [String]
     class ThreeDSRequest
       attr_accessor :enabled,
                     :attempt_n3d,
@@ -50,7 +52,8 @@ module CheckoutSdk
                     :status_reason_code,
                     :challenge_cancel_reason,
                     :score,
-                    :cryptogram_algorithm
+                    :cryptogram_algorithm,
+                    :authentication_id
     end
   end
 end
