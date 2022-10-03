@@ -54,6 +54,9 @@ require 'checkout_sdk/sessions/sessions'
 require 'checkout_sdk/tokens/tokens'
 require 'checkout_sdk/apm/apm'
 
+# Checkout modules (previous)
+require 'checkout_sdk/sources/sources'
+
 module CheckoutSdk
   include PlatformType
 
