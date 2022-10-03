@@ -12,4 +12,6 @@ require 'checkout_sdk/instruments/get/bank_account_field_query'
 require 'checkout_sdk/instruments/create/instrument_request'
 require 'checkout_sdk/instruments/create/instrument_token_request'
 require 'checkout_sdk/instruments/create/instrument_bank_account_request'
+
+require 'checkout_sdk/instruments/previous/instruments_client'
 require 'checkout_sdk/instruments/instruments_client'

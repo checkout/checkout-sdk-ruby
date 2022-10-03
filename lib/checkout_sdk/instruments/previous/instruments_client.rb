@@ -9,11 +9,12 @@ module CheckoutSdk
 
         # @param [ApiClient] api_client
         # @param [CheckoutConfiguration] configuration
-        def initialize(api_client, configuration)
-          super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
+        # @param [CheckoutSdk::AuthorizationType, ]
+        def initialize(api_client, configuration, authorization_type = CheckoutSdk::AuthorizationType::SECRET_KEY)
+          super api_client, configuration, authorization_type
         end
 
-        # @param [CustomerRequest] create_instrument_request
+        # @param [InstrumentRequest] create_instrument_request
         def create(create_instrument_request)
           api_client.invoke_post(INSTRUMENTS, sdk_authorization, create_instrument_request)
         end
