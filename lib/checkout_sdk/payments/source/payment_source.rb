@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute type
     #   @return [String] {CheckoutSdk::Common::PaymentSourceType}
-    class PaymentRequestSource
+    class PaymentSource
       attr_reader :type
 
       protected

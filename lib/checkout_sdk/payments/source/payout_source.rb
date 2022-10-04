@@ -6,9 +6,9 @@ module CheckoutSdk
     #   @return [String] {PayoutSourceType}
     # @!attribute amount
     #   @return [String]
-    class PayoutRequestSource
-      attr_accessor :type,
-                    :amount
+    class PayoutSource
+      attr_reader :type
+      attr_accessor :amount
 
       protected
 

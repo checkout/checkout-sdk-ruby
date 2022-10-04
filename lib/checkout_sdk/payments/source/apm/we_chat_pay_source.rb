@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute billing_address
     #   @return [CheckoutSdk::Common::Address]
-    class WeChatPaySource < PaymentRequestSource
+    class WeChatPaySource < PaymentSource
       attr_accessor :billing_address
 
       def initialize

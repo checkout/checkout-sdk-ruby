@@ -18,7 +18,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute ptlf
     #   @return [String]
-    class KnetSource < PaymentRequestSource
+    class KnetSource < PaymentSource
       attr_accessor :language,
                     :user_defined_field1,
                     :user_defined_field2,

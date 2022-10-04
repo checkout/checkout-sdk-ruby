@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute account_holder
     #   @return [CheckoutSdk::Common::AccountHolder]
-    class AfterPaySource < PaymentRequestSource
+    class AfterPaySource < PaymentSource
       attr_accessor :account_holder
 
       def initialize

@@ -6,7 +6,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute info_fields
     #   @return [Array(InfoFields)]
-    class GiropaySource < PaymentRequestSource
+    class GiropaySource < PaymentSource
       attr_accessor :purpose,
                     :info_fields
 

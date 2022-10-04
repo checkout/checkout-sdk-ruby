@@ -5,7 +5,7 @@ module CheckoutSdk
     # @!attribute type
     #   @return [String] {DestinationType}
     class Destination
-      attr_accessor :type
+      attr_reader :type
 
       protected
 

@@ -6,7 +6,7 @@ module CheckoutSdk
     #   @return [String] {CheckoutSdk::Common::Country}
     # @!attribute languageCode
     #   @return [String]
-    class SofortSource < PaymentRequestSource
+    class SofortSource < PaymentSource
       attr_accessor :countryCode,
                     :languageCode
 

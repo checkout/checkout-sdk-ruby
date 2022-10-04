@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute billing_address
     #   @return [CheckoutSdk::Common::Address]
-    class AlmaSource < PaymentRequestSource
+    class AlmaSource < PaymentSource
       attr_accessor :billing_address
 
       def initialize

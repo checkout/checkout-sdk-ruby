@@ -24,7 +24,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute phone
     #   @return [CheckoutSdk::Common::Phone]
-    class NetworkTokenSource < PaymentRequestSource
+    class NetworkTokenSource < PaymentSource
       attr_accessor :token,
                     :expiry_month,
                     :expiry_year,

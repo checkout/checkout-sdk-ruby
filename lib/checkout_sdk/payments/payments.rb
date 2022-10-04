@@ -22,7 +22,6 @@ require 'checkout_sdk/payments/merchant_initiated_reason'
 require 'checkout_sdk/payments/preferred_schema'
 require 'checkout_sdk/payments/airline_data'
 require 'checkout_sdk/payments/risk_request'
-require 'checkout_sdk/payments/payments_client'
 require 'checkout_sdk/payments/billing_descriptor'
 require 'checkout_sdk/payments/payment_recipient'
 require 'checkout_sdk/payments/d_local_installments'
@@ -42,8 +41,8 @@ require 'checkout_sdk/payments/billing_plan'
 require 'checkout_sdk/payments/billing_plan_type'
 
 # Source
-require 'checkout_sdk/payments/source/payment_request_source'
-require 'checkout_sdk/payments/source/payout_request_source'
+require 'checkout_sdk/payments/source/payment_source'
+require 'checkout_sdk/payments/source/payout_source'
 require 'checkout_sdk/payments/source/network_token_source'
 require 'checkout_sdk/payments/source/token_source'
 require 'checkout_sdk/payments/source/provider_token_source'
@@ -92,3 +91,29 @@ require 'checkout_sdk/payments/destination/bank_account_destination'
 require 'checkout_sdk/payments/destination/card_destination'
 require 'checkout_sdk/payments/destination/destination_type'
 require 'checkout_sdk/payments/destination/id_destination'
+
+## Previous
+require 'checkout_sdk/payments/previous/fund_transfer_type'
+require 'checkout_sdk/payments/previous/capture_request'
+require 'checkout_sdk/payments/previous/payout_request'
+require 'checkout_sdk/payments/previous/payment_request'
+
+# Source
+require 'checkout_sdk/payments/previous/source/payment_source'
+require 'checkout_sdk/payments/previous/source/network_token_source'
+require 'checkout_sdk/payments/previous/source/customer_source'
+require 'checkout_sdk/payments/previous/source/token_source'
+require 'checkout_sdk/payments/previous/source/id_source'
+require 'checkout_sdk/payments/previous/source/card_source'
+require 'checkout_sdk/payments/previous/source/d_local_source'
+
+# Destination
+require 'checkout_sdk/payments/previous/destination/destination'
+require 'checkout_sdk/payments/previous/destination/token_destination'
+require 'checkout_sdk/payments/previous/destination/card_destination'
+require 'checkout_sdk/payments/previous/destination/id_destination'
+
+# Client
+require 'checkout_sdk/payments/base_payments_client'
+require 'checkout_sdk/payments/payments_client'
+require 'checkout_sdk/payments/previous/payments_client'

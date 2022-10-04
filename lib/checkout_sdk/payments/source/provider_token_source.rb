@@ -8,7 +8,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute account_holder
     #   @return [CheckoutSdk::Common::AccountHolder]
-    class ProviderTokenSource < PaymentRequestSource
+    class ProviderTokenSource < PaymentSource
       attr_accessor :payment_method,
                     :token,
                     :account_holder

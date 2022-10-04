@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute account_holder
     #   @return [CheckoutSdk::Common::AccountHolder]
-    class KlarnaSource < PaymentRequestSource
+    class KlarnaSource < PaymentSource
       attr_accessor :account_holder
 
       def initialize

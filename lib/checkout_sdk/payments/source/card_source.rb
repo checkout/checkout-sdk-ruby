@@ -20,7 +20,7 @@ module CheckoutSdk
     #   @return [String] {CheckoutSdk::Common::Address}
     # @!attribute phone
     #   @return [String] {CheckoutSdk::Common::Phone}
-    class CardSource < PaymentRequestSource
+    class CardSource < PaymentSource
       attr_accessor :number,
                     :expiry_month,
                     :expiry_year,
