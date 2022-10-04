@@ -14,7 +14,7 @@ module CheckoutSdk
     #   @return [Time]
     # @!attribute products
     #   @return [Array(FawryProduct)]
-    class FawrySource < PaymentRequestSource
+    class FawrySource < PaymentSource
       attr_accessor :description,
                     :customer_profile_id,
                     :customer_email,

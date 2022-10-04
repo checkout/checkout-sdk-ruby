@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Payments
-    class AlipayPlusSource < PaymentRequestSource
+    class AlipayPlusSource < PaymentSource
       # @return [AlipayPlusSource] of type {CheckoutSdk::Common::PaymentSourceType::ALIPAY_PLUS}
       def self.alipay_plus_source
         AlipayPlusSource.new CheckoutSdk::Common::PaymentSourceType::ALIPAY_PLUS

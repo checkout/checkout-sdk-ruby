@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Payments
-    class BenefitSource < PaymentRequestSource
+    class BenefitSource < PaymentSource
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::BENEFIT
       end

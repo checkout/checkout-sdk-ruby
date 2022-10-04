@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Payments
-    class MbwaySource < PaymentRequestSource
+    class MbwaySource < PaymentSource
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::MBWAY
       end

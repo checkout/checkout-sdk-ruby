@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute plan
     #   @return [BillingPlan]
-    class PayPalSource < PaymentRequestSource
+    class PayPalSource < PaymentSource
       attr_accessor :plan
 
       def initialize

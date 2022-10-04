@@ -8,10 +8,16 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Previous::Apm::KlarnaClient]
     # @!attribute sepa
     #   @return [CheckoutSdk::Previous::Apm::SepaClient]
+    # @!attribute payments
+    #   @return [CheckoutSdk::Payments::PaymentsClient]
+    # @!attribute tokens
+    #   @return [CheckoutSdk::Tokens::TokensClient]
     class CheckoutApi
       attr_reader :customers,
                   :klarna,
-                  :sepa
+                  :sepa,
+                  :tokens,
+                  :payments
 
       # @param [CheckoutConfiguration] configuration
       def initialize(configuration)
@@ -19,6 +25,8 @@ module CheckoutSdk
         @customers = CheckoutSdk::Customers::CustomersClient.new api_client, configuration
         @klarna = CheckoutSdk::Previous::Apm::KlarnaClient.new api_client, configuration
         @sepa = CheckoutSdk::Previous::Apm::SepaClient.new api_client, configuration
+        @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration
+        @payments = CheckoutSdk::Payments::PaymentsClient.new api_client, configuration
       end
 
       private

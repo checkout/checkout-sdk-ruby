@@ -3,7 +3,7 @@
 module CheckoutSdk
   module Payments
     # @!attribute source
-    #   @return [PayoutRequestSource]
+    #   @return [PayoutSource]
     # @!attribute destination
     #   @return [Destination]
     # @!attribute amount
