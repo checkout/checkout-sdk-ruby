@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute purpose
     #   @return [String]
-    class EPSSource < PaymentRequestSource
+    class EPSSource < PaymentSource
       attr_accessor :purpose
 
       def initialize

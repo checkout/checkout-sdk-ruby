@@ -8,7 +8,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute billing_descriptor
     #   @return [String]
-    class PostFinanceSource < PaymentRequestSource
+    class PostFinanceSource < PaymentSource
       attr_accessor :payment_country,
                     :account_holder_name,
                     :billing_descriptor

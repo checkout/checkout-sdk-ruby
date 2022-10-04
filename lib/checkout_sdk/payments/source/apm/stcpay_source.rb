@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Payments
-    class StcPaySource < PaymentRequestSource
+    class StcPaySource < PaymentSource
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::STCPAY
       end

@@ -59,7 +59,7 @@ def make_authorization_payment
 
   sender = CheckoutSdk::Payments::IndividualSender.new
   sender.first_name = Helpers::DataFactory::FIRST_NAME
-  sender.first_name = Helpers::DataFactory::LAST_NAME
+  sender.last_name = Helpers::DataFactory::LAST_NAME
   sender.address = address
   sender.identification = identification
 

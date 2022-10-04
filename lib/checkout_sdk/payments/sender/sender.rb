@@ -7,8 +7,8 @@ module CheckoutSdk
     # @!attribute reference
     #   @return [String]
     class Sender
-      attr_accessor :type,
-                    :reference
+      attr_reader :type
+      attr_accessor :reference
 
       protected
 

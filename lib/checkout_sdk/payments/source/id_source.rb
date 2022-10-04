@@ -8,7 +8,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute payment_method
     #   @return [String]
-    class IdSource < PaymentRequestSource
+    class IdSource < PaymentSource
       attr_accessor :id,
                     :cvv,
                     :payment_method

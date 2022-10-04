@@ -55,11 +55,9 @@ module Helpers
 
     def assert_response(response, properties = nil)
       expect(response).not_to be nil
-      unless properties.nil?
-        properties.each do |evaluation|
+      properties&.each do |evaluation|
           assert_response_validation(response, evaluation)
         end
-      end
     end
 
     def new_idempotency_key

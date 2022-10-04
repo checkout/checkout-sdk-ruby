@@ -10,7 +10,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::Phone]
     # @!attribute store_for_future_use
     #   @return [TrueClass, FalseClass]
-    class TokenSource < PaymentRequestSource
+    class TokenSource < PaymentSource
       attr_accessor :token,
                     :billing_address,
                     :phone,

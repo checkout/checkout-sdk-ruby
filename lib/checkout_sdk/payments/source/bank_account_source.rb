@@ -14,7 +14,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute account_holder
     #   @return [CheckoutSdk::Common::AccountHolder]
-    class BankAccountSource < PaymentRequestSource
+    class BankAccountSource < PaymentSource
       attr_accessor :payment_method,
                     :account_type,
                     :country,

@@ -10,7 +10,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute billing_descriptor
     #   @return [String]
-    class P24Source < PaymentRequestSource
+    class P24Source < PaymentSource
       attr_accessor :payment_country,
                     :account_holder_name,
                     :account_holder_email,

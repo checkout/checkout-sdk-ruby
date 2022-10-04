@@ -10,7 +10,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute language
     #   @return [String]
-    class BancontactSource < PaymentRequestSource
+    class BancontactSource < PaymentSource
       attr_accessor :payment_country,
                     :account_holder_name,
                     :billing_descriptor,

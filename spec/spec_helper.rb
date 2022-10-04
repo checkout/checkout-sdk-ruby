@@ -7,6 +7,7 @@ require './spec/support/data_factory'
 require './spec/support/sandbox_test_fixture'
 require './spec/checkout_sdk/payments/payments_helper'
 require './spec/checkout_sdk/sessions/sessions_helper'
+require './spec/checkout_sdk/payments/previous/payments_helper'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

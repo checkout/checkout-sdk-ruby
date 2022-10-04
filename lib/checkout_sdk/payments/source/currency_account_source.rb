@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     # @!attribute id
     #   @return [String]
-    class CurrencyAccountSource < PayoutRequestSource
+    class CurrencyAccountSource < PayoutSource
       attr_accessor :id
 
       def initialize

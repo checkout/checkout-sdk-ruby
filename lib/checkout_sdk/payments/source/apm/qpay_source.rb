@@ -10,7 +10,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute national_id
     #   @return [String]
-    class QPaySource < PaymentRequestSource
+    class QPaySource < PaymentSource
       attr_accessor :quantity,
                     :description,
                     :language,

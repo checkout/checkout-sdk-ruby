@@ -8,7 +8,7 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute language
     #   @return [String]
-    class IdealSource < PaymentRequestSource
+    class IdealSource < PaymentSource
       attr_accessor :bic,
                     :description,
                     :language
