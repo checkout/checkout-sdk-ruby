@@ -5,7 +5,7 @@ module CheckoutSdk
     # @!attribute type
     #   @return [String] {TokenType}
     class WalletTokenRequest
-      attr_accessor :type
+      attr_reader :type
 
       protected
 

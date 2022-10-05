@@ -13,15 +13,14 @@ RSpec.describe CheckoutSdk::Previous::Payments do
         proc = -> { @api.payments.get_payment_actions(payment_response.id) }
         predicate = ->(response) { there_are_two_payment_actions(response) }
 
-        # TODO add items logic
         response = retriable(proc, predicate)
         assert_response response
-        expect(response.length).to eq(2)
+        expect(response.items.length).to eq(2)
       end
     end
   end
 end
 
 def there_are_two_payment_actions(response)
-  response.length == 2
+  response.items.length == 2
 end

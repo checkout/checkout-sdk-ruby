@@ -19,6 +19,9 @@ Metrics/MethodLength:
 Metrics/ParameterLists:
   Max: 10
 
+Metrics/ClassLength:
+  Max: 110
+
 Style/Documentation:
   Enabled: false
 
