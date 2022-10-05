@@ -10,7 +10,7 @@ module CheckoutSdk
       # @!attribute phone
       #   @return [CheckoutSdk::Common::Phone]
       # @!attribute customer
-      #   @return [CheckoutSdk::Common::Customer]
+      #   @return [CheckoutSdk::Common::CustomerRequest]
       class SourceRequest
         attr_reader :type
         attr_accessor :reference,
@@ -20,7 +20,7 @@ module CheckoutSdk
         protected
 
         # @abstract
-        # @param [String]  {SourceType}
+        # @param [String] {SourceType}
         def initialize(type)
           @type = type
         end

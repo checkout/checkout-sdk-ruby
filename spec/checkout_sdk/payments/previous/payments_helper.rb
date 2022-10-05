@@ -92,5 +92,13 @@ module Previous
       source.phone = phone
       source
     end
+
+    def payer
+      payer = CheckoutSdk::Payments::Payer.new
+      payer.name = Helpers::DataFactory::NAME
+      payer.email = generate_random_email
+      payer.document = '53033315550'
+      payer
+    end
   end
 end
