@@ -118,7 +118,8 @@ RSpec.describe CheckoutSdk::Disputes do
 
           response = default_sdk.disputes.put_evidence(@dispute.id, request)
 
-          # TODO validate 204 status
+          expect(response).not_to be nil
+          expect(response.metadata.status_code).to eq 204
         end
 
         it 'should have new values for updated fields' do
@@ -188,7 +189,8 @@ RSpec.describe CheckoutSdk::Disputes do
         it 'submits dispute evidence' do
           response = default_sdk.disputes.submit_evidence(@dispute.id)
 
-          #TODO validate 204 status
+          expect(response).not_to be nil
+          expect(response.metadata.status_code).to eq 204
         end
       end
 

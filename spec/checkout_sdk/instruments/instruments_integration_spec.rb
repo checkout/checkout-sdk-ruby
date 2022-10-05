@@ -101,10 +101,11 @@ RSpec.describe CheckoutSdk::Instruments do
   describe '.delete' do
     subject(:instrument) { create_card_token_instrument }
     context 'when deleting an existent instrument' do
-      it 'should return http: 200' do
+      it 'should return http: 204' do
         response = default_sdk.instruments.delete(instrument.id)
 
-        #TODO check for response status
+        expect(response).not_to be nil
+        expect(response.metadata.status_code).to eq 204
       end
     end
 

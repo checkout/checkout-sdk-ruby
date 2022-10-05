@@ -12,8 +12,8 @@ RSpec.describe CheckoutSdk::Customers do
           response = default_sdk.customers.create(request)
 
           expect(response).not_to be nil
-          # TODO check status code
           expect(response.id).not_to be nil
+          expect(response.metadata.status_code).to eq 201
         end
       end
 
@@ -56,7 +56,8 @@ RSpec.describe CheckoutSdk::Customers do
 
           response = default_sdk.customers.update(@customer.id, request)
 
-          # TODO check status code
+          expect(response).not_to be nil
+          expect(response.metadata.status_code).to eq 204
         end
 
         it 'should have new values for updated fields' do
@@ -75,7 +76,8 @@ RSpec.describe CheckoutSdk::Customers do
         it 'should return http: 200' do
           response = default_sdk.customers.delete(customer_id)
 
-          # TODO check status code
+          expect(response).not_to be nil
+          expect(response.metadata.status_code).to eq 204
         end
       end
 

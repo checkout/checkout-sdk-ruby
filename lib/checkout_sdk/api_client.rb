@@ -128,8 +128,12 @@ module CheckoutSdk
     end
 
     def parse_response(response)
-      # TODO: include http metadata response
-      JSON.parse(response.body, object_class: OpenStruct) if !response.body.nil? && response.body != ''
+      metadata = CheckoutUtils.map_to_http_metadata(response)
+      body = (JSON.parse(response.body, object_class: OpenStruct) if !response.body.nil? && response.body != '')
+      body = OpenStruct.new if body.nil?
+      body = OpenStruct.new(items: body) if body.is_a? Array
+      body.metadata = metadata if body.is_a? OpenStruct
+      body
     end
   end
 end
