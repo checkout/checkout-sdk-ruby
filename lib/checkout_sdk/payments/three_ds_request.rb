@@ -18,6 +18,8 @@ module CheckoutSdk
     #   @return [String] {Exemption}
     # @!attribute challenge_indicator
     #   @return [String] {ChallengeIndicator}
+    # @!attribute allow_upgrade
+    #   @return [TrueClass, FalseClass]
     # @!attribute status
     #   @return [String]
     # @!attribute authentication_date
@@ -45,6 +47,7 @@ module CheckoutSdk
                     :version,
                     :exemption,
                     :challenge_indicator,
+                    :allow_upgrade,
                     :status,
                     :authentication_date,
                     :authentication_amount,

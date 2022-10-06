@@ -104,5 +104,24 @@ RSpec.describe CheckoutSdk::Payments do
         expect(payment_response_1.action_id).to eq(payment_response_2.action_id)
       end
     end
+    context 'when requesting customer source payment' do
+      it 'raises an error (customer_not_found)' do
+
+        source = CheckoutSdk::Payments::CustomerSource.new
+        source.id = 'cus_udst2tfldj6upmye2reztkmm4i'
+
+        request = CheckoutSdk::Payments::PaymentRequest.new
+        request.source = source
+        request.reference = Helpers::DataFactory::REFERENCE
+        request.currency = CheckoutSdk::Common::Currency::EGP
+        request.amount = 10
+        request.capture = true
+        request.success_url = 'https://testing.checkout.com/sucess'
+        request.failure_url = 'https://testing.checkout.com/failure'
+
+        expect { default_sdk.payments.request_payment(request) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'customer_not_found' }
+      end
+    end
   end
 end
