@@ -7,8 +7,12 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Disputes::DisputesClient]
   # @!attribute forex
   #   @return [CheckoutSdk::Forex::ForexClient]
+  # @!attribute hosted
+  #   @return [CheckoutSdk::Payments::HostedPaymentsClient]
   # @!attribute instruments
   #   @return [CheckoutSdk::Instruments::InstrumentsClient]
+  # @!attribute links
+  #   @return [CheckoutSdk::Payments::PaymentsLinksClient]
   # @!attribute payments
   #   @return [CheckoutSdk::Payments::PaymentsClient]
   # @!attribute sessions
@@ -21,7 +25,9 @@ module CheckoutSdk
     attr_reader :customers,
                 :disputes,
                 :forex,
+                :hosted,
                 :instruments,
+                :links,
                 :payments,
                 :sessions,
                 :tokens,
@@ -33,7 +39,9 @@ module CheckoutSdk
       @customers = CheckoutSdk::Customers::CustomersClient.new api_client, configuration
       @disputes = CheckoutSdk::Disputes::DisputesClient.new api_client, configuration
       @forex = CheckoutSdk::Forex::ForexClient.new api_client, configuration
+      @hosted = CheckoutSdk::Payments::HostedPaymentsClient.new api_client, configuration
       @instruments = CheckoutSdk::Instruments::InstrumentsClient.new api_client, configuration
+      @links = CheckoutSdk::Payments::PaymentsLinksClient.new api_client, configuration
       @payments = CheckoutSdk::Payments::PaymentsClient.new api_client, configuration
       @sessions = CheckoutSdk::Sessions::SessionsClient.new api_client, configuration
       @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration

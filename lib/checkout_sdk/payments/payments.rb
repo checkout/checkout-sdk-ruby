@@ -39,6 +39,7 @@ require 'checkout_sdk/payments/terminal_type'
 require 'checkout_sdk/payments/flight_leg_details'
 require 'checkout_sdk/payments/billing_plan'
 require 'checkout_sdk/payments/billing_plan_type'
+require 'checkout_sdk/payments/billing_information'
 
 # Source
 require 'checkout_sdk/payments/source/payment_source'
@@ -138,3 +139,11 @@ require 'checkout_sdk/payments/previous/destination/id_destination'
 require 'checkout_sdk/payments/base_payments_client'
 require 'checkout_sdk/payments/payments_client'
 require 'checkout_sdk/payments/previous/payments_client'
+
+# Hosted Payments
+require 'checkout_sdk/payments/hosted/hosted_payments_session'
+require 'checkout_sdk/payments/hosted/hosted_payments_client'
+
+# Payment Links
+require 'checkout_sdk/payments/links/payment_link'
+require 'checkout_sdk/payments/links/payments_links_client'
