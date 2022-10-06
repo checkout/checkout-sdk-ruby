@@ -7,7 +7,6 @@ module CheckoutSdk
       RECURRING = 'Recurring'
       MOTO = 'Moto'
       INSTALLMENT = 'Installment'
-      UNSCHEDULED = 'Unscheduled'
     end
   end
 end
