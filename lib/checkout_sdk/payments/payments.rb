@@ -40,6 +40,7 @@ require 'checkout_sdk/payments/flight_leg_details'
 require 'checkout_sdk/payments/billing_plan'
 require 'checkout_sdk/payments/billing_plan_type'
 require 'checkout_sdk/payments/billing_information'
+require 'checkout_sdk/payments/payments_query_filter'
 
 # Source
 require 'checkout_sdk/payments/source/payment_source'
