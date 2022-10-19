@@ -5,6 +5,11 @@ module CheckoutSdk
     class BasePaymentsClient < Client
       PAYMENTS_PATH = 'payments'
 
+      # @param [PaymentsQueryFilter] query_filter
+      def get_payments_list(query_filter)
+        api_client.invoke_get(PAYMENTS_PATH, sdk_authorization, query_filter)
+      end
+
       # @param [String] payment_id
       def get_payment_details(payment_id)
         api_client.invoke_get(build_path(PAYMENTS_PATH, payment_id),
