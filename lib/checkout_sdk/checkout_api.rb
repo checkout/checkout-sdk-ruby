@@ -15,6 +15,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Payments::PaymentsLinksClient]
   # @!attribute payments
   #   @return [CheckoutSdk::Payments::PaymentsClient]
+  # @!attribute reports
+  #   @return [CheckoutSdk::Reports::ReportsClient]
   # @!attribute sessions
   #   @return [CheckoutSdk::Sessions::SessionsClient]
   # @!attribute tokens
@@ -29,6 +31,7 @@ module CheckoutSdk
                 :instruments,
                 :links,
                 :payments,
+                :reports,
                 :sessions,
                 :tokens,
                 :ideal
@@ -43,6 +46,7 @@ module CheckoutSdk
       @instruments = CheckoutSdk::Instruments::InstrumentsClient.new api_client, configuration
       @links = CheckoutSdk::Payments::PaymentsLinksClient.new api_client, configuration
       @payments = CheckoutSdk::Payments::PaymentsClient.new api_client, configuration
+      @reports = CheckoutSdk::Reports::ReportsClient.new api_client, configuration
       @sessions = CheckoutSdk::Sessions::SessionsClient.new api_client, configuration
       @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration
       @ideal = CheckoutSdk::Apm::IdealClient.new api_client, configuration
