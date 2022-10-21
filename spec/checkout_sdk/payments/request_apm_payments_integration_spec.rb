@@ -158,21 +158,23 @@ RSpec.describe CheckoutSdk::Payments do
       end
     end
 
-    context 'when requesting Mbway source payment' do
-      it 'raises an error (apm_service_unavailable)' do
-        source = CheckoutSdk::Payments::MbwaySource.new
+    skip 'Mbway - processing channel invalid' do
+      context 'when requesting Mbway source payment' do
+        it 'raises an error (apm_service_unavailable)' do
+          source = CheckoutSdk::Payments::MbwaySource.new
 
-        request = CheckoutSdk::Payments::PaymentRequest.new
-        request.source = source
-        request.reference = Helpers::DataFactory::REFERENCE
-        request.currency = CheckoutSdk::Common::Currency::GBP
-        request.amount = 100
-        request.capture = true
-        request.success_url = 'https://testing.checkout.com/sucess'
-        request.failure_url = 'https://testing.checkout.com/failure'
+          request = CheckoutSdk::Payments::PaymentRequest.new
+          request.source = source
+          request.reference = Helpers::DataFactory::REFERENCE
+          request.currency = CheckoutSdk::Common::Currency::GBP
+          request.amount = 100
+          request.capture = true
+          request.success_url = 'https://testing.checkout.com/sucess'
+          request.failure_url = 'https://testing.checkout.com/failure'
 
-        expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+          expect { default_sdk.payments.request_payment(request) }
+            .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+        end
       end
     end
 
