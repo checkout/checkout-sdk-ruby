@@ -37,5 +37,7 @@ module CheckoutSdk
     MIDDLEWARE = 'middleware'
     MIDDLEWARE_MERCHANTS_SECRET = 'middleware:merchants-secret'
     MIDDLEWARE_MERCHANTS_PUBLIC = 'middleware:merchants-public'
+    REPORTING = 'reporting'
+    REPORTING_VIEW = 'reporting:view'
   end
 end
