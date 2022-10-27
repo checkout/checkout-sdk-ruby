@@ -17,9 +17,9 @@ module CheckoutSdk
     # @!attribute store_for_future_use
     #   @return [TrueClass, FalseClass]
     # @!attribute billing_address
-    #   @return [String] {CheckoutSdk::Common::Address}
+    #   @return [CheckoutSdk::Common::Address]
     # @!attribute phone
-    #   @return [String] {CheckoutSdk::Common::Phone}
+    #   @return [CheckoutSdk::Common::Phone]
     class CardSource < PaymentSource
       attr_accessor :number,
                     :expiry_month,

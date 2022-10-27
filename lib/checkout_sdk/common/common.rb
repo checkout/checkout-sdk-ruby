@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'checkout_sdk/common/abstract_file_request'
 require 'checkout_sdk/common/account_type'
 require 'checkout_sdk/common/customer_request'
 require 'checkout_sdk/common/amount_allocations'

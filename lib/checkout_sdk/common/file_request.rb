@@ -4,8 +4,11 @@ module CheckoutSdk
   module Common
     # @!attribute purpose
     #   @return [FilePurpose]
-    class FileRequest < AbstractFileRequest
-      attr_accessor :purpose
+    # @!attribute file
+    #   @return [String]
+    class FileRequest
+      attr_accessor :purpose,
+                    :file
     end
   end
 end

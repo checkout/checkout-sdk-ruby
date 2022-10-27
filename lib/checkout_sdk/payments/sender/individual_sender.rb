@@ -7,7 +7,7 @@ module CheckoutSdk
     # @!attribute last_name
     #   @return [String]
     # @!attribute address
-    #   @return [String] {CheckoutSdk::Common::Address}
+    #   @return [CheckoutSdk::Common::Address]
     # @!attribute identification
     #   @return [CheckoutSdk::Common::AccountHolderIdentification]
     # @!attribute middle_name

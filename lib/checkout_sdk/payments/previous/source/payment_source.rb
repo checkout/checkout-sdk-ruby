@@ -10,6 +10,7 @@ module CheckoutSdk
 
         protected
 
+        # @abstract
         # @param [String] type {CheckoutSdk::Common::PaymentSourceType}
         def initialize(type)
           @type = type
