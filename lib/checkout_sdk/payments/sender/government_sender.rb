@@ -5,7 +5,7 @@ module CheckoutSdk
     # @!attribute company_name
     #   @return [String]
     # @!attribute address
-    #   @return [String] {CheckoutSdk::Common::Address}
+    #   @return [CheckoutSdk::Common::Address]
     # @!attribute reference_type
     #   @return [String]
     # @!attribute source_of_funds

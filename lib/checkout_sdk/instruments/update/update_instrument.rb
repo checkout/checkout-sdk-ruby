@@ -7,6 +7,8 @@ module CheckoutSdk
     class UpdateInstrument
       attr_reader :type
 
+      protected
+
       # @abstract
       # @param [String]  {CheckoutSdk::Common::InstrumentType}
       def initialize(type)
