@@ -98,7 +98,7 @@ module CheckoutSdk
     end
 
     def build_multipart_request(file_request, file)
-      key = file_request.is_a?(CheckoutSdk::Common::FileRequest) ? :file : :path
+      key = file_request.class.name.start_with?(CheckoutSdk::Common::FileRequest.name) ? :file : :path
       {
         key => Faraday::Multipart::FilePart.new(
           file,

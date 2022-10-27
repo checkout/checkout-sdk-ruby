@@ -95,7 +95,7 @@ require 'checkout_sdk/payments/destination/card_destination'
 require 'checkout_sdk/payments/destination/destination_type'
 require 'checkout_sdk/payments/destination/id_destination'
 
-## Previous
+# Previous
 require 'checkout_sdk/payments/previous/fund_transfer_type'
 require 'checkout_sdk/payments/previous/capture_request'
 require 'checkout_sdk/payments/previous/payout_request'
