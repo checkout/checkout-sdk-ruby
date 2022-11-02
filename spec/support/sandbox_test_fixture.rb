@@ -51,13 +51,14 @@ module Helpers
         end
         current_attempt += 1
       end
+      raise CheckoutSdk::CheckoutException, 'Max attempts reached!' if current_attempt >= max_attempts
     end
 
     def assert_response(response, properties = nil)
       expect(response).not_to be nil
       properties&.each do |evaluation|
-          assert_response_validation(response, evaluation)
-        end
+        assert_response_validation(response, evaluation)
+      end
     end
 
     def new_idempotency_key
