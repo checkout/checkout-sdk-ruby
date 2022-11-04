@@ -20,5 +20,20 @@ module CheckoutSdk
       end
       metadata
     end
+
+    # @return [Faraday::Connection]
+    def self.build_multipart_client
+      Faraday.new do |f|
+        f.request :multipart
+        f.response :raise_error
+      end
+    end
+
+    # @return [Faraday::Connection]
+    def self.build_default_client
+      Faraday.new do |f|
+        f.response :raise_error
+      end
+    end
   end
 end

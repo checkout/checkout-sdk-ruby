@@ -65,13 +65,13 @@ module CheckoutSdk
     # @param [CheckoutConfiguration] configuration
     # @return [ApiClient]
     def base_api_client(configuration)
-      CheckoutSdk::ApiClient.new configuration, configuration.environment.base_uri
+      ApiClient.new(configuration, configuration.environment.base_uri)
     end
 
     # @param [CheckoutConfiguration] configuration
     # @return [ApiClient]
     def files_client(configuration)
-      CheckoutSdk::ApiClient.new configuration, configuration.environment.files_uri
+      ApiClient.new(configuration, configuration.environment.files_uri)
     end
   end
 end
