@@ -5,8 +5,10 @@ module CheckoutSdk
     # @!attribute environment
     #   @return [Environment]
     # @!attribute http_client
-    #   @return [Object]
-    attr_accessor :environment, :http_client
+    #   @return [Faraday::Connection]
+    # @!attribute multipart_http_client
+    #   @return [Faraday::Connection]
+    attr_accessor :environment, :http_client, :multipart_http_client
 
     # @param [Environment] environment
     def with_environment(environment)
@@ -14,15 +16,34 @@ module CheckoutSdk
       self
     end
 
+    # @param [Faraday::Connection] http_client
     def with_http_client(http_client)
       @http_client = http_client
       self
     end
 
+    # @param [Faraday::Connection] multipart_http_client
+    def with_multipart_http_client(multipart_http_client)
+      @multipart_http_client = multipart_http_client
+      self
+    end
+
     def build
       with_environment(Environment.sandbox) if environment.nil?
-      raise CheckoutArgumentException, 'HttpClient must be an instance of Faraday::Connection' \
-      if !http_client.nil? && !@http_client.instance_of?(Faraday::Connection)
+      if http_client.nil?
+        @http_client = CheckoutUtils.build_default_client
+      else
+        unless @http_client.instance_of?(Faraday::Connection)
+          raise CheckoutArgumentException, 'http_client must be an instance of Faraday::Connection'
+        end
+      end
+      if multipart_http_client.nil?
+        @multipart_http_client = CheckoutUtils.build_multipart_client
+      else
+        unless @multipart_http_client.instance_of?(Faraday::Connection)
+          raise CheckoutArgumentException, 'multipart_http_client must be an instance of Faraday::Connection'
+        end
+      end
     end
   end
 end

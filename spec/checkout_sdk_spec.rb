@@ -120,19 +120,6 @@ RSpec.describe CheckoutSdk do
                            'Invalid OAuth "client_id" or "client_secret"')
       end
 
-      it 'raises an error when environment and authorization_uri are not provided' do
-        expect do
-          CheckoutSdk.builder
-                     .oauth
-                     .with_client_credentials(ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_ID'],
-                                              ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET'])
-                     .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
-                                   CheckoutSdk::OAuthScopes::GATEWAY])
-                     .build
-        end.to raise_error(CheckoutSdk::CheckoutArgumentException,
-                           'Invalid configuration. Please specify an "environment" or a specific OAuth "authorization_uri"')
-      end
-
       it 'raises an error when the authorization_uri provided is invalid' do
         expect do
           CheckoutSdk.builder

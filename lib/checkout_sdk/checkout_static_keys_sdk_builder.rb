@@ -15,7 +15,8 @@ module CheckoutSdk
         CheckoutConfiguration.new(
           StaticKeysSdkCredentials.new(secret_key, public_key),
           environment,
-          http_client
+          http_client,
+          multipart_http_client
         )
       )
     end
