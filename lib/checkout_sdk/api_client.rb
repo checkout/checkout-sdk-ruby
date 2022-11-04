@@ -2,12 +2,15 @@
 
 module CheckoutSdk
   class ApiClient
-    # @param [CheckoutConfiguration] _configuration
+    attr_accessor :client, :multipart_client
+
+    # @param [CheckoutConfiguration] configuration
     # @param [String] uri
-    def initialize(_configuration, uri)
-      # TODO: expect given http client
-      @client = build_default_client(uri)
-      @multipart_client = build_multipart_client(uri)
+    def initialize(configuration, uri)
+      @client = configuration.http_client.clone
+      @client.url_prefix = uri
+      @multipart_client = configuration.multipart_http_client.clone
+      @multipart_client.url_prefix = uri
     end
 
     # @param [String] path
@@ -51,19 +54,6 @@ module CheckoutSdk
 
     private
 
-    def build_multipart_client(uri)
-      Faraday.new(uri) do |f|
-        f.request :multipart
-        f.response :raise_error
-      end
-    end
-
-    def build_default_client(uri)
-      Faraday.new(uri) do |f|
-        f.response :raise_error
-      end
-    end
-
     def invoke(method, path, authorization, body = nil, idempotency_key = nil, params: nil)
       path = append_params(path, params) unless params.nil?
 
@@ -91,7 +81,6 @@ module CheckoutSdk
     end
 
     def append_params(path, input_params)
-      # TODO: refactor this into a utils method
       hash = CheckoutSdk::JsonSerializer.to_custom_hash(input_params)
       params = URI.encode_www_form(hash)
       "#{path}?#{params}"
@@ -128,6 +117,8 @@ module CheckoutSdk
     end
 
     def parse_response(response)
+      raise CheckoutApiException, response if response.status < 200 || response.status >= 300
+
       metadata = CheckoutUtils.map_to_http_metadata(response)
       body = (JSON.parse(response.body, object_class: OpenStruct) if !response.body.nil? && response.body != '')
       body = OpenStruct.new if body.nil?

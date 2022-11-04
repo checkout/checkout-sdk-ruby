@@ -27,7 +27,7 @@ module CheckoutSdk
     # @param [String] client_id
     # @param [String] client_secret
     # @param [Array(CheckoutSdk::OAuthScopes)] scopes
-    # @param [Faraday] http_client
+    # @param [Faraday::Connection] http_client
     # @param [CheckoutSdk::Environment] environment
     # @param [String, nil] auth_uri
     def initialize(client_id, client_secret, scopes, http_client, environment, auth_uri = nil)
@@ -36,7 +36,8 @@ module CheckoutSdk
       @client_secret = client_secret
       @scopes = scopes
       @authorization_uri = auth_uri.nil? ? environment.authorization_uri : auth_uri
-      @http_client = http_client.nil? ? build_default_client(authorization_uri) : http_client
+      @oauth_http_client = http_client.clone
+      @oauth_http_client.url_prefix = @authorization_uri
       build_access_token
     end
 
@@ -66,7 +67,7 @@ module CheckoutSdk
       body = URI.encode_www_form data
 
       begin
-        response = @http_client.run_request(:post, @authorization_uri, body, headers)
+        response = @oauth_http_client.run_request(:post, @authorization_uri, body, headers)
       rescue Faraday::ClientError => e
         raise CheckoutAuthorizationException, e.response
       rescue Faraday::ConnectionFailed => e
@@ -85,19 +86,10 @@ module CheckoutSdk
 
     private
 
-    # TODO: refactor this into a utils method
-    # @param [String] authorization_uri
-    # @return [Faraday::Connection]
-    def build_default_client(authorization_uri)
-      Faraday.new(authorization_uri) do |f|
-        f.response(:raise_error)
-      end
-    end
-
     # @param [String] client_id
     # @param [String] client_secret
     # @param [Environment] environment
-    # @param [String] authorization_uri
+    # @param [String, nil] authorization_uri
     def validate_arguments(client_id, client_secret, environment, authorization_uri)
       if client_id.nil? || client_secret.nil?
         raise CheckoutArgumentException, 'Invalid OAuth "client_id" or "client_secret"'

@@ -113,6 +113,63 @@ All the API responses that do not fall in the 2** status codes will cause a `Che
 exception
 encapsulates the `http_metadata` and a map of `error_details`, if available.
 
+## Custom Http Client
+
+Ruby SDK supports your own configuration for `http client` using `Faraday::Connection` object, you can pass
+through the
+SDK instantiation as follows:
+
+```ruby
+http_client = Faraday.new do |conn|
+  conn.options.timeout = 10
+  conn.proxy "http://localhost:8080"
+end
+
+api = CheckoutSdk.builder
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_public_key('public_key') # optional, only required for operations related with tokens
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_http_client(http_client)
+                 .build
+```
+
+You don't need to specify the URL for Faraday constructor the SDK grabs the belong URI from `CheckoutSdk::Environment`
+however if you want to
+use specific URI's without a proxy you can create the `Environment` object as follows.
+
+```ruby
+environment = CheckoutSdk::Environment.new('https://the.base.uri/', # the uri for all CKO operations
+                                           'https://the.oauth.uri/connect/token', # the uri used for OAUTH authorization, only required for OAuth operations
+                                           'https://the.files.uri/', # the uri used for Files operations, only required for Accounts module
+                                           'https://the.transfers.uri/', # the uri used for Transfer operations, only required for Transfers module
+                                           'https://the.balances.uri/', # the uri used for Balances operations, only required for Balances module
+                                           false)
+```
+
+If you want to provide your own `http client` and wants to use the `upload_file` functionality from `Disputes` or `Accounts` modules, you
+also need to specify the custom `http client` for `multipart requests`:
+
+```ruby
+http_client = Faraday.new do |conn|
+  conn.options.timeout = 10
+  conn.proxy "http://localhost:8080"
+end
+
+multipart_client = Faraday.new do |f|
+  f.request :multipart
+end
+
+api = CheckoutSdk.builder
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_public_key('public_key') # optional, only required for operations related with tokens
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_http_client(http_client)
+                 .with_multipart_http_client(multipart_client)
+                 .build
+```
+
 ## Building from source
 
 Once you check out the code from GitHub, the project can be built using gem:
