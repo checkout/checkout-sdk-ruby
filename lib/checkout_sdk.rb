@@ -56,6 +56,7 @@ require 'checkout_sdk/tokens/tokens'
 require 'checkout_sdk/apm/apm'
 require 'checkout_sdk/accounts/accounts'
 require 'checkout_sdk/workflows/workflows'
+require 'checkout_sdk/risk/risk'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'
