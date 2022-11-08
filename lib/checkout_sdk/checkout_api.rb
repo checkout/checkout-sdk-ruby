@@ -27,6 +27,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Accounts::AccountsClient]
   # @!attribute workflows
   #   @return [CheckoutSdk::Workflows::WorkflowsClient]
+  # @!attribute risk
+  #   @return [CheckoutSdk::Risk::RiskClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -40,7 +42,8 @@ module CheckoutSdk
                 :tokens,
                 :ideal,
                 :accounts,
-                :workflows
+                :workflows,
+                :risk
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -58,6 +61,7 @@ module CheckoutSdk
       @ideal = CheckoutSdk::Apm::IdealClient.new api_client, configuration
       @workflows = CheckoutSdk::Workflows::WorkflowsClient.new api_client, configuration
       @accounts = CheckoutSdk::Accounts::AccountsClient.new(api_client, files_client(configuration), configuration)
+      @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
     end
 
     private

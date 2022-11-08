@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require 'checkout_sdk/risk/authentication_result'
+require 'checkout_sdk/risk/risk_payment'
+require 'checkout_sdk/risk/authorization_result'
+require 'checkout_sdk/risk/pre_capture_assessment'
+require 'checkout_sdk/risk/risk_client'
+require 'checkout_sdk/risk/source/risk_payment_source'
+require 'checkout_sdk/risk/source/customer_source'
+require 'checkout_sdk/risk/source/token_source'
+require 'checkout_sdk/risk/source/id_source'
+require 'checkout_sdk/risk/source/card_source'
+require 'checkout_sdk/risk/risk'
+require 'checkout_sdk/risk/location'
+require 'checkout_sdk/risk/risk_shipping_details'
+require 'checkout_sdk/risk/device'
+require 'checkout_sdk/risk/pre_authentication_assessment'

@@ -265,7 +265,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when requesting Sofort source payment' do
-      it 'raises an error (apm_service_unavailable)' do
+      it 'should request payment correctly' do
         source = CheckoutSdk::Payments::SofortSource.new
 
         request = CheckoutSdk::Payments::PaymentRequest.new
@@ -277,8 +277,14 @@ RSpec.describe CheckoutSdk::Payments do
         request.success_url = 'https://testing.checkout.com/sucess'
         request.failure_url = 'https://testing.checkout.com/failure'
 
-        expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+        response = default_sdk.payments.request_payment(request)
+        expect(response).not_to be nil
+        expect(response.id).not_to be nil
+
+        payment_details = default_sdk.payments.get_payment_details(response.id)
+        expect(payment_details).not_to be nil
+        expect(payment_details.id).to eq response.id
+        expect(payment_details.source.type).to eq CheckoutSdk::Common::PaymentSourceType::SOFORT
       end
     end
 
