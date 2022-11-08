@@ -22,6 +22,8 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Previous::Apm::KlarnaClient]
     # @!attribute sepa
     #   @return [CheckoutSdk::Previous::Apm::SepaClient]
+    # @!attribute risk
+    #   @return [CheckoutSdk::Risk::RiskClient]
     class CheckoutApi
       attr_reader :customers,
                   :disputes,
@@ -32,7 +34,8 @@ module CheckoutSdk
                   :sources,
                   :tokens,
                   :klarna,
-                  :sepa
+                  :sepa,
+                  :risk
 
       # @param [CheckoutConfiguration] configuration
       def initialize(configuration)
@@ -47,6 +50,7 @@ module CheckoutSdk
         @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration
         @klarna = CheckoutSdk::Previous::Apm::KlarnaClient.new api_client, configuration
         @sepa = CheckoutSdk::Previous::Apm::SepaClient.new api_client, configuration
+        @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
       end
 
       private
