@@ -255,6 +255,7 @@ module CheckoutSdk
       ZM = 'ZM'
       ZW = 'ZW'
       PS = 'PS'
+      QZ = 'QZ'
     end
   end
 end
