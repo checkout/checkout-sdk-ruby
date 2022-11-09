@@ -3,9 +3,9 @@
 module CheckoutSdk
   module Risk
     # @!attribute latitude
-    #   @return [String]
+    #   @return [Integer]
     # @!attribute longitude
-    #   @return [String]
+    #   @return [Integer]
     class Location
       attr_accessor :latitude,
                     :longitude

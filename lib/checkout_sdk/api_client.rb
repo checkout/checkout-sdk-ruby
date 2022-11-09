@@ -81,8 +81,15 @@ module CheckoutSdk
     end
 
     def append_params(path, input_params)
-      hash = CheckoutSdk::JsonSerializer.to_custom_hash(input_params)
-      params = URI.encode_www_form(hash)
+      raise CheckoutArgumentException, 'Query parameters were not provided' if input_params.nil?
+
+      if input_params.is_a? String
+        params = input_params
+      else
+        hash = CheckoutSdk::JsonSerializer.to_custom_hash(input_params)
+        params = URI.encode_www_form(hash)
+      end
+
       "#{path}?#{params}"
     end
 
