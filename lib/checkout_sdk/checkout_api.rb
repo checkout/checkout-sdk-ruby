@@ -29,6 +29,10 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Workflows::WorkflowsClient]
   # @!attribute risk
   #   @return [CheckoutSdk::Risk::RiskClient]
+  # @!attribute balances
+  #   @return [CheckoutSdk::Balances::BalancesClient]
+  # @!attribute transfers
+  #   @return [CheckoutSdk::Transfers::TransfersClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -43,7 +47,9 @@ module CheckoutSdk
                 :ideal,
                 :accounts,
                 :workflows,
-                :risk
+                :risk,
+                :balances,
+                :transfers
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -62,6 +68,8 @@ module CheckoutSdk
       @workflows = CheckoutSdk::Workflows::WorkflowsClient.new api_client, configuration
       @accounts = CheckoutSdk::Accounts::AccountsClient.new(api_client, files_client(configuration), configuration)
       @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
+      @balances = CheckoutSdk::Balances::BalancesClient.new(balances_client(configuration), configuration)
+      @transfers = CheckoutSdk::Transfers::TransfersClient.new(transfers_client(configuration), configuration)
     end
 
     private
@@ -76,6 +84,18 @@ module CheckoutSdk
     # @return [ApiClient]
     def files_client(configuration)
       ApiClient.new(configuration, configuration.environment.files_uri)
+    end
+
+    # @param [CheckoutConfiguration] configuration
+    # @return [ApiClient]
+    def balances_client(configuration)
+      ApiClient.new(configuration, configuration.environment.balances_uri)
+    end
+
+    # @param [CheckoutConfiguration] configuration
+    # @return [ApiClient]
+    def transfers_client(configuration)
+      ApiClient.new(configuration, configuration.environment.transfers_uri)
     end
   end
 end
