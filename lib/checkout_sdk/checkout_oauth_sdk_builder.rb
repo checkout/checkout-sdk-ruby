@@ -43,10 +43,17 @@ module CheckoutSdk
       super
       CheckoutSdk::CheckoutApi.new(
         CheckoutConfiguration.new(
-          OAuthSdkCredentials.new(client_id, client_secret, scopes, http_client, environment, authorization_uri),
+          OAuthSdkCredentials.new(client_id,
+                                  client_secret,
+                                  scopes,
+                                  http_client,
+                                  environment,
+                                  logger,
+                                  authorization_uri),
           environment,
           http_client,
-          multipart_http_client
+          multipart_http_client,
+          logger
         )
       )
     end

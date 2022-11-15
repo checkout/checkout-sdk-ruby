@@ -8,17 +8,18 @@ module CheckoutSdk
   # @!attribute http_client
   #   @return [Faraday::Connection]
   class CheckoutConfiguration
-    attr_accessor :credentials, :environment, :http_client, :multipart_http_client
+    attr_accessor :credentials, :environment, :http_client, :multipart_http_client, :logger
 
     # @param [SdkCredentials] credentials
     # @param [Environment] environment
     # @param [Faraday::Connection] http_client
     # @param [Faraday::Connection] multipart_http_client
-    def initialize(credentials, environment, http_client, multipart_http_client)
+    def initialize(credentials, environment, http_client, multipart_http_client, logger)
       @credentials = credentials
       @environment = environment
       @http_client = http_client
       @multipart_http_client = multipart_http_client
+      @logger = logger
     end
   end
 end

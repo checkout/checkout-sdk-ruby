@@ -8,7 +8,7 @@ module CheckoutSdk
     #   @return [Faraday::Connection]
     # @!attribute multipart_http_client
     #   @return [Faraday::Connection]
-    attr_accessor :environment, :http_client, :multipart_http_client
+    attr_accessor :environment, :http_client, :multipart_http_client, :logger
 
     # @param [Environment] environment
     def with_environment(environment)
@@ -28,6 +28,10 @@ module CheckoutSdk
       self
     end
 
+    def with_logger(logger)
+      @logger = logger
+    end
+
     def build
       with_environment(Environment.sandbox) if environment.nil?
       if http_client.nil?
@@ -44,6 +48,7 @@ module CheckoutSdk
           raise CheckoutArgumentException, 'multipart_http_client must be an instance of Faraday::Connection'
         end
       end
+      @logger = SimpleLogger.new.logger if @logger.nil?
     end
   end
 end

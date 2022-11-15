@@ -25,6 +25,9 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 8
 
+Metrics/PerceivedComplexity:
+  Max: 9
+
 Style/Documentation:
   Enabled: false
 
