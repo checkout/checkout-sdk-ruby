@@ -107,6 +107,20 @@ request = CheckoutSdk::Payments::PaymentRequest.new
 payment_response = api.payments.request_payment(request)
 ```
 
+## Logging
+
+The SDK supports custom Log provider, you need to provide your log configuration via SDK initialization by default uses `Logger` from Ruby.
+
+```ruby
+api = CheckoutSdk.builder
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_public_key('public_key') # optional, only required for operations related with tokens
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_logger(logger) # your own custom configuration
+                 .build
+```
+
 ## Exception handling
 
 All the API responses that do not fall in the 2** status codes will cause a `CheckoutSdk::CheckoutApiException`. The

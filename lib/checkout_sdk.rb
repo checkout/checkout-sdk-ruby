@@ -7,6 +7,7 @@ require 'faraday'
 require 'faraday/multipart'
 require 'faraday/net_http'
 require 'mime/types'
+require 'logger'
 
 # Version
 require 'checkout_sdk/version'
@@ -30,6 +31,7 @@ require 'checkout_sdk/static_keys_builder'
 require 'checkout_sdk/checkout_static_keys_sdk_builder'
 require 'checkout_sdk/checkout_sdk_builder'
 require 'checkout_sdk/checkout_api'
+require 'checkout_sdk/simple_logger'
 
 # Configuration(Previous)
 require 'checkout_sdk/previous/checkout_previous_static_keys_sdk_builder'

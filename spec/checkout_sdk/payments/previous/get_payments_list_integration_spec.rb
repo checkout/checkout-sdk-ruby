@@ -31,6 +31,6 @@ RSpec.describe CheckoutSdk::Payments do
 end
 
 private def there_are_payments(response)
-  sleep 10
+  sleep 15
   response.total_count > 0
 end

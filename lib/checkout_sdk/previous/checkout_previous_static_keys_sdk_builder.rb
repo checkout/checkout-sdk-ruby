@@ -16,7 +16,8 @@ module CheckoutSdk
             PreviousStaticKeysSdkCredentials.new(secret_key, public_key),
             environment,
             http_client,
-            multipart_http_client
+            multipart_http_client,
+            logger
           )
         )
       end
