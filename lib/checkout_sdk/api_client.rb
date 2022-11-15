@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   class ApiClient
-    attr_accessor :client, :multipart_client
+    attr_accessor :client, :multipart_client, :log
 
     # @param [CheckoutConfiguration] configuration
     # @param [String] uri
@@ -11,6 +11,7 @@ module CheckoutSdk
       @client.url_prefix = uri
       @multipart_client = configuration.multipart_http_client.clone
       @multipart_client.url_prefix = uri
+      @log = configuration.logger
     end
 
     # @param [String] path
@@ -64,6 +65,7 @@ module CheckoutSdk
       json_body = CheckoutSdk::JsonSerializer.to_custom_hash(body).to_json
 
       begin
+        @log.info "#{method}: /#{path}"
         response = @client.run_request(method, path, json_body, headers)
       rescue Faraday::ClientError => e
         raise CheckoutApiException, e.response
@@ -113,6 +115,7 @@ module CheckoutSdk
       form = build_multipart_request file_request, file
 
       begin
+        @log.info "post: /#{path}"
         response = @multipart_client.run_request(:post, path, form, headers)
       rescue Faraday::ClientError => e
         raise CheckoutApiException, e.response
