@@ -130,11 +130,21 @@ module CheckoutSdk
       raise CheckoutApiException, response if response.status < 200 || response.status >= 300
 
       metadata = CheckoutUtils.map_to_http_metadata(response)
-      body = (JSON.parse(response.body, object_class: OpenStruct) if !response.body.nil? && response.body != '')
+      body = parse_json_or_contents(response)
       body = OpenStruct.new if body.nil?
       body = OpenStruct.new(items: body) if body.is_a? Array
       body.metadata = metadata if body.is_a? OpenStruct
       body
+    end
+
+    def parse_json_or_contents(response)
+      return if response.body.nil? || response.body == ''
+
+      if response.body.start_with?('{', '[')
+        JSON.parse(response.body, object_class: OpenStruct)
+      else
+        OpenStruct.new(contents: response.body)
+      end
     end
   end
 end
