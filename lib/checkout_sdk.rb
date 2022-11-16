@@ -64,6 +64,7 @@ require 'checkout_sdk/transfers/transfers'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'
+require 'checkout_sdk/reconciliation/reconciliation'
 
 module CheckoutSdk
   include PlatformType

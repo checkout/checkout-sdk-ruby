@@ -24,6 +24,8 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Previous::Apm::SepaClient]
     # @!attribute risk
     #   @return [CheckoutSdk::Risk::RiskClient]
+    # @!attribute reconciliation
+    #   @return [CheckoutSdk::Previous::Reconciliation::ReconciliationClient]
     class CheckoutApi
       attr_reader :customers,
                   :disputes,
@@ -35,7 +37,8 @@ module CheckoutSdk
                   :tokens,
                   :klarna,
                   :sepa,
-                  :risk
+                  :risk,
+                  :reconciliation
 
       # @param [CheckoutConfiguration] configuration
       def initialize(configuration)
@@ -51,6 +54,7 @@ module CheckoutSdk
         @klarna = CheckoutSdk::Previous::Apm::KlarnaClient.new api_client, configuration
         @sepa = CheckoutSdk::Previous::Apm::SepaClient.new api_client, configuration
         @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
+        @reconciliation = CheckoutSdk::Previous::Reconciliation::ReconciliationClient.new api_client, configuration
       end
 
       private

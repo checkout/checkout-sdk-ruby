@@ -20,10 +20,10 @@ Metrics/ParameterLists:
   Max: 10
 
 Metrics/ClassLength:
-  Max: 110
+  Max: 120
 
 Metrics/CyclomaticComplexity:
-  Max: 8
+  Max: 10
 
 Metrics/PerceivedComplexity:
   Max: 9
