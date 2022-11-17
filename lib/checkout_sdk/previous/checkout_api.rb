@@ -6,7 +6,7 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Customers::CustomerClient]
     # @!attribute disputes
     #   @return [CheckoutSdk::Disputes::DisputesClient]
-    # @!attribute payments
+    # @!attribute hosted
     #   @return [CheckoutSdk::Payments::HostedPaymentsClient]
     # @!attribute instruments
     #   @return [CheckoutSdk::Previous::Instruments::InstrumentsClient]
@@ -26,6 +26,10 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Risk::RiskClient]
     # @!attribute reconciliation
     #   @return [CheckoutSdk::Previous::Reconciliation::ReconciliationClient]
+    # @!attribute webhooks
+    #   @return [CheckoutSdk::Previous::Webhooks::WebhooksClient]
+    # @!attribute events
+    #   @return [CheckoutSdk::Previous::Events::EventsClient]
     class CheckoutApi
       attr_reader :customers,
                   :disputes,
@@ -38,7 +42,9 @@ module CheckoutSdk
                   :klarna,
                   :sepa,
                   :risk,
-                  :reconciliation
+                  :reconciliation,
+                  :webhooks,
+                  :events
 
       # @param [CheckoutConfiguration] configuration
       def initialize(configuration)
@@ -55,6 +61,8 @@ module CheckoutSdk
         @sepa = CheckoutSdk::Previous::Apm::SepaClient.new api_client, configuration
         @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
         @reconciliation = CheckoutSdk::Previous::Reconciliation::ReconciliationClient.new api_client, configuration
+        @webhooks = CheckoutSdk::Previous::Webhooks::WebhooksClient.new api_client, configuration
+        @events = CheckoutSdk::Previous::Events::EventsClient.new api_client, configuration
       end
 
       private

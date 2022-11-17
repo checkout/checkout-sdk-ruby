@@ -6,10 +6,6 @@ module CheckoutSdk
     #   @return [Integer]
     # @!attribute skip
     #   @return [Integer]
-    # @!attribute from
-    #   @return [DateTime]
-    # @!attribute to
-    #   @return [DateTime]
     # @!attribute id
     #   @return [String]
     # @!attribute statuses
@@ -28,11 +24,9 @@ module CheckoutSdk
     #   @return [String] - Not available on Previous.
     # @!attribute payment_mcc
     #   @return [String] - Not available on Previous.
-    class DisputesQueryFilter
+    class DisputesQueryFilter < CheckoutSdk::Common::DateRangeQueryFilter
       attr_accessor :limit,
                     :skip,
-                    :from,
-                    :to,
                     :id,
                     :statuses,
                     :payment_id,
