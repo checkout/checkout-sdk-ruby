@@ -32,6 +32,7 @@ module CheckoutSdk
     # @return [Faraday::Connection]
     def self.build_default_client
       Faraday.new do |f|
+        f.response :follow_redirects
         f.response :raise_error
       end
     end

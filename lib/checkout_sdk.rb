@@ -6,6 +6,7 @@ require 'json'
 require 'faraday'
 require 'faraday/multipart'
 require 'faraday/net_http'
+require 'faraday/follow_redirects'
 require 'mime/types'
 require 'logger'
 

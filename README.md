@@ -168,6 +168,7 @@ also need to specify the custom `http client` for `multipart requests`:
 http_client = Faraday.new do |conn|
   conn.options.timeout = 10
   conn.proxy "http://localhost:8080"
+  conn.response :raise_error
 end
 
 multipart_client = Faraday.new do |f|
@@ -181,6 +182,25 @@ api = CheckoutSdk.builder
                  .with_environment(CheckoutSdk::Environment.sandbox)
                  .with_http_client(http_client)
                  .with_multipart_http_client(multipart_client)
+                 .build
+```
+
+If you want to use your own `http_client` and wants to use `Reports` module, the `get_report_file` function follows a redirect URL from Checkout, 
+Ruby SDK uses `faraday-follow-redirects` which is an [open source](https://github.com/tisba/faraday-follow-redirects) solution that came after Faraday 2.0 deprecation, 
+you must add it otherwise Ruby SDK will not be able to download the contents file, or provide your custom redirect adapter.
+
+```ruby
+http_client = Faraday.new do |f|
+  f.response :follow_redirects
+  f.response :raise_error
+end
+
+api = CheckoutSdk.builder
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_public_key('public_key') # optional, only required for operations related with tokens
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_http_client(http_client)
                  .build
 ```
 
