@@ -61,4 +61,21 @@ RSpec.describe CheckoutSdk::Reports do
       end
     end
   end
+
+  describe '.get_report_file' do
+    context 'when requesting report file' do
+      subject(:report) {
+        response = default_sdk.reports.get_all_reports @query
+        assert_response response, %w[data]
+        response.data[0]
+      }
+      it 'should retrieve report file contents' do
+        response = default_sdk.reports.get_report_file report.id, report.files[0].id
+        expect(response).not_to be_nil
+        expect(response.contents).not_to be_nil
+        expect(response.metadata.status_code).to eq 200
+      end
+
+    end
+  end
 end
