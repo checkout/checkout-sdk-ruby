@@ -3,7 +3,7 @@ name: build-pull-request
 on:
   pull_request:
     branches:
-      - "beta"
+      - "master"
       - "feature/**"
 
 jobs:
