@@ -2,13 +2,13 @@ name: build-release
 on:
   push:
     branches:
-      - beta
+      - master
     paths:
       - lib/checkout_sdk/version.rb
 
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/beta'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

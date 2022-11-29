@@ -3,7 +3,7 @@ name: build-master
 on:
   push:
     branches:
-      - "beta"
+      - "master"
 
 jobs:
   build:
