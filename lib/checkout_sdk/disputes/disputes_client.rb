@@ -7,7 +7,8 @@ module CheckoutSdk
       FILES = 'files'
       ACCEPT = 'accept'
       EVIDENCE = 'evidence'
-      private_constant :DISPUTES, :FILES, :ACCEPT, :EVIDENCE
+      SCHEME_FILES = 'schemefiles'
+      private_constant :DISPUTES, :FILES, :ACCEPT, :EVIDENCE, :SCHEME_FILES
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -44,6 +45,11 @@ module CheckoutSdk
       # @param [String] dispute_id
       def submit_evidence(dispute_id)
         api_client.invoke_post(build_path(DISPUTES, dispute_id, EVIDENCE), sdk_authorization)
+      end
+
+      # @param [String] dispute_id
+      def get_dispute_scheme_files(dispute_id)
+        api_client.invoke_get(build_path(DISPUTES, dispute_id, SCHEME_FILES), sdk_authorization)
       end
 
       # @param [CheckoutSdk::Common::FileRequest] file_request

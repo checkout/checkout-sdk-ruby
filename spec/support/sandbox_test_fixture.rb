@@ -87,8 +87,7 @@ module Helpers
        CheckoutSdk::OAuthScopes::SESSIONS_APP, CheckoutSdk::OAuthScopes::SESSIONS_BROWSER,
        CheckoutSdk::OAuthScopes::FLOW, CheckoutSdk::OAuthScopes::FILES,
        CheckoutSdk::OAuthScopes::FX, CheckoutSdk::OAuthScopes::BALANCES_VIEW,
-       CheckoutSdk::OAuthScopes::MARKETPLACE, CheckoutSdk::OAuthScopes::TRANSFERS,
-       CheckoutSdk::OAuthScopes::REPORTING]
+       CheckoutSdk::OAuthScopes::MARKETPLACE, CheckoutSdk::OAuthScopes::TRANSFERS]
     end
   end
 end
