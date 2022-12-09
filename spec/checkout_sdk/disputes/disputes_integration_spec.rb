@@ -34,20 +34,6 @@ RSpec.describe CheckoutSdk::Disputes do
       end
     end
 
-    context 'when querying with valid filters but no matches found' do
-      it 'returns null data' do
-        query = CheckoutSdk::Disputes::DisputesQueryFilter.new
-        query.limit = 100
-        query.from = DateTime.now
-        query.to = DateTime.now
-
-        response = default_sdk.disputes.query(query)
-
-        expect(response).not_to be nil
-        expect(response.total_count).to eq(0)
-      end
-    end
-
     context 'when querying with invalid filters' do
       it 'raises an error' do
         query = CheckoutSdk::Disputes::DisputesQueryFilter.new
@@ -200,7 +186,30 @@ RSpec.describe CheckoutSdk::Disputes do
         end
       end
     end
+  end
 
+  describe '.get_dispute_scheme_files' do
+    context 'when fetching scheme files for valid dispute' do
+      subject(:dispute) { get_disputes(from: DateTime.now.prev_year(1), to: DateTime.now).data.first }
+      it 'returns scheme files' do
+        response = default_sdk.disputes.get_dispute_scheme_files(dispute.id)
+
+        expect(response).not_to be nil
+        expect(response.id).to eq dispute.id
+        expect(response.files).not_to be nil
+
+        response.files.each { |file|
+          expect(file.file).not_to be nil
+          expect(file.dispute_status).not_to be nil
+        }
+      end
+    end
+
+    context 'when fetching inexistent dispute' do
+      it 'raises an error' do
+        expect { default_sdk.disputes.get_dispute_scheme_files('not_found') }.to raise_error(CheckoutSdk::CheckoutApiException)
+      end
+    end
   end
 
   describe '.upload_file' do

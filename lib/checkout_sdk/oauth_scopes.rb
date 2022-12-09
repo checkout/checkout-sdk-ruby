@@ -20,6 +20,7 @@ module CheckoutSdk
     DISPUTES_VIEW = 'disputes:view'
     DISPUTES_PROVIDE_EVIDENCE = 'disputes:provide-evidence'
     DISPUTES_ACCEPT = 'disputes:accept'
+    DISPUTES_SCHEME_FILES = 'disputes:scheme-files'
     MARKETPLACE = 'marketplace'
     ACCOUNTS = 'accounts'
     FLOW = 'flow'
