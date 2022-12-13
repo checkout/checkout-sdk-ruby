@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 module Helpers
   module DataFactory
-    NAME = 'Integration Test'.freeze
-    FIRST_NAME = 'Integration'.freeze
-    LAST_NAME = 'Test'.freeze
-    SUCCESS_URL = 'https://testing.checkout.com/sucess'.freeze
-    FAILURE_URL = 'https://testing.checkout.com/failure'.freeze
-    CARD_NUMBER = '4242424242424242'.freeze
-    CVV = '100'.freeze
-    EXPIRY_MONTH = 6.freeze
-    EXPIRY_YEAR = 2025.freeze
-    DESCRIPTION = 'Description'.freeze
-    REFERENCE = 'Reference'.freeze
+    NAME = 'Integration Test'
+    FIRST_NAME = 'Integration'
+    LAST_NAME = 'Test'
+    SUCCESS_URL = 'https://testing.checkout.com/sucess'
+    FAILURE_URL = 'https://testing.checkout.com/failure'
+    CARD_NUMBER = '4242424242424242'
+    CVV = '100'
+    EXPIRY_MONTH = 6
+    EXPIRY_YEAR = 2025
+    DESCRIPTION = 'Description'
+    REFERENCE = 'Reference'
 
     # @return [CheckoutSdk::Common::Phone]
     def phone

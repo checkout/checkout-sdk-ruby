@@ -62,6 +62,7 @@ require 'checkout_sdk/workflows/workflows'
 require 'checkout_sdk/risk/risk'
 require 'checkout_sdk/balances/balances'
 require 'checkout_sdk/transfers/transfers'
+require 'checkout_sdk/metadata/metadata'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'

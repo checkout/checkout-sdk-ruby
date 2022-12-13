@@ -33,6 +33,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Balances::BalancesClient]
   # @!attribute transfers
   #   @return [CheckoutSdk::Transfers::TransfersClient]
+  # @!attribute metadata
+  #   @return [CheckoutSdk::Metadata::MetadataClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -49,7 +51,8 @@ module CheckoutSdk
                 :workflows,
                 :risk,
                 :balances,
-                :transfers
+                :transfers,
+                :metadata
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -70,6 +73,7 @@ module CheckoutSdk
       @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
       @balances = CheckoutSdk::Balances::BalancesClient.new(balances_client(configuration), configuration)
       @transfers = CheckoutSdk::Transfers::TransfersClient.new(transfers_client(configuration), configuration)
+      @metadata = CheckoutSdk::Metadata::MetadataClient.new api_client, configuration
     end
 
     private

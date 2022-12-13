@@ -40,5 +40,6 @@ module CheckoutSdk
     MIDDLEWARE_MERCHANTS_PUBLIC = 'middleware:merchants-public'
     REPORTING = 'reporting'
     REPORTING_VIEW = 'reporting:view'
+    CARD_METADATA = 'vault:card-metadata'
   end
 end
