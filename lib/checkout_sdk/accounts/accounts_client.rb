@@ -16,7 +16,7 @@ module CheckoutSdk
       # @param [ApiClient] files_client
       # @param [CheckoutConfiguration] configuration
       def initialize(api_client, files_client, configuration)
-        super(api_client, configuration, CheckoutSdk::AuthorizationType::OAUTH)
+        super(api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH)
         @files_client = files_client
       end
 
