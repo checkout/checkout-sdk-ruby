@@ -8,12 +8,15 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute phone
     #   @return [CheckoutSdk::Common::Phone]
+    # @!attribute stored
+    #   @return [TrueClass, FalseClass]
     # @!attribute store_for_future_use
     #   @return [TrueClass, FalseClass]
     class TokenSource < PaymentSource
       attr_accessor :token,
                     :billing_address,
                     :phone,
+                    :stored,
                     :store_for_future_use
 
       def initialize
