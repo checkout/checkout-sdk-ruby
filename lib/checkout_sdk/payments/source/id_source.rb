@@ -8,10 +8,16 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute payment_method
     #   @return [String]
+    # @!attribute stored
+    #   @return [TrueClass, FalseClass]
+    # @!attribute store_for_future_use
+    #   @return [TrueClass, FalseClass]
     class IdSource < PaymentSource
       attr_accessor :id,
                     :cvv,
-                    :payment_method
+                    :payment_method,
+                    :stored,
+                    :store_for_future_use
 
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::ID
