@@ -79,6 +79,20 @@ module Helpers
       @common_account_holder
     end
 
+    def payment_recipient
+      if @payment_recipient.nil?
+        payment_recipient = CheckoutSdk::Payments::PaymentRecipient.new
+        payment_recipient.account_number = '123456789'
+        payment_recipient.dob = '1985-05-18'
+        payment_recipient.first_name = 'IT'
+        payment_recipient.last_name = 'Testing'
+        payment_recipient.zip = '12345'
+        payment_recipient.country = CheckoutSdk::Common::Country::BE
+        @payment_recipient = payment_recipient
+      end
+      @payment_recipient
+    end
+
     class VisaCard
       attr_reader :card_number,
                   :expiry_month,
