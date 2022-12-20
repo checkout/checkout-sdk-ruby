@@ -2,6 +2,8 @@
 
 module CheckoutSdk
   module Risk
+    #   @deprecated Risk endpoints have been officially no longer supported, This module will be removed in a
+    # future release.
     class RiskClient < Client
       PRE_AUTHENTICATION = 'risk/assessments/pre-authentication'
       PRE_CAPTURE = 'risk/assessments/pre-capture'
