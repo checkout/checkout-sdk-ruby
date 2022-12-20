@@ -199,7 +199,7 @@ RSpec.describe CheckoutSdk::Payments do
       end
     end
 
-    context 'when requesting P24 source payment' do
+    skip 'when requesting P24 source payment' do
       it 'raises an error (payee_not_onboarded)' do
         source = CheckoutSdk::Payments::P24Source.new
         source.payment_country = CheckoutSdk::Common::Country::PL

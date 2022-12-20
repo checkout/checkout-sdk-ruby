@@ -55,12 +55,6 @@ def create_hosted_payments_request
   shipping_details.address = address
   shipping_details.phone = phone
 
-  recipient = CheckoutSdk::Payments::PaymentRecipient.new
-  recipient.account_number = '123456789'
-  recipient.dob = '1985-05-18'
-  recipient.last_name = 'Testing'
-  recipient.zip = '12345'
-
   product = CheckoutSdk::Common::Product.new
   product.name = 'Gold Necklace'
   product.quantity = 1
@@ -89,7 +83,7 @@ def create_hosted_payments_request
   request.customer = common_customer_request
   request.shipping = shipping_details
   request.billing = billing_information
-  request.recipient = recipient
+  request.recipient = payment_recipient
   request.processing = processing_settings
   request.products = [product]
   request.risk = risk_request

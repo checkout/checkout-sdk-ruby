@@ -8,13 +8,19 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute zip
     #   @return [String]
+    # @!attribute first_name
+    #   @return [String]
     # @!attribute last_name
     #   @return [String]
+    # @!attribute country
+    #   @return [String] {CheckoutSdk::Common::Country}
     class PaymentRecipient
       attr_accessor :dob,
                     :account_number,
                     :zip,
-                    :last_name
+                    :first_name,
+                    :last_name,
+                    :country
     end
   end
 end
