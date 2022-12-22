@@ -7,6 +7,9 @@ Metrics/AbcSize:
 Lint/MissingSuper:
   Enabled: false
 
+Lint/EmptyClass:
+  Enabled: false
+
 Layout/LineLength:
   Max: 120
 

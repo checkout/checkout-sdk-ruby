@@ -10,7 +10,8 @@ module CheckoutSdk
       INSTRUMENT = 'instruments'
       PAYOUT_SCHEDULE = 'payout-schedules'
       FILES = 'files'
-      private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES
+      PAYMENT_INSTRUMENTS = 'payment-instruments'
+      private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES, :PAYMENT_INSTRUMENTS
 
       # @param [ApiClient] api_client
       # @param [ApiClient] files_client
@@ -36,11 +37,34 @@ module CheckoutSdk
         api_client.invoke_put(build_path(ACCOUNTS, ENTITIES, entity_id), sdk_authorization, entity_request)
       end
 
+      # @deprecated Please use {#add_payment_instrument} instead
       # @param [String] entity_id
       # @param [PaymentInstrument] payment_instrument
       def create_payment_instrument(entity_id, payment_instrument)
         api_client.invoke_post(build_path(ACCOUNTS, ENTITIES, entity_id, INSTRUMENT), sdk_authorization,
                                payment_instrument)
+      end
+
+      # @param [String] entity_id
+      # @param [PaymentInstrumentRequest] payment_instrument
+      def add_payment_instrument(entity_id, payment_instrument)
+        api_client.invoke_post(build_path(ACCOUNTS, ENTITIES, entity_id, PAYMENT_INSTRUMENTS), sdk_authorization,
+                               payment_instrument)
+      end
+
+      # @param [String] entity_id
+      # @param [PaymentInstrumentsQuery,nil] payment_instruments_query
+      def query_payment_instruments(entity_id, payment_instruments_query = nil)
+        api_client.invoke_get(build_path(ACCOUNTS, ENTITIES, entity_id, PAYMENT_INSTRUMENTS),
+                              sdk_authorization,
+                              payment_instruments_query)
+      end
+
+      # @param [String] entity_id
+      # @param [String] payment_instrument_id
+      def retrieve_payment_instrument_details(entity_id, payment_instrument_id)
+        api_client.invoke_get(build_path(ACCOUNTS, ENTITIES, entity_id, PAYMENT_INSTRUMENTS, payment_instrument_id),
+                              sdk_authorization)
       end
 
       # @param [String] entity_id

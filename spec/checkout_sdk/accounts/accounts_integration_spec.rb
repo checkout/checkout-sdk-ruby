@@ -1,8 +1,13 @@
 RSpec.describe CheckoutSdk::Accounts do
 
+  before(:all) do
+    @payout_schedules_sdk = payout_schedules_checkout_api
+    @accounts_sdk = accounts_checkout_api
+  end
+
   describe 'when sub entity operations' do
     before(:all) do
-      @entity = create_entity
+      @entity = create_entity oauth_sdk
     end
     describe '.create_entity' do
       context 'when creating a entity with valid data' do
@@ -50,6 +55,55 @@ RSpec.describe CheckoutSdk::Accounts do
     end
   end
 
+  describe 'when entity payment instrument operations' do
+    before(:all) do
+      @entity = create_entity @accounts_sdk
+      @file = upload_file_accounts @accounts_sdk
+    end
+
+    describe '.add_payment_instrument' do
+      context 'when adding payment instrument to existing entity' do
+        it 'creates instrument for entity successfully' do
+          request = build_payment_instrument @file
+
+          response = @accounts_sdk.accounts.add_payment_instrument @entity.id, request
+
+          assert_response response, %w[id]
+        end
+      end
+    end
+
+    describe '.retrieve_payment_instrument_details' do
+      context 'when fetching existing payment instrument for valid entity' do
+        subject(:payment_instrument) {
+          @accounts_sdk.accounts.add_payment_instrument @entity.id, build_payment_instrument(@file)
+        }
+        it 'retrieves payment instrument details' do
+          response = @accounts_sdk.accounts.retrieve_payment_instrument_details @entity.id, payment_instrument.id
+
+          assert_response response, %w[id
+                                       status
+                                       label
+                                       type
+                                       currency
+                                       country
+                                       document]
+        end
+      end
+    end
+
+    describe '.query_payment_instruments' do
+      context 'when querying for valid entity' do
+        it 'retrieves entity payment instruments' do
+          response = @accounts_sdk.accounts.query_payment_instruments @entity.id
+
+          assert_response response, %w[data]
+        end
+      end
+    end
+  end
+
+
   describe '.upload_file' do
     context 'when uploading a file' do
       it 'returns http 200' do
@@ -76,17 +130,18 @@ RSpec.describe CheckoutSdk::Accounts do
         request.threshold = 1000
         request.recurrence = frequency
 
-        expect { payout_schedules_checkout_api.accounts.update_payout_schedule('ent_sdioy6bajpzxyl3utftdp7legq', CheckoutSdk::Common::Currency::USD, request) }
+        expect { @payout_schedules_sdk.accounts.update_payout_schedule('ent_sdioy6bajpzxyl3utftdp7legq', CheckoutSdk::Common::Currency::USD, request) }
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'company_business_registration_number_invalid' }
       end
     end
   end
-
 end
 
-def create_entity
+private
+
+def create_entity(sdk)
   request = build_entity
-  oauth_sdk.accounts.create_entity request
+  sdk.accounts.create_entity request
 end
 
 def build_entity
@@ -129,13 +184,51 @@ def build_entity
   request
 end
 
+def build_payment_instrument(file)
+  document = CheckoutSdk::Accounts::InstrumentDocument.new
+  document.type = 'bank_statement'
+  document.file_id = file.id
+
+  instrument_details = CheckoutSdk::Accounts::InstrumentDetailsFasterPayments.new
+  instrument_details.account_number = '12334454'
+  instrument_details.bank_code = '050389'
+
+  request = CheckoutSdk::Accounts::PaymentInstrumentRequest.new
+  request.label = 'Barclays'
+  request.currency = CheckoutSdk::Common::Currency::GBP
+  request.country = CheckoutSdk::Common::Country::GB
+  request.default = false
+  request.document = document
+  request.instrument_details = instrument_details
+  request
+end
+
+def upload_file_accounts(sdk)
+  request = CheckoutSdk::Accounts::FileRequest.new
+  request.file = './spec/resources/checkout.jpeg'
+  request.purpose = 'bank_verification'
+
+  sdk.accounts.upload_file(request)
+end
+
 def payout_schedules_checkout_api
   CheckoutSdk.builder
              .oauth
              .with_client_credentials(
-               ENV['CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID'],
-               ENV['CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET'])
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil))
              .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
+             .with_environment(CheckoutSdk::Environment.sandbox)
+             .build
+end
+
+def accounts_checkout_api
+  CheckoutSdk.builder
+             .oauth
+             .with_client_credentials(
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil))
+             .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::FILES])
              .with_environment(CheckoutSdk::Environment.sandbox)
              .build
 end
