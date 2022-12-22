@@ -9,7 +9,7 @@ RSpec.describe CheckoutSdk::Workflows do
     delete_workflow @workflow.id
   end
 
-  describe '.retrieve_action_invocations' do
+  skip '.retrieve_action_invocations' do
     context 'when creating a workflow' do
       it 'successfully retrieve actions invocations after a payment' do
         payment_response = make_card_payment

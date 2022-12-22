@@ -9,7 +9,7 @@ RSpec.describe CheckoutSdk::Workflows do
     delete_workflow @workflow.id
   end
 
-  describe '.reflow_by_event' do
+  skip '.reflow_by_event' do
     context 'when having a workflow and after a payment' do
       it 'should successfully reflow by event' do
         payment_response = make_card_payment
@@ -20,7 +20,7 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
-  describe '.reflow_by_subject' do
+  skip '.reflow_by_subject' do
     context 'when having a workflow and after a payment' do
       it 'should successfully reflow by subject' do
         payment_response = make_card_payment
@@ -31,7 +31,7 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
-  describe '.reflow_by_event_and_workflow' do
+  skip '.reflow_by_event_and_workflow' do
     context 'when having a workflow and after a payment' do
       it 'should successfully reflow by event and workflow' do
         payment_response = make_card_payment
@@ -43,7 +43,7 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
-  describe '.reflow_by_subject_and_workflow' do
+  skip '.reflow_by_subject_and_workflow' do
     context 'when having a workflow and after a payment' do
       it 'should successfully reflow by subject and workflow' do
         payment_response = make_card_payment
@@ -54,7 +54,7 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
-  describe '.reflow' do
+  skip '.reflow' do
     context 'when having a workflow and after a payment' do
       it 'should successfully reflow by event request' do
         payment_response = make_card_payment
