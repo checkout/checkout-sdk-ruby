@@ -9,7 +9,7 @@ RSpec.describe CheckoutSdk::Workflows do
     delete_workflow @workflow.id
   end
 
-  describe '.retrieve_event_types' do
+  skip '.retrieve_event_types' do
     context 'when fetching workflows event types' do
       it 'successfully retrieve event types' do
         event_types = default_sdk.workflows.retrieve_event_types
@@ -19,7 +19,7 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
-  describe '.retrieve_event' do
+  skip '.retrieve_event' do
     context 'when creates a workflow and after a payment' do
       it 'should get subject event and events' do
         payment_response = make_card_payment(capture: true)
