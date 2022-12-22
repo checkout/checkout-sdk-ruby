@@ -79,7 +79,7 @@ RSpec.describe CheckoutSdk::Disputes do
         disputes = retriable(proc, predicate)
 
         @dispute = disputes.data.first
-        @file_id = upload_file_previous.id
+        @file_id = upload_file_disputes_previous.id
       end
 
       describe '.put_evidence' do
@@ -230,7 +230,7 @@ RSpec.describe CheckoutSdk::Disputes do
 
     describe '.get_file_details' do
       context 'when fetching existing file' do
-        subject(:file) { upload_file_previous }
+        subject(:file) { upload_file_disputes_previous }
         it 'returns file details' do
           response = previous_sdk.disputes.get_file_details(file.id)
 
@@ -262,7 +262,7 @@ private def get_disputes_previous(from: nil, to: nil, status: nil, payment_id: n
   previous_sdk.disputes.query(query)
 end
 
-private def upload_file_previous
+private def upload_file_disputes_previous
   request = CheckoutSdk::Common::FileRequest.new
   request.file = './spec/resources/checkout.jpeg'
   request.purpose = CheckoutSdk::Common::FilePurpose::DISPUTE_EVIDENCE

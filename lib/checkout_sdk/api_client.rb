@@ -50,7 +50,7 @@ module CheckoutSdk
     def submit_file(path,
                     authorization,
                     request)
-      upload_file(path, authorization, request)
+      upload(path, authorization, request)
     end
 
     private
@@ -107,7 +107,7 @@ module CheckoutSdk
       }
     end
 
-    def upload_file(path, authorization, file_request)
+    def upload(path, authorization, file_request)
       headers = get_default_headers authorization
 
       file = File.open(file_request.file)
