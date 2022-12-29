@@ -42,7 +42,7 @@ module WorkflowsHelper
     workflow_request.actions = [action_request]
     workflow_request.conditions = [entity_condition_request, event_condition_request,
                                    pc_condition]
-    workflow_request.name = 'testing'
+    workflow_request.name = 'testing-ruby'
     workflow_request.active = true
 
     proc = -> { default_sdk.workflows.create_workflow(workflow_request) }
