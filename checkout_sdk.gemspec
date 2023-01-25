@@ -31,8 +31,9 @@ sellers and service providers."
   spec.add_development_dependency 'rake', '>= 13.0'
   spec.add_development_dependency 'rspec', '>= 3.0'
   spec.add_development_dependency 'rubocop', '~> 1.36.0'
-  spec.add_dependency 'faraday', '>= 2.0.0'
-  spec.add_dependency 'faraday-multipart', '~> 1.0.4'
+  spec.add_dependency 'faraday', '>= 1.10.0'
   spec.add_dependency 'faraday-follow_redirects', '~> 0.3.0'
+  spec.add_dependency 'faraday-multipart', '~> 1.0.4'
   spec.add_dependency 'mime-types', '~> 3.0'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end
