@@ -35,5 +35,4 @@ sellers and service providers."
   spec.add_dependency 'faraday-follow_redirects', '~> 0.3.0'
   spec.add_dependency 'faraday-multipart', '~> 1.0.4'
   spec.add_dependency 'mime-types', '~> 3.0'
-  spec.metadata['rubygems_mfa_required'] = 'true'
 end
