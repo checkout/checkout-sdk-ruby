@@ -1,6 +1,6 @@
 RSpec.describe CheckoutSdk::Previous::Sources do
 
-  describe '.create_sepa_source' do
+  context '.create_sepa_source', skip: 'responding 502 in sandbox' do
     context 'when creating a SEPA source with valid parameters' do
       it 'creates SEPA source correctly' do
         source_data = CheckoutSdk::Previous::Sources::SourceData.new
