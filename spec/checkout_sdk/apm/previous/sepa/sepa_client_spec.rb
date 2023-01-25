@@ -40,7 +40,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::SepaClient do
     context 'when fetching valid mandate via ppro' do
       it 'retrieves mandate details' do
         expect(@api_client_mock).to receive(:invoke_get)
-                                      .with('ppro/sepa/mandates/mandate_id',
+                                      .with('apms/ppro/sepa/mandates/mandate_id',
                                             'secret_key')
                                       .and_return('response')
 
@@ -53,7 +53,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::SepaClient do
     context 'when cancelling existing mandate via ppro' do
       it 'cancels mandate' do
         expect(@api_client_mock).to receive(:invoke_post)
-                                      .with('ppro/sepa/mandates/mandate_id/cancel',
+                                      .with('apms/ppro/sepa/mandates/mandate_id/cancel',
                                             'secret_key')
                                       .and_return('response')
 
