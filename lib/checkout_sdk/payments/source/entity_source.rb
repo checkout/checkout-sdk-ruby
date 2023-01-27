@@ -2,9 +2,9 @@
 
 module CheckoutSdk
   module Payments
-    class CurrencyAccountSource < PayoutSource
+    class EntitySource < PayoutSource
       def initialize
-        super PayoutSourceType::CURRENCY_ACCOUNT
+        super PayoutSourceType::ENTITY
       end
     end
   end

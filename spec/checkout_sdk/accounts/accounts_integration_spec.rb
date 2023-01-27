@@ -101,6 +101,35 @@ RSpec.describe CheckoutSdk::Accounts do
         end
       end
     end
+
+    describe '.update_payment_instrument', skip: 'returns 428 status when updating' do
+      subject(:payment_instrument) {
+        @accounts_sdk.accounts.add_payment_instrument @entity.id, build_payment_instrument(@file)
+      }
+      context 'when updating existing payment instrument for valid entity' do
+        it 'returns http 200' do
+          request = CheckoutSdk::Accounts::UpdatePaymentInstrumentRequest.new
+          request.label = 'new label'
+          request.default = true
+
+          response = @accounts_sdk.accounts.update_payment_instrument @entity.id,
+                                                                      payment_instrument.id,
+                                                                      request
+          assert_response response, %w[id]
+        end
+
+        it 'reflects new values for updated fields' do
+          response = @accounts_sdk.accounts.retrieve_payment_instrument_details @entity.id,
+                                                                                payment_instrument.id
+
+          assert_response response, %w[id
+                                       label
+                                       default]
+          expect(response.label).to eq 'new label'
+          expect(response.default).to be true
+        end
+      end
+    end
   end
 
 

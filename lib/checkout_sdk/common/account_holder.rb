@@ -4,7 +4,11 @@ module CheckoutSdk
   module Common
     # @!attribute type
     #   @return [String] {AccountHolderType}
+    # @!attribute title
+    #   @return [String]
     # @!attribute first_name
+    #   @return [String]
+    # @!attribute middle_name
     #   @return [String]
     # @!attribute last_name
     #   @return [String]
@@ -30,7 +34,9 @@ module CheckoutSdk
     #   @return [String]
     class AccountHolder
       attr_accessor :type,
+                    :title,
                     :first_name,
+                    :middle_name,
                     :last_name,
                     :company_name,
                     :tax_id,

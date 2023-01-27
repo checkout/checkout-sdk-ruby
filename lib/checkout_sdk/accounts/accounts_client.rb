@@ -68,6 +68,15 @@ module CheckoutSdk
       end
 
       # @param [String] entity_id
+      # @param [String] instrument_id
+      # @param [UpdatePaymentInstrumentRequest] update_payment_instrument
+      def update_payment_instrument(entity_id, instrument_id, update_payment_instrument)
+        api_client.invoke_patch(build_path(ACCOUNTS, ENTITIES, entity_id, PAYMENT_INSTRUMENTS, instrument_id),
+                                sdk_authorization,
+                                update_payment_instrument)
+      end
+
+      # @param [String] entity_id
       # @param [String] currency {CheckoutSdk::Common::Currency}
       # @param [UpdateSchedule] update_schedule
       def update_payout_schedule(entity_id, currency, update_schedule)
