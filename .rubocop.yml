@@ -41,3 +41,4 @@ Naming/MethodName:
   Exclude:
     - "**/google_pay_token_data*"
     - "**/sofort_source*"
+    - "**/processing_settings*"

@@ -54,12 +54,18 @@ module CheckoutSdk
     #   @return [String] {CheckoutSdk::Common::Country}
     # @!attribute custom_payment_method_ids
     #   @return [Array(String)]
+    # @!attribute merchant_callback_url
+    #   @return [String]
     # @!attribute shipping_delay
     #   @return [Integer]
     # @!attribute shipping_info
     #   @return [Array(CheckoutSdk::Common::ShippingInfo)]
     # @!attribute dlocal
     #   @return [DLocalProcessingSettings]
+    # @!attribute senderInformation
+    #   @return [SenderInformation]
+    # @!attribute purpose
+    #   @return [String]
     class ProcessingSettings
       attr_accessor :order_id,
                     :tax_amount,
@@ -87,9 +93,12 @@ module CheckoutSdk
                     :otp_value,
                     :purchase_country,
                     :custom_payment_method_ids,
+                    :merchant_callback_url,
                     :shipping_delay,
                     :shipping_info,
-                    :dlocal
+                    :dlocal,
+                    :senderInformation,
+                    :purpose
     end
   end
 end

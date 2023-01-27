@@ -6,6 +6,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute account_number
     #   @return [String]
+    # @!attribute address
+    #   @return [CheckoutSdk::Common::Address]
     # @!attribute zip
     #   @return [String]
     # @!attribute first_name
@@ -17,6 +19,7 @@ module CheckoutSdk
     class PaymentRecipient
       attr_accessor :dob,
                     :account_number,
+                    :address,
                     :zip,
                     :first_name,
                     :last_name,
