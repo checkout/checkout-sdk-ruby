@@ -9,6 +9,7 @@ module CheckoutSdk
     # @!attribute address
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute zip
+    #   @deprecated Please use {#CheckoutSdk::Common::Address.zip} instead
     #   @return [String]
     # @!attribute first_name
     #   @return [String]
