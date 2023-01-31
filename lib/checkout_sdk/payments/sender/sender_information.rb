@@ -22,6 +22,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute source_of_funds
     #   @return [String]
+    # @!attribute purpose
+    #     #   @return [String]
     class SenderInformation
       attr_accessor :reference,
                     :first_name,
@@ -32,7 +34,8 @@ module CheckoutSdk
                     :state,
                     :country,
                     :postal_code,
-                    :source_of_funds
+                    :source_of_funds,
+                    :purpose
     end
   end
 end

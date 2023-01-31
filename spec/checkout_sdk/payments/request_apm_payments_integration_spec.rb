@@ -395,7 +395,6 @@ RSpec.describe CheckoutSdk::Payments do
 
     context 'when requesting Fawry source payment' do
       it 'raises an error (payee_not_onboarded)' do
-
         product = CheckoutSdk::Payments::FawryProduct.new
         product.product_id = '0123456789'
         product.quantity = 1
@@ -420,6 +419,63 @@ RSpec.describe CheckoutSdk::Payments do
         expect { default_sdk.payments.request_payment(request) }
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
+    end
+  end
+
+  context 'when requesting CvConnect source payment' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::CvConnectSource.new
+      source.billing_address = address
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 100
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+              expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+    end
+  end
+
+  context 'when requesting Trustly source payment' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::TrustlySource.new
+      source.billing_address = address
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 100
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+    end
+  end
+
+  context 'when requesting Illicado source payment' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::IllicadoSource.new
+      source.billing_address = address
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 100
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
     end
   end
 

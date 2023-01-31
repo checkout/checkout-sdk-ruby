@@ -53,10 +53,10 @@ module CheckoutSdk
     #   @return [Array(CheckoutSdk::Common::AmountAllocations)]
     # @!attribute processing
     #   @return [ProcessingSettings]
-    # @!attribute metadata
-    #   @return [Hash{String => Object}]
     # @!attribute items
     #   @return [Array(Product)]
+    # @!attribute metadata
+    #   @return [Hash{String => Object}]
     class PaymentRequest
       attr_accessor :source,
                     :amount,
@@ -83,8 +83,8 @@ module CheckoutSdk
                     :marketplace,
                     :amount_allocations,
                     :processing,
-                    :metadata,
-                    :items
+                    :items,
+                    :metadata
     end
   end
 end

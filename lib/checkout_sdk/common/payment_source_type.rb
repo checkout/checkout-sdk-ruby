@@ -48,6 +48,9 @@ module CheckoutSdk
       POSTFINANCE = 'postfinance'
       STCPAY = 'stcpay'
       ALMA = 'alma'
+      CV_CONNECT = 'cvconnect'
+      TRUSTLY = 'trustly'
+      ILLICADO = 'illicado'
     end
   end
 end
