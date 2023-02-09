@@ -269,6 +269,5 @@ private def upload_file_disputes
 end
 
 private def there_are_disputes(response)
-  sleep 10
   response.total_count > 0
 end

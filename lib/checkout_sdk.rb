@@ -63,6 +63,7 @@ require 'checkout_sdk/risk/risk'
 require 'checkout_sdk/balances/balances'
 require 'checkout_sdk/transfers/transfers'
 require 'checkout_sdk/metadata/metadata'
+require 'checkout_sdk/financial/financial'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'

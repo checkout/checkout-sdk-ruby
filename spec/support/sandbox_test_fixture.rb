@@ -38,7 +38,7 @@ module Helpers
       @oauth_sdk
     end
 
-    def retriable(callback, predicate = nil)
+    def retriable(callback, predicate = nil, timeout = 2)
       current_attempt = 1
       max_attempts = 10
       while current_attempt <= max_attempts
@@ -46,8 +46,10 @@ module Helpers
           response = callback.call
           return response if predicate.nil?
           return response if predicate.call(response)
+
+          sleep timeout
         rescue CheckoutSdk::CheckoutApiException => e
-          sleep 2
+          sleep timeout
         end
         current_attempt += 1
       end
@@ -88,7 +90,7 @@ module Helpers
        CheckoutSdk::OAuthScopes::FLOW, CheckoutSdk::OAuthScopes::FILES,
        CheckoutSdk::OAuthScopes::FX, CheckoutSdk::OAuthScopes::BALANCES_VIEW,
        CheckoutSdk::OAuthScopes::MARKETPLACE, CheckoutSdk::OAuthScopes::TRANSFERS,
-       CheckoutSdk::OAuthScopes::CARD_METADATA]
+       CheckoutSdk::OAuthScopes::CARD_METADATA, CheckoutSdk::OAuthScopes::FINANCIAL_ACTIONS]
     end
   end
 end
