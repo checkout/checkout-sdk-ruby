@@ -15,7 +15,7 @@ RSpec.describe CheckoutSdk::Payments do
           proc = -> { default_sdk.payments.get_payments_list(query) }
           predicate = ->(response) { there_are_payments response }
 
-          response = retriable proc, predicate
+          response = retriable proc, predicate, 15
 
           assert_response response, %w[limit
                                      skip
@@ -31,6 +31,5 @@ RSpec.describe CheckoutSdk::Payments do
 end
 
 private def there_are_payments(response)
-  sleep 15
   response.total_count > 0
 end

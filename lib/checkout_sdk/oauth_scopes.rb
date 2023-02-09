@@ -41,5 +41,7 @@ module CheckoutSdk
     REPORTS = 'reports'
     REPORTS_VIEW = 'reports:view'
     CARD_METADATA = 'vault:card-metadata'
+    FINANCIAL_ACTIONS = 'financial-actions'
+    FINANCIAL_ACTIONS_VIEW = 'financial-actions:view'
   end
 end
