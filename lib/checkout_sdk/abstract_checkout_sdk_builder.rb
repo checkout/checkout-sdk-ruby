@@ -30,6 +30,7 @@ module CheckoutSdk
 
     def with_logger(logger)
       @logger = logger
+      self
     end
 
     def build
