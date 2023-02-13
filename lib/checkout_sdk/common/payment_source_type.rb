@@ -51,6 +51,7 @@ module CheckoutSdk
       CV_CONNECT = 'cvconnect'
       TRUSTLY = 'trustly'
       ILLICADO = 'illicado'
+      SEPA = 'sepa'
     end
   end
 end
