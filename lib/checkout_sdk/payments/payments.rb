@@ -80,6 +80,7 @@ require 'checkout_sdk/payments/source/apm/klarna_source'
 require 'checkout_sdk/payments/source/apm/cv_connect_source'
 require 'checkout_sdk/payments/source/apm/trustly_source'
 require 'checkout_sdk/payments/source/apm/illicado_source'
+require 'checkout_sdk/payments/source/apm/sepa_source'
 
 # Sender
 require 'checkout_sdk/payments/sender/sender'

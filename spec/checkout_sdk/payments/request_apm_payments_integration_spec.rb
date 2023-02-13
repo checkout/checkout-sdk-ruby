@@ -479,4 +479,29 @@ RSpec.describe CheckoutSdk::Payments do
     end
   end
 
+  context 'when requesting Sepa source payment' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::SepaSource.new
+      source.country = CheckoutSdk::Common::Country::ES
+      source.account_number = "HU93116000060000000012345676"
+      source.bank_code = "37040044"
+      source.currency = CheckoutSdk::Common::Currency::EUR
+      source.mandate_id = "man_12321233211"
+      source.date_of_signature = "2023-01-01"
+      source.account_holder = common_account_holder
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 100
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+    end
+  end
+
 end
