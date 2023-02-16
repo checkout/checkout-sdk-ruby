@@ -1,13 +1,14 @@
 RSpec.describe CheckoutSdk::Accounts do
 
   before(:all) do
-    @payout_schedules_sdk = payout_schedules_checkout_api
     @accounts_sdk = accounts_checkout_api
+    @payout_schedules_sdk = payout_schedules_checkout_api
+    @files_sdk = files_checkout_api
   end
 
   describe 'when sub entity operations' do
     before(:all) do
-      @entity = create_entity oauth_sdk
+      @entity = create_entity @accounts_sdk
     end
     describe '.create_entity' do
       context 'when creating a entity with valid data' do
@@ -22,7 +23,7 @@ RSpec.describe CheckoutSdk::Accounts do
     describe '.get_entity' do
       context 'when fetching a valid entity' do
         it 'returns entity data' do
-          response = oauth_sdk.accounts.get_entity @entity.id
+          response = @accounts_sdk.accounts.get_entity @entity.id
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
@@ -39,13 +40,13 @@ RSpec.describe CheckoutSdk::Accounts do
           request.contact_details.email_addresses.primary = generate_random_email
           request.profile.urls = ['https://www.anothersuperheroexample.com']
 
-          response = oauth_sdk.accounts.update_entity(@entity.id, request)
+          response = @accounts_sdk.accounts.update_entity(@entity.id, request)
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
           expect(response.metadata.status_code).to eq 200
 
-          verify_update = oauth_sdk.accounts.get_entity @entity.id
+          verify_update = @accounts_sdk.accounts.get_entity @entity.id
           expect(verify_update).not_to be nil
           expect(verify_update.contact_details.phone.number).to eq(request.contact_details.phone.number)
           expect(verify_update.contact_details.email_addresses.primary).to eq(request.contact_details.email_addresses.primary)
@@ -140,7 +141,7 @@ RSpec.describe CheckoutSdk::Accounts do
         request.file = './spec/resources/checkout.jpeg'
         request.purpose = 'dispute_evidence'
 
-        response = oauth_sdk.accounts.upload_file(request)
+        response = @files_sdk.accounts.upload_file(request)
 
         expect(response).not_to be nil
         expect(response.id).not_to be nil
@@ -148,19 +149,21 @@ RSpec.describe CheckoutSdk::Accounts do
     end
   end
 
-  describe '.update_payout_schedule' do
-    context 'when update a weekly payout' do
-      it 'fail because company_business_registration_number_invalid' do
-        frequency = CheckoutSdk::Accounts::ScheduleFrequencyWeekly.new
-        frequency.by_day = ['monday']
+  skip 'Skipping because payouts client_id does not have access to accounts scope' do
+    describe '.update_payout_schedule' do
+      context 'when update a weekly payout' do
+        it 'fail because company_business_registration_number_invalid' do
+          frequency = CheckoutSdk::Accounts::ScheduleFrequencyWeekly.new
+          frequency.by_day = ['monday']
 
-        request = CheckoutSdk::Accounts::UpdateSchedule.new
-        request.enabled = true
-        request.threshold = 1000
-        request.recurrence = frequency
+          request = CheckoutSdk::Accounts::UpdateSchedule.new
+          request.enabled = true
+          request.threshold = 1000
+          request.recurrence = frequency
 
-        expect { @payout_schedules_sdk.accounts.update_payout_schedule('ent_sdioy6bajpzxyl3utftdp7legq', CheckoutSdk::Common::Currency::USD, request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'company_business_registration_number_invalid' }
+          expect { @payout_schedules_sdk.accounts.update_payout_schedule('ent_sdioy6bajpzxyl3utftdp7legq', CheckoutSdk::Common::Currency::USD, request) }
+            .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'company_business_registration_number_invalid' }
+        end
       end
     end
   end
@@ -258,6 +261,17 @@ def accounts_checkout_api
                ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
                ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil))
              .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::FILES])
+             .with_environment(CheckoutSdk::Environment.sandbox)
+             .build
+end
+
+def files_checkout_api
+  CheckoutSdk.builder
+             .oauth
+             .with_client_credentials(
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil))
+             .with_scopes([CheckoutSdk::OAuthScopes::FILES])
              .with_environment(CheckoutSdk::Environment.sandbox)
              .build
 end
