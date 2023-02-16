@@ -52,7 +52,7 @@ RSpec.describe CheckoutSdk::Previous::Webhooks do
 
         request = CheckoutSdk::Previous::Webhooks::WebhookRequest.new
         request.url = 'https://checkout.ruby.com/failed'
-        request.headers = @webhook.headers.to_h
+        request.headers = { authorization: '1234' }
         request.event_types = ['source_updated']
         request.active = true
         request.content_type = 'json'
