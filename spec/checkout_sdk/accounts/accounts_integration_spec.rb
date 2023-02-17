@@ -7,7 +7,7 @@ RSpec.describe CheckoutSdk::Accounts do
 
   describe 'when sub entity operations' do
     before(:all) do
-      @entity = create_entity oauth_sdk
+      @entity = create_entity @accounts_sdk
     end
     describe '.create_entity' do
       context 'when creating a entity with valid data' do
@@ -22,7 +22,7 @@ RSpec.describe CheckoutSdk::Accounts do
     describe '.get_entity' do
       context 'when fetching a valid entity' do
         it 'returns entity data' do
-          response = oauth_sdk.accounts.get_entity @entity.id
+          response = @accounts_sdk.accounts.get_entity @entity.id
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
@@ -39,17 +39,49 @@ RSpec.describe CheckoutSdk::Accounts do
           request.contact_details.email_addresses.primary = generate_random_email
           request.profile.urls = ['https://www.anothersuperheroexample.com']
 
-          response = oauth_sdk.accounts.update_entity(@entity.id, request)
+          response = @accounts_sdk.accounts.update_entity(@entity.id, request)
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
           expect(response.metadata.status_code).to eq 200
 
-          verify_update = oauth_sdk.accounts.get_entity @entity.id
+          verify_update = @accounts_sdk.accounts.get_entity @entity.id
           expect(verify_update).not_to be nil
           expect(verify_update.contact_details.phone.number).to eq(request.contact_details.phone.number)
           expect(verify_update.contact_details.email_addresses.primary).to eq(request.contact_details.email_addresses.primary)
           expect(verify_update.profile.urls).to eq(request.profile.urls)
+        end
+      end
+    end
+  end
+
+  describe 'when upload a file get a file link and we can retrieve this file' do
+    before(:all) do
+      @entity = create_entity @accounts_sdk
+    end
+
+    describe '.update and retrieve a file' do
+      context 'when fetching a valid entity' do
+        it 'returns entity data' do
+          request = request_file @entity
+          upload_response = @accounts_sdk.accounts.update_a_file request
+
+          assert_response upload_response, %w[id
+                                              status
+                                              maximum_size_in_bytes
+                                              document_types_for_purpose]
+
+          retrieve_response = @accounts_sdk.accounts.retrieve_a_file upload_response.id
+
+          assert_response retrieve_response, %w[id
+                                                status
+                                                status_reasons
+                                                file_name
+                                                size
+                                                mime_type
+                                                uploaded_on
+                                                purpose]
+
         end
       end
     end
@@ -210,6 +242,13 @@ def build_entity
   request.contact_details = contact_details
   request.profile = profile
   request.individual = individual
+  request
+end
+
+def request_file(entity)
+  request = CheckoutSdk::Accounts::PlatformsFile.new
+  request.purpose = 'identity_verification'
+  request.entity_id = entity.id
   request
 end
 

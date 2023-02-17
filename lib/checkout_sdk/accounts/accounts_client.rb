@@ -11,6 +11,7 @@ module CheckoutSdk
       PAYOUT_SCHEDULE = 'payout-schedules'
       FILES = 'files'
       PAYMENT_INSTRUMENTS = 'payment-instruments'
+      PLATFORMS_FILES_PATH = 'platforms-files'
       private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES, :PAYMENT_INSTRUMENTS
 
       # @param [ApiClient] api_client
@@ -35,6 +36,16 @@ module CheckoutSdk
       # @param [OnboardEntity] entity_request
       def update_entity(entity_id, entity_request)
         api_client.invoke_put(build_path(ACCOUNTS, ENTITIES, entity_id), sdk_authorization, entity_request)
+      end
+
+      # @param [PlatformsFile] file_request
+      def update_a_file(file_request)
+        api_client.invoke_post(build_path(PLATFORMS_FILES_PATH), sdk_authorization, file_request)
+      end
+
+      # @param [String] file_id
+      def retrieve_a_file(file_id)
+        api_client.invoke_get(build_path(PLATFORMS_FILES_PATH, file_id), sdk_authorization)
       end
 
       # @deprecated Please use {#add_payment_instrument} instead
@@ -89,6 +100,7 @@ module CheckoutSdk
         api_client.invoke_get(build_path(ACCOUNTS, ENTITIES, entity_id, PAYOUT_SCHEDULE), sdk_authorization)
       end
 
+      # @deprecated This endpoint is no longer supported officially, please check the documentation.
       # @param [FileRequest] file_request
       def upload_file(file_request)
         files_client.submit_file(FILES, sdk_authorization, file_request)
