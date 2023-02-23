@@ -4,21 +4,21 @@ module CheckoutSdk
   class CheckoutUtils
     # @return [CheckoutSdk::HttpMetadata]
     def self.map_to_http_metadata(response)
-      metadata = CheckoutSdk::HttpMetadata.new
-      return metadata if response.nil?
+      http_metadata = CheckoutSdk::HttpMetadata.new
+      return http_metadata if response.nil?
 
       if response.is_a?(Hash)
-        metadata.headers = response[:headers]
-        metadata.status_code = response[:status]
-        metadata.body = response[:body]
+        http_metadata.headers = response[:headers]
+        http_metadata.status_code = response[:status]
+        http_metadata.body = response[:body]
       end
 
       if response.class.name.start_with? Faraday::Response.name
-        metadata.headers = response.headers
-        metadata.status_code = response.status
-        metadata.body = response.body
+        http_metadata.headers = response.headers
+        http_metadata.status_code = response.status
+        http_metadata.body = response.body
       end
-      metadata
+      http_metadata
     end
 
     # @return [Faraday::Connection]

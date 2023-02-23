@@ -7,11 +7,11 @@ RSpec.describe CheckoutSdk::Payments::HostedPaymentsClient do
           response = previous_sdk.hosted.create_hosted_payments_page_session request
 
           assert_response response, %w[id
-                                     reference
-                                     warnings
-                                     _links
-                                     metadata]
-          expect(response.metadata.status_code).to eq 201
+                                       reference
+                                       warnings
+                                       _links
+                                       http_metadata]
+          expect(response.http_metadata.status_code).to eq 201
         end
       end
     end
@@ -23,17 +23,17 @@ RSpec.describe CheckoutSdk::Payments::HostedPaymentsClient do
           response = previous_sdk.hosted.get_hosted_payments_page_details session.id
 
           assert_response response, %w[id
-                                     status
-                                     amount
-                                     currency
-                                     reference
-                                     description
-                                     customer
-                                     billing
-                                     products
-                                     _links
-                                     metadata]
-          expect(response.metadata.status_code).to eq 200
+                                       status
+                                       amount
+                                       currency
+                                       reference
+                                       description
+                                       customer
+                                       billing
+                                       products
+                                       _links
+                                       http_metadata]
+          expect(response.http_metadata.status_code).to eq 200
           expect(response.id).to eq session.id
         end
       end

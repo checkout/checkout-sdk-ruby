@@ -15,7 +15,7 @@ RSpec.describe CheckoutSdk::Accounts do
         it 'returns a new entity' do
           expect(@entity).not_to be nil
           expect(@entity.id).not_to be nil
-          expect(@entity.metadata.status_code).to eq 201
+          expect(@entity.http_metadata.status_code).to eq 201
         end
       end
     end
@@ -44,7 +44,7 @@ RSpec.describe CheckoutSdk::Accounts do
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
-          expect(response.metadata.status_code).to eq 200
+          expect(response.http_metadata.status_code).to eq 200
 
           verify_update = @accounts_sdk.accounts.get_entity @entity.id
           expect(verify_update).not_to be nil

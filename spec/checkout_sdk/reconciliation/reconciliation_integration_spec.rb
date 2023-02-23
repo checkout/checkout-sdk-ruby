@@ -17,7 +17,7 @@ RSpec.describe CheckoutSdk::Previous::Reconciliation do
         response = @api.reconciliation.query_payments_report request
 
         expect(response).not_to be_nil
-        expect(response.metadata.status_code).to eq 200
+        expect(response.http_metadata.status_code).to eq 200
       end
     end
   end

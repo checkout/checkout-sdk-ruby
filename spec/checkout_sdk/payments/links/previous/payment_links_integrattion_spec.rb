@@ -11,8 +11,8 @@ RSpec.describe CheckoutSdk::Payments::PaymentsLinksClient do
                                      expires_on
                                      warnings
                                      _links
-                                     metadata]
-          expect(response.metadata.status_code).to eq 201
+                                     http_metadata]
+          expect(response.http_metadata.status_code).to eq 201
         end
       end
     end
@@ -33,8 +33,8 @@ RSpec.describe CheckoutSdk::Payments::PaymentsLinksClient do
                                      billing
                                      products
                                      _links
-                                     metadata]
-          expect(response.metadata.status_code).to eq 200
+                                     http_metadata]
+          expect(response.http_metadata.status_code).to eq 200
           expect(response.id).to eq link.id
         end
       end
