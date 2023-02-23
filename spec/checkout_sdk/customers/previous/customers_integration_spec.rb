@@ -13,7 +13,7 @@ RSpec.describe CheckoutSdk::Customers do
 
           expect(response).not_to be nil
           expect(response.id).not_to be nil
-          expect(response.metadata.status_code).to eq 201
+          expect(response.http_metadata.status_code).to eq 201
         end
       end
 
@@ -57,7 +57,7 @@ RSpec.describe CheckoutSdk::Customers do
           response = previous_sdk.customers.update(@customer.id, request)
 
           expect(response).not_to be nil
-          expect(response.metadata.status_code).to eq 204
+          expect(response.http_metadata.status_code).to eq 204
         end
 
         it 'should have new values for updated fields' do
@@ -77,7 +77,7 @@ RSpec.describe CheckoutSdk::Customers do
           response = previous_sdk.customers.delete(customer_id)
 
           expect(response).not_to be nil
-          expect(response.metadata.status_code).to eq 204
+          expect(response.http_metadata.status_code).to eq 204
         end
       end
 

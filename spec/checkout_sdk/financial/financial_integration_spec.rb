@@ -18,7 +18,7 @@ RSpec.describe CheckoutSdk::Financial do
         response = retriable proc, predicate, 5
 
         assert_response response,
-                        %w[metadata
+                        %w[http_metadata
                            count
                            data
                            _links]

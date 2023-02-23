@@ -15,7 +15,7 @@ RSpec.describe CheckoutSdk::Workflows do
         payment_response = make_card_payment
         payment_event = retrieve_subject_event payment_response.id
         response = default_sdk.workflows.reflow_by_event payment_event.id
-        expect(response.metadata.status_code).to eq 202
+        expect(response.http_metadata.status_code).to eq 202
       end
     end
   end
@@ -26,7 +26,7 @@ RSpec.describe CheckoutSdk::Workflows do
         payment_response = make_card_payment
         proc = -> { default_sdk.workflows.reflow_by_subject(payment_response.id) }
         response = retriable proc
-        expect(response.metadata.status_code).to eq 202
+        expect(response.http_metadata.status_code).to eq 202
       end
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe CheckoutSdk::Workflows do
         payment_event = retrieve_subject_event payment_response.id
         proc = -> { default_sdk.workflows.reflow_by_event_and_workflow(payment_event.id, @workflow.id) }
         response = retriable proc
-        expect(response.metadata.status_code).to eq 202
+        expect(response.http_metadata.status_code).to eq 202
       end
     end
   end
@@ -49,7 +49,7 @@ RSpec.describe CheckoutSdk::Workflows do
         payment_response = make_card_payment
         proc = -> { default_sdk.workflows.reflow_by_subject_and_workflow(payment_response.id, @workflow.id) }
         response = retriable proc
-        expect(response.metadata.status_code).to eq 202
+        expect(response.http_metadata.status_code).to eq 202
       end
     end
   end
@@ -66,7 +66,7 @@ RSpec.describe CheckoutSdk::Workflows do
 
         proc = -> { default_sdk.workflows.reflow(request) }
         response = retriable proc
-        expect(response.metadata.status_code).to eq 202
+        expect(response.http_metadata.status_code).to eq 202
       end
     end
   end

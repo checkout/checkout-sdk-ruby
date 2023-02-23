@@ -133,7 +133,7 @@ module CheckoutSdk
       body = parse_json_or_contents(response)
       body = OpenStruct.new if body.nil?
       body = OpenStruct.new(items: body) if body.is_a? Array
-      body.metadata = metadata if body.is_a? OpenStruct
+      body.http_metadata = metadata if body.is_a? OpenStruct
       body
     end
 
