@@ -11,7 +11,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
       end
 
-      # @param [HostedPaymentsSession] hosted_payments_session
+      # @param [Hash, HostedPaymentsSession] hosted_payments_session
       def create_hosted_payments_page_session(hosted_payments_session)
         api_client.invoke_post(HOSTED_PAYMENTS, sdk_authorization, hosted_payments_session)
       end

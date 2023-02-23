@@ -12,7 +12,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [ReportsQuery] query_filter
+      # @param [Hash, ReportsQuery] query_filter
       def get_all_reports(query_filter)
         api_client.invoke_get(REPORTS, sdk_authorization, query_filter)
       end

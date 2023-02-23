@@ -12,7 +12,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [FinancialActionsQuery] query_filter
+      # @param [Hash, FinancialActionsQuery] query_filter
       def query(query_filter)
         api_client.invoke_get(FINANCIAL_ACTIONS, sdk_authorization, query_filter)
       end

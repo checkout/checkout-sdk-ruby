@@ -13,7 +13,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [MetadataRequest] metadata_request
+      # @param [Hash, MetadataRequest] metadata_request
       def request_card_metadata(metadata_request)
         api_client.invoke_post(build_path(METADATA, CARD), sdk_authorization, metadata_request)
       end

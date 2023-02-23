@@ -16,7 +16,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [DisputesQueryFilter] disputes_query_filter
+      # @param [Hash, DisputesQueryFilter] disputes_query_filter
       def query(disputes_query_filter)
         api_client.invoke_get(DISPUTES, sdk_authorization, disputes_query_filter)
       end
@@ -32,7 +32,7 @@ module CheckoutSdk
       end
 
       # @param [String] dispute_id
-      # @param [DisputeEvidence] dispute_evidence
+      # @param [Hash, DisputeEvidence] dispute_evidence
       def put_evidence(dispute_id, dispute_evidence)
         api_client.invoke_put(build_path(DISPUTES, dispute_id, EVIDENCE), sdk_authorization, dispute_evidence)
       end
@@ -52,7 +52,7 @@ module CheckoutSdk
         api_client.invoke_get(build_path(DISPUTES, dispute_id, SCHEME_FILES), sdk_authorization)
       end
 
-      # @param [CheckoutSdk::Common::FileRequest] file_request
+      # @param [Hash, CheckoutSdk::Common::FileRequest] file_request
       def upload_file(file_request)
         api_client.submit_file(FILES, sdk_authorization, file_request)
       end

@@ -23,6 +23,67 @@ module PaymentsHelper
     response
   end
 
+  def make_hash_card_payment(amount: 10, capture_on: nil, idempotency_key: nil, capture: false)
+    request = {
+      source: {
+        type: 'card',
+        number: '4242424242424242',
+        expiry_month: 6,
+        expiry_year: 2025,
+        cvv: '100',
+        name: 'Visa Card Name',
+        billing_address: {
+          address_line1: 'CheckoutSdk.com',
+          address_line2: '90 Tottenham Court Road',
+          city: 'London',
+          state: 'London',
+          zip: 'W1T 4TJ',
+          country: 'GB'
+        },
+        phone: {
+          country_code: '1',
+          number: '4155552671'
+        }
+      },
+      reference: 'b24ba5b0-24bc-411e-9d56-6929d229592a',
+      amount: amount,
+      currency: 'USD',
+      capture: capture,
+      capture_on: capture_on,
+      customer: {
+        email: '21629381@checkout-sdk-ruby.com',
+        name: 'Integration Test',
+        phone: {
+          country_code: '1',
+          number: '4155552671'
+        }
+      },
+      sender: {
+        type: 'individual',
+        first_name: 'Integration',
+        last_name: 'Test',
+        address: {
+          address_line1: 'CheckoutSdk.com',
+          address_line2: '90 Tottenham Court Road',
+          city: 'London',
+          state: 'London',
+          zip: 'W1T 4TJ',
+          country: 'GB'
+        },
+        identification: {
+          type: 'driving_licence',
+          number: '1234',
+          issuing_country: 'GB'
+        }
+      }
+    }
+
+    response = default_sdk.payments.request_payment(request, idempotency_key)
+    expect(response).not_to be nil
+    expect(response.id).not_to be nil
+    response
+  end
+
   def make_token_payment
     token_request = CheckoutSdk::Tokens::CardTokenRequest.new
     token_request.number = visa_card.card_number

@@ -43,6 +43,46 @@ RSpec.describe CheckoutSdk::Payments do
         expect(payment_response.source.type).to eq(CheckoutSdk::Common::PaymentSourceType::CARD)
       end
 
+      it 'make card payment when request is hash' do
+        payment_response = make_hash_card_payment
+
+        assert_response(payment_response, %w[id
+                                               processed_on
+                                               reference
+                                               action_id
+                                               response_code
+                                               scheme_id
+                                               response_summary
+                                               status
+                                               amount
+                                               approved
+                                               auth_code
+                                               currency
+                                               source.type
+                                               source.id
+                                               source.avs_check
+                                               source.cvv_check
+                                               source.bin
+                                               source.card_category
+                                               source.card_type
+                                               source.expiry_month
+                                               source.expiry_year
+                                               source.last4
+                                               source.scheme
+                                               source.name
+                                               source.fingerprint
+                                               source.issuer_country
+                                               source.product_id
+                                               source.product_type
+                                               customer
+                                               customer.id
+                                               customer.name
+                                               processing
+                                               processing.acquirer_transaction_id
+                                               processing.retrieval_reference_number])
+        expect(payment_response.source.type).to eq(CheckoutSdk::Common::PaymentSourceType::CARD)
+      end
+
       it 'make 3ds card payment' do
         payment_response = make_3ds_card_payment
 

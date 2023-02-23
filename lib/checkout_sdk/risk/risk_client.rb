@@ -15,12 +15,12 @@ module CheckoutSdk
         super(api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY)
       end
 
-      # @param [PreAuthenticationAssessment] pre_authentication_request
+      # @param [Hash, PreAuthenticationAssessment] pre_authentication_request
       def pre_authentication_scan(pre_authentication_request)
         api_client.invoke_post(PRE_AUTHENTICATION, sdk_authorization, pre_authentication_request)
       end
 
-      # @param [PreCaptureAssessment] pre_capture_request
+      # @param [Hash, PreCaptureAssessment] pre_capture_request
       def pre_capture_scan(pre_capture_request)
         api_client.invoke_post(PRE_CAPTURE, sdk_authorization, pre_capture_request)
       end

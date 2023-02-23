@@ -24,7 +24,7 @@ module CheckoutSdk
           api_client.invoke_get(EVENT_TYPES, sdk_authorization, query)
         end
 
-        # @param [EventsQueryFilter] query_filter
+        # @param [Hash, EventsQueryFilter] query_filter
         def retrieve_events(query_filter)
           api_client.invoke_get(EVENTS, sdk_authorization, query_filter)
         end

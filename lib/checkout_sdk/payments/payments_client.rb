@@ -9,7 +9,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [PaymentRequest] payment_request
+      # @param [Hash, PaymentRequest] payment_request
       # @param [String, nil] idempotency_key
       def request_payment(payment_request, idempotency_key = nil)
         api_client.invoke_post(PAYMENTS_PATH,
@@ -18,7 +18,7 @@ module CheckoutSdk
                                idempotency_key)
       end
 
-      # @param [PayoutRequest] payout_request
+      # @param [Hash, PayoutRequest] payout_request
       # @param [String, nil] idempotency_key
       def request_payout(payout_request, idempotency_key = nil)
         api_client.invoke_post(PAYMENTS_PATH,
@@ -28,7 +28,7 @@ module CheckoutSdk
       end
 
       # @param [String] payment_id
-      # @param [CaptureRequest] capture_request
+      # @param [Hash, CaptureRequest] capture_request
       # @param [String, nil] idempotency_key
       def capture_payment(payment_id, capture_request = nil, idempotency_key = nil)
         api_client.invoke_post(build_path(PAYMENTS_PATH, payment_id, 'captures'),
@@ -38,7 +38,7 @@ module CheckoutSdk
       end
 
       # @param [String] payment_id
-      # @param [AuthorizationRequest] authorization_request
+      # @param [Hash, AuthorizationRequest] authorization_request
       # @param [String, nil] idempotency_key
       def increment_payment_authorization(payment_id, authorization_request = nil, idempotency_key = nil)
         api_client.invoke_post(build_path(PAYMENTS_PATH, payment_id, 'authorizations'),

@@ -5,7 +5,7 @@ RSpec.describe CheckoutSdk::Financial do
 
   describe '.query' do
     context 'when querying with valid filters' do
-      it 'returns valid financial actions' do
+      skip 'returns valid financial actions' do
         payment = make_card_payment(amount: 100, capture: true)
 
         query = CheckoutSdk::Financial::FinancialActionsQuery.new

@@ -12,7 +12,7 @@ module CheckoutSdk
         super(api_client, configuration, CheckoutSdk::AuthorizationType::PUBLIC_KEY)
       end
 
-      # @param [CardTokenRequest, WalletTokenRequest] token_request
+      # @param [Hash, CardTokenRequest, WalletTokenRequest] token_request
       def request_token(token_request)
         api_client.invoke_post(TOKENS, sdk_authorization, token_request)
       end
