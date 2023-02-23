@@ -34,6 +34,23 @@ RSpec.describe CheckoutSdk::Disputes do
       end
     end
 
+    context 'when querying with valid DateTime filters as hash request' do
+      it 'returns valid disputes' do
+        query = {
+          limit: 100,
+          from: '2022-02-22T23:04:50-06:00',
+          to: '2023-02-22T23:04:50-06:00'
+        }
+
+        response = default_sdk.disputes.query(query)
+
+        expect(response).not_to be nil
+        expect(response.total_count).to be > 0
+        expect(response.from).not_to be nil
+        expect(response.to).not_to be nil
+      end
+    end
+
     context 'when querying with invalid filters' do
       it 'raises an error' do
         query = CheckoutSdk::Disputes::DisputesQueryFilter.new

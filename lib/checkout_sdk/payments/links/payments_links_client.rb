@@ -11,7 +11,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
       end
 
-      # @param [PaymentLink] payment_link
+      # @param [Hash, PaymentLink] payment_link
       def create_payment_link(payment_link)
         api_client.invoke_post(PAYMENT_LINKS, sdk_authorization, payment_link)
       end

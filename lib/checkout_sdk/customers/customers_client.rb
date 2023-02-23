@@ -12,7 +12,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
       end
 
-      # @param [CustomerRequest] customer_request
+      # @param [Hash, CustomerRequest] customer_request
       def create(customer_request)
         api_client.invoke_post(CUSTOMERS, sdk_authorization, customer_request)
       end
@@ -23,7 +23,7 @@ module CheckoutSdk
       end
 
       # @param [String] customer_id
-      # @param [CustomerRequest] customer_request
+      # @param [Hash, CustomerRequest] customer_request
       def update(customer_id, customer_request)
         api_client.invoke_patch(build_path(CUSTOMERS, customer_id), sdk_authorization, customer_request)
       end

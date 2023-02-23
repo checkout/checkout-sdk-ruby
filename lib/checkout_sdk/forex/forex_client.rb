@@ -12,7 +12,7 @@ module CheckoutSdk
         super(api_client, configuration, CheckoutSdk::AuthorizationType::OAUTH)
       end
 
-      # @param [QuoteRequest] quote_request
+      # @param [Hash, QuoteRequest] quote_request
       def request_quote(quote_request)
         api_client.invoke_post(FOREX, sdk_authorization, quote_request)
       end

@@ -16,7 +16,7 @@ module CheckoutSdk
           super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
         end
 
-        # @param credit_session_request [CreditSessionRequest]
+        # @param credit_session_request [Hash, CreditSessionRequest]
         def create_credit_session(credit_session_request)
           api_client.invoke_post(build_path(base_url, CREDIT_SESSIONS), sdk_authorization, credit_session_request)
         end
@@ -27,7 +27,7 @@ module CheckoutSdk
         end
 
         # @param payment_id [String]
-        # @param order_capture_request [OrderCaptureRequest]
+        # @param order_capture_request [Hash, OrderCaptureRequest]
         def capture_payment(payment_id, order_capture_request)
           api_client.invoke_post(build_path(base_url, ORDERS, payment_id, CAPTURES),
                                  sdk_authorization,
@@ -35,7 +35,7 @@ module CheckoutSdk
         end
 
         # @param payment_id [String]
-        # @param void_request [CheckoutSdk::Payments::VoidRequest]
+        # @param void_request [Hash, CheckoutSdk::Payments::VoidRequest]
         def void_payment(payment_id, void_request)
           api_client.invoke_post(build_path(base_url, ORDERS, payment_id, VOIDS),
                                  sdk_authorization,

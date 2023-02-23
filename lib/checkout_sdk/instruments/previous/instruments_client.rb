@@ -10,13 +10,13 @@ module CheckoutSdk
           super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
         end
 
-        # @param [CustomerRequest] create_instrument_request
+        # @param [Hash, CustomerRequest] create_instrument_request
         def create(create_instrument_request)
           api_client.invoke_post(INSTRUMENTS, sdk_authorization, create_instrument_request)
         end
 
         # @param [String] instrument_id
-        # @param [UpdateInstrument] update_instrument_request
+        # @param [Hash, UpdateInstrument] update_instrument_request
         def update(instrument_id, update_instrument_request)
           api_client.invoke_patch(build_path(INSTRUMENTS, instrument_id),
                                   sdk_authorization,

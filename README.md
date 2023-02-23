@@ -103,7 +103,15 @@ api = CheckoutSdk.builder
 Then just get any client, and start making requests:
 
 ```ruby
-request = CheckoutSdk::Payments::PaymentRequest.new
+request = {
+  source: {
+    type: 'token',
+    token: 'tok_4gzeau5o2uqubbk6fufs3m7p54',
+  },
+  reference: '9bf2e1e9-193a-400a-86d5-debabc495237',
+  amount: 10,
+  currency: 'GBP',
+}
 payment_response = api.payments.request_payment(request)
 ```
 

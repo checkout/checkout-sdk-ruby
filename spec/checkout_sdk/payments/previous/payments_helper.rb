@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 module Previous
   module PaymentsHelper
-
     def make_card_payment(amount: 10, capture_on: nil, idempotency_key: nil, capture: false)
-
       request = CheckoutSdk::Previous::Payments::PaymentRequest.new
       request.source = card_source
       request.reference = SecureRandom.uuid
@@ -14,6 +14,42 @@ module Previous
         request.capture = true
         request.capture_on = capture_on
       end
+
+      response = previous_sdk.payments.request_payment(request, idempotency_key)
+      expect(response).not_to be nil
+      expect(response.id).not_to be nil
+      response
+    end
+
+    def make_hash_card_payment(amount: 10, capture_on: nil, idempotency_key: nil, capture: false)
+      request = {
+        source: {
+          type: 'card',
+          number: '4242424242424242',
+          expiry_month: 6,
+          expiry_year: 2025,
+          cvv: '100',
+          name: 'Visa Card Name',
+          stored: false,
+          billing_address: {
+            address_line1: 'CheckoutSdk.com',
+            address_line2: '90 Tottenham Court Road',
+            city: 'London',
+            state: 'London',
+            zip: 'W1T 4TJ',
+            country: 'GB'
+          },
+          phone: {
+            country_code: '1',
+            number: '4155552671'
+          }
+        },
+        reference: '9bf2e1e9-193a-400a-86d5-debabc495237',
+        amount: amount,
+        currency: 'GBP',
+        capture: capture,
+        capture_on: capture_on
+      }
 
       response = previous_sdk.payments.request_payment(request, idempotency_key)
       expect(response).not_to be nil

@@ -21,7 +21,7 @@ module CheckoutSdk
         super(api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH)
       end
 
-      # @param [CreateWorkflow] create_workflow
+      # @param [Hash, CreateWorkflow] create_workflow
       def create_workflow(create_workflow)
         api_client.invoke_post(WORKFLOWS, sdk_authorization, create_workflow)
       end
@@ -36,7 +36,7 @@ module CheckoutSdk
       end
 
       # @param [String] workflow_id
-      # @param [PatchWorkflow] patch_workflow
+      # @param [Hash, PatchWorkflow] patch_workflow
       def patch_workflow(workflow_id, patch_workflow)
         api_client.invoke_patch(build_path(WORKFLOWS, workflow_id), sdk_authorization, patch_workflow)
       end
@@ -48,7 +48,7 @@ module CheckoutSdk
 
       # @param [String] workflow_id
       # @param [String] action_id
-      # @param [WorkflowAction] workflow_action
+      # @param [Hash, WorkflowAction] workflow_action
       def update_workflow_action(workflow_id, action_id, workflow_action)
         api_client.invoke_put(build_path(WORKFLOWS, workflow_id, ACTIONS, action_id), sdk_authorization,
                               workflow_action)
@@ -56,7 +56,7 @@ module CheckoutSdk
 
       # @param [String] workflow_id
       # @param [String] condition_id
-      # @param [WorkflowCondition] workflow_condition
+      # @param [Hash, WorkflowCondition] workflow_condition
       def update_workflow_condition(workflow_id, condition_id, workflow_condition)
         api_client.invoke_put(build_path(WORKFLOWS, workflow_id, CONDITIONS, condition_id), sdk_authorization,
                               workflow_condition)

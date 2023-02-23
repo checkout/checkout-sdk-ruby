@@ -15,7 +15,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::OAUTH
       end
 
-      # @param [SessionRequest] session_request
+      # @param [Hash, SessionRequest] session_request
       def request_session(session_request)
         api_client.invoke_post(SESSIONS, sdk_authorization, session_request)
       end
@@ -27,7 +27,7 @@ module CheckoutSdk
       end
 
       # @param [String] session_id
-      # @param [ChannelData] channel_data
+      # @param [Hash, ChannelData] channel_data
       # @param [String, nil] session_secret
       def update_session(session_id, channel_data, session_secret = nil)
         api_client.invoke_put(build_path(SESSIONS, session_id, COLLECT_DATA),
@@ -42,7 +42,7 @@ module CheckoutSdk
       end
 
       # @param [String] session_id
-      # @param [ThreeDsMethodCompletionRequest] three_ds_method_completion_request
+      # @param [Hash, ThreeDsMethodCompletionRequest] three_ds_method_completion_request
       # @param [String, nil] session_secret
       def update_3ds_method_completion(session_id, three_ds_method_completion_request, session_secret = nil)
         api_client.invoke_put(build_path(SESSIONS, session_id, ISSUER_FINGERPRINT),

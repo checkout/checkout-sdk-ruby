@@ -9,6 +9,8 @@ module CheckoutSdk
 
     def self.to_custom_hash(object)
       hash = {}
+      return object if object.is_a? Hash
+
       object.instance_variables.each do |v|
         value = object.instance_variable_get(v)
         value = serialize_by_type(value)

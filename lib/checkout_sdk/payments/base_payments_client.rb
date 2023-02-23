@@ -5,7 +5,7 @@ module CheckoutSdk
     class BasePaymentsClient < Client
       PAYMENTS_PATH = 'payments'
 
-      # @param [PaymentsQueryFilter] query_filter
+      # @param [Hash, PaymentsQueryFilter] query_filter
       def get_payments_list(query_filter)
         api_client.invoke_get(PAYMENTS_PATH, sdk_authorization, query_filter)
       end
@@ -23,7 +23,7 @@ module CheckoutSdk
       end
 
       # @param [String] payment_id
-      # @param [RefundRequest] refund_request
+      # @param [Hash, RefundRequest] refund_request
       # @param [String, nil] idempotency_key
       def refund_payment(payment_id, refund_request = nil, idempotency_key = nil)
         api_client.invoke_post(build_path(PAYMENTS_PATH, payment_id, 'refunds'),
@@ -33,7 +33,7 @@ module CheckoutSdk
       end
 
       # @param [String] payment_id
-      # @param [VoidRequest] void_request
+      # @param [Hash, VoidRequest] void_request
       # @param [String, nil] idempotency_key
       def void_payment(payment_id, void_request = nil, idempotency_key = nil)
         api_client.invoke_post(build_path(PAYMENTS_PATH, payment_id, 'voids'),

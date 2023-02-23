@@ -17,7 +17,7 @@ module CheckoutSdk
           api_client.invoke_get(WEBHOOKS, sdk_authorization)
         end
 
-        # @param [WebhookRequest] webhook_request
+        # @param [Hash, WebhookRequest] webhook_request
         # @param [String,nil] idempotency_key
         def register_webhook(webhook_request, idempotency_key = nil)
           api_client.invoke_post(WEBHOOKS, sdk_authorization, webhook_request, idempotency_key)
@@ -29,13 +29,13 @@ module CheckoutSdk
         end
 
         # @param [String] webhook_id
-        # @param [WebhookRequest] webhook_request
+        # @param [Hash, WebhookRequest] webhook_request
         def update_webhook(webhook_id, webhook_request)
           api_client.invoke_put(build_path(WEBHOOKS, webhook_id), sdk_authorization, webhook_request)
         end
 
         # @param [String] webhook_id
-        # @param [WebhookRequest] webhook_request
+        # @param [Hash, WebhookRequest] webhook_request
         def patch_webhook(webhook_id, webhook_request)
           api_client.invoke_patch(build_path(WEBHOOKS, webhook_id), sdk_authorization, webhook_request)
         end

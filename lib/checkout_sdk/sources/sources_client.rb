@@ -13,7 +13,7 @@ module CheckoutSdk
           super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
         end
 
-        # @param [SepaSourceRequest] sepa_source_request
+        # @param [Hash, SepaSourceRequest] sepa_source_request
         def create_sepa_source(sepa_source_request)
           api_client.invoke_post(SOURCES, sdk_authorization, sepa_source_request)
         end
