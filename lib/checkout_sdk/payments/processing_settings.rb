@@ -56,6 +56,8 @@ module CheckoutSdk
     #   @return [Array(String)]
     # @!attribute merchant_callback_url
     #   @return [String]
+    # @!attribute line_of_business
+    #   @return [String]
     # @!attribute shipping_delay
     #   @return [Integer]
     # @!attribute shipping_info
@@ -94,6 +96,7 @@ module CheckoutSdk
                     :purchase_country,
                     :custom_payment_method_ids,
                     :merchant_callback_url,
+                    :line_of_business,
                     :shipping_delay,
                     :shipping_info,
                     :dlocal,
