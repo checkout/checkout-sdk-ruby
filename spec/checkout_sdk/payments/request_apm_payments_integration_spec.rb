@@ -94,9 +94,9 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when requesting Giropay source payment' do
-      it 'raises an error (payee_not_onboarded)' do
+      skip 'Until it is fixed in Sandbox'
+      skip 'raises an error (payee_not_onboarded)' do
         source = CheckoutSdk::Payments::GiropaySource.new
-        source.purpose = 'test purpose'
 
         request = CheckoutSdk::Payments::PaymentRequest.new
         request.source = source
