@@ -56,4 +56,19 @@ module WorkflowsHelper
   def delete_workflow(workflow_id)
     default_sdk.workflows.remove_workflow workflow_id
   end
+
+  def add_action(workflow_id)
+    signature = CheckoutSdk::Workflows::WebhookSignature.new
+    signature.key = '8V8x0dLK%AyD*DNS8JJr'
+    signature.method = 'HMACSHA256'
+
+    action_request = CheckoutSdk::Workflows::WebhookWorkflowAction.new
+    action_request.url = 'https://google.com/fail/new-action'
+    action_request.signature = signature
+
+    response = default_sdk.workflows.add_workflow_action workflow_id, action_request
+    assert_response(response, ['id'])
+
+    response
+  end
 end
