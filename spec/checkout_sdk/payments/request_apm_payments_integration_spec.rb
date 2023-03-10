@@ -98,12 +98,18 @@ RSpec.describe CheckoutSdk::Payments do
         source = CheckoutSdk::Payments::GiropaySource.new
         source.purpose = 'test purpose'
 
+        shipping = CheckoutSdk::Payments::ShippingDetails.new
+        shipping.address = address
+        shipping.phone = phone
+
         request = CheckoutSdk::Payments::PaymentRequest.new
         request.source = source
         request.reference = Helpers::DataFactory::REFERENCE
+        request.description = Helpers::DataFactory::DESCRIPTION
         request.currency = CheckoutSdk::Common::Currency::EUR
         request.amount = 100
         request.capture = true
+        request.shipping = shipping
         request.success_url = 'https://testing.checkout.com/sucess'
         request.failure_url = 'https://testing.checkout.com/failure'
 

@@ -64,6 +64,32 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
+  describe '.add_workflow_action' do
+    context 'when workflow exists and request valid' do
+      it 'should add workflow action' do
+        workflow = default_sdk.workflows.retrieve_workflow create_workflow.id
+
+        signature = CheckoutSdk::Workflows::WebhookSignature.new
+        signature.key = '8V8x0dLK%AyD*DNS8JJr'
+        signature.method = 'HMACSHA256'
+
+        action_request = CheckoutSdk::Workflows::WebhookWorkflowAction.new
+        action_request.url = 'https://google.com/fail/new-action'
+        action_request.signature = signature
+
+        response = default_sdk.workflows.add_workflow_action workflow.id, action_request
+        expect(response).not_to be_nil
+        expect(response.id).not_to be_nil
+
+        updated_workflow = default_sdk.workflows.retrieve_workflow workflow.id
+        expect(updated_workflow).not_to be_nil
+        expect(updated_workflow.actions.length).to be > workflow.actions.length
+
+        delete_workflow workflow.id
+      end
+    end
+  end
+
   describe '.update_workflow_action' do
     context 'when having a workflow' do
       it 'should update workflow action' do
@@ -86,4 +112,15 @@ RSpec.describe CheckoutSdk::Workflows do
     end
   end
 
+  describe '.remove_workflow_action' do
+    context 'when workflow with actions' do
+      it 'should delete action if action_id exists' do
+        action = add_action @workflow.id
+
+        response = default_sdk.workflows.remove_workflow_action @workflow.id, action.id
+
+        assert_response response
+      end
+    end
+  end
 end

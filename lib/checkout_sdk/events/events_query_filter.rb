@@ -15,7 +15,7 @@ module CheckoutSdk
       #   @return [Integer]
       # @!attribute limit
       #   @return [Integer]
-      class EventsQueryFilter < CheckoutSdk::Common::DateRangeQueryFilter
+      class EventsQueryFilter
         attr_accessor :payment_id,
                       :charge_id,
                       :track_id,
