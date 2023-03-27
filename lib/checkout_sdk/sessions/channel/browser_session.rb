@@ -8,6 +8,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute java_enabled
     #   @return [TrueClass, FalseClass]
+    # @!attribute javascript_enabled
+    #   @return [TrueClass, FalseClass]
     # @!attribute language
     #   @return [String]
     # @!attribute color_depth
@@ -26,6 +28,7 @@ module CheckoutSdk
       attr_accessor :three_ds_method_completion,
                     :accept_header,
                     :java_enabled,
+                    :javascript_enabled,
                     :language,
                     :color_depth,
                     :screen_height,
