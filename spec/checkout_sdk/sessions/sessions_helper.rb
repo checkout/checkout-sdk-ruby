@@ -3,6 +3,7 @@ module SessionsHelper
     browser_session = CheckoutSdk::Sessions::BrowserSession.new
     browser_session.accept_header = 'Accept:  *.*, q=0.1'
     browser_session.java_enabled = true
+    browser_session.javascript_enabled = true
     browser_session.language = 'FR-fr'
     browser_session.color_depth = '16'
     browser_session.screen_width = '1920'
