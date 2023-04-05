@@ -50,9 +50,6 @@ module CheckoutSdk
     #   @return [Time]
     # @!attribute processing_channel_id
     #   @return [String] - Not available on Previous.
-    # @!attribute marketplace
-    #   @deprecated Please use {#amount_allocations} instead
-    #   @return [CheckoutSdk::Common::MarketplaceData] - Not available on Previous.
     # @!attribute amount_allocations
     #   @return [Array(CheckoutSdk::Common::AmountAllocations)] - Not available on Previous.
     class HostedPaymentsSession
@@ -80,7 +77,6 @@ module CheckoutSdk
                     :capture,
                     :capture_on,
                     :processing_channel_id,
-                    :marketplace,
                     :amount_allocations
     end
   end

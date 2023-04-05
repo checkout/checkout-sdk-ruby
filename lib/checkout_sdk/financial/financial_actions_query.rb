@@ -6,6 +6,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute action_id
     #   @return [String]
+    # @!attribute reference
+    #   @return [String]
     # @!attribute limit
     #   @return [Integer]
     # @!attribute pagination_token
@@ -13,6 +15,7 @@ module CheckoutSdk
     class FinancialActionsQuery
       attr_accessor :payment_id,
                     :action_id,
+                    :reference,
                     :limit,
                     :pagination_token
     end
