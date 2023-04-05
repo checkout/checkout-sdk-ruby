@@ -20,4 +20,26 @@ RSpec.describe CheckoutSdk::Forex do
       end
     end
   end
+
+  skip 'Skipping because processing_channel_id is invalid' do
+    describe '.get_rates' do
+      context 'when fetching rates with valid parameters' do
+        it 'retrieves valid rates' do
+          query = CheckoutSdk::Forex::RatesQueryFilter.new
+          query.product = 'card_payouts'
+          query.source = CheckoutSdk::Forex::ForexSource::VISA
+          query.currency_pairs = 'GBPEUR,USDNOK,JPNCAD'
+          query.process_channel_id = 'pc_abcdefghijklmnopqrstuvwxyz'
+
+          response = oauth_sdk.forex.get_rates(query)
+
+          assert_response response, %w[product
+                                       source
+                                       rates]
+          expect(response.product).to eq query.product
+          expect(response.source).to eq query.source
+        end
+      end
+    end
+  end
 end
