@@ -5,7 +5,8 @@ module CheckoutSdk
     KEYS_TRANSFORMATIONS = { three_ds: '3ds',
                              account_holder_type: 'account-holder-type',
                              payment_network: 'payment-network',
-                             from_: 'from' }.freeze
+                             from_: 'from',
+                             if_match: 'if-match' }.freeze
 
     def self.to_custom_hash(object)
       hash = {}

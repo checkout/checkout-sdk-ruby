@@ -6,9 +6,12 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute default
     #   @return [TrueClass, FalseClass]
+    # @!attribute headers
+    #   @return [Headers]
     class UpdatePaymentInstrumentRequest
       attr_accessor :label,
-                    :default
+                    :default,
+                    :headers
     end
   end
 end

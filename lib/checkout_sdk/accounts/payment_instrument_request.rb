@@ -24,10 +24,6 @@ module CheckoutSdk
                     :default,
                     :document,
                     :instrument_details
-
-      def initialize
-        @type = CheckoutSdk::Common::InstrumentType::BANK_ACCOUNT
-      end
     end
   end
 end
