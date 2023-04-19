@@ -60,7 +60,7 @@ def create_hosted_payments_request
   product = CheckoutSdk::Common::Product.new
   product.name = 'Gold Necklace'
   product.quantity = 1
-  product.price = 10
+  product.price = 1000
 
   three_ds_request = CheckoutSdk::Payments::ThreeDSRequest.new
   three_ds_request.enabled = true

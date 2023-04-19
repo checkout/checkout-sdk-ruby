@@ -227,6 +227,7 @@ def build_payment_instrument(file)
 
   request = CheckoutSdk::Accounts::PaymentInstrumentRequest.new
   request.label = 'Barclays'
+  request.type = CheckoutSdk::Common::InstrumentType::BANK_ACCOUNT
   request.currency = CheckoutSdk::Common::Currency::GBP
   request.country = CheckoutSdk::Common::Country::GB
   request.default = false
