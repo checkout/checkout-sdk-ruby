@@ -20,6 +20,18 @@ RSpec.describe CheckoutSdk::Accounts do
       end
     end
 
+    context 'when sub-entity onboarding request conflicted with an existing sub-entity' do
+      it 'raises an error' do
+        random_uuid = SecureRandom.uuid
+        sub_entity = accounts_checkout_api.accounts.create_entity build_entity(random_uuid)
+        expect { accounts_checkout_api.accounts.create_entity build_entity(random_uuid) }
+          .to raise_error(CheckoutSdk::CheckoutApiException) {
+            |e| expect(e.http_metadata.status_code).to eq 409
+                expect(JSON.parse(e.http_metadata.body)['id']).to eq sub_entity[:id]
+          }
+      end
+    end
+
     describe '.get_entity' do
       context 'when fetching a valid entity' do
         it 'returns entity data' do
@@ -172,11 +184,11 @@ end
 private
 
 def create_entity(sdk)
-  request = build_entity
+  request = build_entity(SecureRandom.uuid)
   sdk.accounts.create_entity request
 end
 
-def build_entity
+def build_entity(reference = nil)
   phone = CheckoutSdk::Accounts::Phone.new
   phone.number = '2345678910'
 
@@ -209,7 +221,7 @@ def build_entity
   individual.identification = identification
 
   request = CheckoutSdk::Accounts::OnboardEntity.new
-  request.reference = SecureRandom.uuid
+  request.reference = reference || SecureRandom.uuid
   request.contact_details = contact_details
   request.profile = profile
   request.individual = individual

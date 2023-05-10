@@ -486,7 +486,7 @@ RSpec.describe CheckoutSdk::Payments do
   end
 
   context 'when requesting Sepa source payment' do
-    it 'raises an error (payee_not_onboarded)' do
+    it 'raises an error (apm_service_unavailable)' do
       source = CheckoutSdk::Payments::SepaSource.new
       source.country = CheckoutSdk::Common::Country::ES
       source.account_number = "HU93116000060000000012345676"
@@ -506,7 +506,7 @@ RSpec.describe CheckoutSdk::Payments do
 
       expect { default_sdk.payments.request_payment(request) }
         .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
-          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
     end
   end
 
