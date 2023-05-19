@@ -26,6 +26,17 @@ module Helpers
       @phone
     end
 
+    # @return [Hash]
+    def phone_hash
+      if @phone_hash.nil?
+        @phone_hash = {
+          'country_code' => '1',
+          'number' => '4155552671'
+        }
+      end
+      @phone_hash
+    end
+
     # @return [CheckoutSdk::Common::Address]
     def address
       if @address.nil?
@@ -40,6 +51,21 @@ module Helpers
         @address = address
       end
       @address
+    end
+
+    # @return [Hash]
+    def address_hash
+      if @address_hash.nil?
+        @address_hash = {
+          'address_line1' => 'CheckoutSdk.com',
+          'address_line2' => '90 Tottenham Court Road',
+          'city' => 'London',
+          'state' => 'London',
+          'zip' => 'W1T 4TJ',
+          'country' => CheckoutSdk::Common::Country::GB
+        }
+      end
+      @address_hash
     end
 
     # @return [String]
