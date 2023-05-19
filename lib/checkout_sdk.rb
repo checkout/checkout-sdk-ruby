@@ -64,6 +64,7 @@ require 'checkout_sdk/balances/balances'
 require 'checkout_sdk/transfers/transfers'
 require 'checkout_sdk/metadata/metadata'
 require 'checkout_sdk/financial/financial'
+require 'checkout_sdk/issuing/issuing'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'

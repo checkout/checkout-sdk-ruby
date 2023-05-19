@@ -37,6 +37,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Metadata::MetadataClient]
   # @!attribute financial
   #   @return [CheckoutSdk::Financial::FinancialClient]
+  # @!attribute issuing
+  #   @return [CheckoutSdk::Issuing::IssuingClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -55,7 +57,8 @@ module CheckoutSdk
                 :balances,
                 :transfers,
                 :metadata,
-                :financial
+                :financial,
+                :issuing
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -78,6 +81,7 @@ module CheckoutSdk
       @transfers = CheckoutSdk::Transfers::TransfersClient.new(transfers_client(configuration), configuration)
       @metadata = CheckoutSdk::Metadata::MetadataClient.new api_client, configuration
       @financial = CheckoutSdk::Financial::FinancialClient.new api_client, configuration
+      @issuing = CheckoutSdk::Issuing::IssuingClient.new api_client, configuration
     end
 
     private
