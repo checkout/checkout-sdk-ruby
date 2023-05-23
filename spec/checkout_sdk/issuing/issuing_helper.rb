@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
 module IssuingHelper
-
   def get_issuing_api
     if @issuing_api.nil?
       @issuing_api = CheckoutSdk.builder
                                 .oauth
-                                .with_client_credentials(ENV['CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID'],
-                                                         ENV['CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET'])
+                                .with_client_credentials(ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID', nil),
+                                                         ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET', nil))
                                 .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                               CheckoutSdk::OAuthScopes::ISSUING_CLIENT,
                                               CheckoutSdk::OAuthScopes::ISSUING_CARD_MGMT,
                                               CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
                                               CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
-                                .with_environment(CheckoutSdk::Environment::sandbox)
+                                .with_environment(CheckoutSdk::Environment.sandbox)
                                 .build
     end
     @issuing_api
   end
 
+  # @@return [Hash]
   def create_cardholder
     request = {
       'type' => 'individual',
@@ -44,5 +44,30 @@ module IssuingHelper
     assert_response cardholder
 
     cardholder
+  end
+
+  # @param [String] cardholder_id
+  # @param [TrueClass, FalseClass] activate
+  # @return [OpenStruct]
+  def create_card(cardholder_id, activate = false)
+    request = {
+      'type' => 'virtual',
+      'cardholder_id' => cardholder_id,
+      'lifetime' => {
+        'unit' => 'Months',
+        'value' => 6
+      },
+      'reference' => 'X-123456-N11',
+      'card_product_id' => 'pro_3fn6pv2ikshurn36dbd3iysyha',
+      'display_name' => 'JOHN KENNEDY',
+      'is_single_use' => false,
+      'activate_card' => activate
+    }
+
+    card = get_issuing_api.issuing.create_card request
+
+    assert_response card
+
+    card
   end
 end
