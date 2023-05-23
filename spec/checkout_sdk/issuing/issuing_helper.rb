@@ -70,4 +70,24 @@ module IssuingHelper
 
     card
   end
+
+  def create_control(card_id)
+    request = {
+      'description' => 'Max spend of 500€ per week for restaurants',
+      'control_type' => 'velocity_limit',
+      'target_id' => card_id,
+      'velocity_limit' => {
+        'amount_limit' => 5000,
+        'velocity_window' => {
+          'type' => 'weekly'
+        }
+      }
+    }
+
+    control = get_issuing_api.issuing.create_control request
+
+    assert_response control
+
+    control
+  end
 end
