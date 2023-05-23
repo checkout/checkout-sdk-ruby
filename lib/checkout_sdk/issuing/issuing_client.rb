@@ -11,6 +11,7 @@ module CheckoutSdk
       CREDENTIALS = 'credentials'
       REVOKE = 'revoke'
       SUSPEND = 'suspend'
+      CONTROLS = 'controls'
       private_constant :ISSUING,
                        :CARDHOLDERS,
                        :CARDS,
@@ -18,7 +19,8 @@ module CheckoutSdk
                        :ACTIVATE,
                        :CREDENTIALS,
                        :REVOKE,
-                       :SUSPEND
+                       :SUSPEND,
+                       :CONTROLS
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -89,6 +91,32 @@ module CheckoutSdk
       # @param [Hash] suspend_request
       def suspend_card(card_id, suspend_request)
         api_client.invoke_post(build_path(ISSUING, CARDS, card_id, SUSPEND), sdk_authorization, suspend_request)
+      end
+
+      # @param [Hash] control_request
+      def create_control(control_request)
+        api_client.invoke_post(build_path(ISSUING, CONTROLS), sdk_authorization, control_request)
+      end
+
+      # @param [Hash] controls_query
+      def get_card_controls(controls_query)
+        api_client.invoke_get(build_path(ISSUING, CONTROLS), sdk_authorization, controls_query)
+      end
+
+      # @param [String] control_id
+      def get_card_control_details(control_id)
+        api_client.invoke_get(build_path(ISSUING, CONTROLS, control_id), sdk_authorization)
+      end
+
+      # @param [String] control_id
+      # @param [Hash] update_control_request
+      def update_card_control(control_id, update_control_request)
+        api_client.invoke_put(build_path(ISSUING, CONTROLS, control_id), sdk_authorization, update_control_request)
+      end
+
+      # @param [String] control_id
+      def remove_card_control(control_id)
+        api_client.invoke_delete(build_path(ISSUING, CONTROLS, control_id), sdk_authorization)
       end
     end
   end
