@@ -12,6 +12,8 @@ module CheckoutSdk
       REVOKE = 'revoke'
       SUSPEND = 'suspend'
       CONTROLS = 'controls'
+      SIMULATE = 'simulate'
+      AUTHORIZATIONS = 'authorizations'
       private_constant :ISSUING,
                        :CARDHOLDERS,
                        :CARDS,
@@ -20,7 +22,9 @@ module CheckoutSdk
                        :CREDENTIALS,
                        :REVOKE,
                        :SUSPEND,
-                       :CONTROLS
+                       :CONTROLS,
+                       :SIMULATE,
+                       :AUTHORIZATIONS
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -117,6 +121,11 @@ module CheckoutSdk
       # @param [String] control_id
       def remove_card_control(control_id)
         api_client.invoke_delete(build_path(ISSUING, CONTROLS, control_id), sdk_authorization)
+      end
+
+      # @param [Hash] authorization_request
+      def simulate_authorization(authorization_request)
+        api_client.invoke_post(build_path(ISSUING, SIMULATE, AUTHORIZATIONS), sdk_authorization, authorization_request)
       end
     end
   end
