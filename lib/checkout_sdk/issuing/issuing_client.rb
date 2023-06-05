@@ -14,6 +14,8 @@ module CheckoutSdk
       CONTROLS = 'controls'
       SIMULATE = 'simulate'
       AUTHORIZATIONS = 'authorizations'
+      PRESENTMENTS = 'presentments'
+      REVERSALS = 'reversals'
       private_constant :ISSUING,
                        :CARDHOLDERS,
                        :CARDS,
@@ -24,7 +26,9 @@ module CheckoutSdk
                        :SUSPEND,
                        :CONTROLS,
                        :SIMULATE,
-                       :AUTHORIZATIONS
+                       :AUTHORIZATIONS,
+                       :PRESENTMENTS,
+                       :REVERSALS
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -126,6 +130,36 @@ module CheckoutSdk
       # @param [Hash] authorization_request
       def simulate_authorization(authorization_request)
         api_client.invoke_post(build_path(ISSUING, SIMULATE, AUTHORIZATIONS), sdk_authorization, authorization_request)
+      end
+
+      # @param [String] transaction_id
+      # @param [Hash] increment_request
+      def simulate_increment(transaction_id, increment_request)
+        api_client.invoke_post(
+          build_path(ISSUING, SIMULATE, AUTHORIZATIONS, transaction_id, AUTHORIZATIONS),
+          sdk_authorization,
+          increment_request
+        )
+      end
+
+      # @param [String] transaction_id
+      # @param [Hash] clearing_request
+      def simulate_clearing(transaction_id, clearing_request)
+        api_client.invoke_post(
+          build_path(ISSUING, SIMULATE, AUTHORIZATIONS, transaction_id, PRESENTMENTS),
+          sdk_authorization,
+          clearing_request
+        )
+      end
+
+      # @param [String] transaction_id
+      # @param [Hash] reversal_request
+      def simulate_reversal(transaction_id, reversal_request)
+        api_client.invoke_post(
+          build_path(ISSUING, SIMULATE, AUTHORIZATIONS, transaction_id, REVERSALS),
+          sdk_authorization,
+          reversal_request
+        )
       end
     end
   end

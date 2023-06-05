@@ -90,4 +90,25 @@ module IssuingHelper
 
     control
   end
+
+  def simulate_transaction(card)
+    request = {
+      'card' => {
+        'id' => card.id,
+        'expiry_month' => card.expiry_month,
+        'expiry_year' => card.expiry_year
+      },
+      'transaction' => {
+        'type' => 'purchase',
+        'amount' => 100,
+        'currency' => CheckoutSdk::Common::Currency::GBP
+      }
+    }
+
+    auth = get_issuing_api.issuing.simulate_authorization request
+
+    assert_response auth
+
+    auth
+  end
 end
