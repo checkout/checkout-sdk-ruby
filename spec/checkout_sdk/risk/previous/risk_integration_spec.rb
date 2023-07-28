@@ -1,7 +1,7 @@
 RSpec.describe CheckoutSdk::Risk do
 
   describe '.pre_authentication_scan' do
-    context 'when requesting pre authentication assessment' do
+    context 'when requesting pre authentication assessment', skip: 'unavailable' do
       subject(:source) { card_source }
       it 'should successfully scan card source' do
         request_pre_authentication_scan source
@@ -15,7 +15,7 @@ RSpec.describe CheckoutSdk::Risk do
   end
 
   describe '.pre_capture_scan' do
-    context 'when requesting pre capture assessment' do
+    context 'when requesting pre capture assessment', skip: 'unavailable' do
       subject(:source) { card_source }
       it 'should successfully scan card source' do
         request_pre_capture_scan source

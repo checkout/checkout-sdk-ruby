@@ -369,7 +369,7 @@ RSpec.describe CheckoutSdk::Payments do
       end
     end
 
-    context 'when requesting Paypal source payment' do
+    context 'when requesting Paypal source payment', skip: 'unavailable' do
       it 'raises an error (payee_not_onboarded)' do
         plan = CheckoutSdk::Payments::BillingPlan.new
         plan.type = CheckoutSdk::Payments::BillingPlanType::CHANNEL_INITIATED_BILLING
