@@ -1,9 +1,12 @@
 # Checkout.com Ruby SDK
+[![build-status](https://github.com/checkout/checkout-sdk-ruby/workflows/build-master/badge.svg)](https://github.com/checkout/checkout-sdk-ruby/actions/workflows/build-master.yml)
+![CodeQL](https://github.com/checkout/checkout-sdk-ruby/workflows/CodeQL/badge.svg)
 
-![build-status](https://github.com/checkout/checkout-sdk-ruby/workflows/build-master/badge.svg)
-[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-ruby.svg)](https://github.com/checkout/checkout-sdk-ruby/blob/master/LICENSE)
+[![build-status](https://github.com/checkout/checkout-sdk-ruby/workflows/build-release/badge.svg)](https://github.com/checkout/checkout-sdk-ruby/actions/workflows/build-release.yml)
 [![GitHub release](https://img.shields.io/github/release/checkout/checkout-sdk-ruby.svg)](https://GitHub.com/checkout/checkout-sdk-ruby/releases/)
 [![Gem Version](https://badge.fury.io/rb/checkout_sdk.svg)](https://badge.fury.io/rb/checkout_sdk)
+
+[![GitHub license](https://img.shields.io/github/license/checkout/checkout-sdk-ruby.svg)](https://github.com/checkout/checkout-sdk-ruby/blob/master/LICENSE.md)
 
 ## Getting started
 
