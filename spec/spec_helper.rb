@@ -7,7 +7,7 @@ require "checkout_sdk/data/payment_source"
 require "checkout_sdk/data/request_token"
 require "checkout_sdk/api_resource"
 require "checkout_sdk"
-require "pry"
+require "byebug"
 
 
 RSpec.configure do |config|
@@ -26,7 +26,7 @@ RSpec.configure do |config|
     CheckoutSdk.configure do |config|
       config.secret_key = "sk_test"
       config.public_key = "pk_test"
-      config.base_url   = "https://test.com"
+      config.base_url = "https://test.com"
     end
   end
 end
