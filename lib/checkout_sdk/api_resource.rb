@@ -3,11 +3,14 @@ require "multi_json"
 
 class CheckoutSdk::ApiResource
   attr_reader :checkout_connection
+  attr_reader :checkout_configuration
 
-  def initialize
+  def initialize(checkout_configuration=CheckoutSdk.configuration)
+    @checkout_configuration = checkout_configuration
+
     @checkout_connection = Excon.new(
-      "#{CheckoutSdk.configuration.base_url}",
-      persistent: CheckoutSdk.configuration.persistent
+      "#{checkout_configuration.base_url}",
+      persistent: checkout_configuration.persistent
     )
   end
 
@@ -57,15 +60,15 @@ class CheckoutSdk::ApiResource
   def get(path)
     checkout_connection.get(
       path: path,
-      headers: { "Authorization" => CheckoutSdk.configuration.secret_key }
+      headers: { "Authorization" => checkout_configuration.secret_key }
     )
   end
 
   def key(path)
     if path == "/tokens"
-      CheckoutSdk.configuration.public_key
+      checkout_configuration.public_key
     else
-      CheckoutSdk.configuration.secret_key
+      checkout_configuration.secret_key
     end
   end
 
