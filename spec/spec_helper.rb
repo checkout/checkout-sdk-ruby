@@ -11,6 +11,7 @@ require './spec/checkout_sdk/sessions/sessions_helper'
 require './spec/checkout_sdk/payments/previous/payments_helper'
 require './spec/checkout_sdk/workflows/workflows_helper'
 require './spec/checkout_sdk/webhooks/webhooks_helper'
+require './spec/checkout_sdk/payments/contexts/contexts_helper'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

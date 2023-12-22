@@ -127,7 +127,7 @@ module CheckoutSdk
     end
 
     def parse_response(response)
-      raise CheckoutApiException, response if response.status < 200 || response.status >= 300
+      raise CheckoutApiException, response if response.status < 200 || response.status >= 400
 
       metadata = CheckoutUtils.map_to_http_metadata(response)
       body = parse_json_or_contents(response)

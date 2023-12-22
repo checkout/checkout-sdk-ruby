@@ -58,7 +58,8 @@ module CheckoutSdk
                 :transfers,
                 :metadata,
                 :financial,
-                :issuing
+                :issuing,
+                :contexts
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -82,6 +83,7 @@ module CheckoutSdk
       @metadata = CheckoutSdk::Metadata::MetadataClient.new api_client, configuration
       @financial = CheckoutSdk::Financial::FinancialClient.new api_client, configuration
       @issuing = CheckoutSdk::Issuing::IssuingClient.new api_client, configuration
+      @contexts = CheckoutSdk::Payments::PaymentContextsClient.new api_client, configuration
     end
 
     private
