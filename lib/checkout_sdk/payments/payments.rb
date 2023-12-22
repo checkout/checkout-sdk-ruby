@@ -155,3 +155,6 @@ require 'checkout_sdk/payments/hosted/hosted_payments_client'
 # Payment Links
 require 'checkout_sdk/payments/links/payment_link'
 require 'checkout_sdk/payments/links/payments_links_client'
+
+# Payment Contexts
+require 'checkout_sdk/payments/contexts/payment_contexts_client'

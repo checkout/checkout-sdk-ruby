@@ -42,7 +42,7 @@ module Helpers
       if @address.nil?
         address = CheckoutSdk::Common::Address.new
         address.address_line1 = 'CheckoutSdk.com'
-        address.address_line2 = '90 Tottenham Court Road'
+        address.address_line2 = '90'
         address.city = 'London'
         address.state = 'London'
         address.zip = 'W1T 4TJ'

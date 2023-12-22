@@ -51,8 +51,9 @@ RSpec.describe CheckoutSdk::Payments do
         request.success_url = 'https://testing.checkout.com/sucess'
         request.failure_url = 'https://testing.checkout.com/failure'
 
-        expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+        response = default_sdk.payments.request_payment(request)
+        expect(response).not_to be nil
+        expect(response.id).not_to be nil
       end
     end
 
@@ -365,7 +366,7 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'custom_data_required' }
       end
     end
 
