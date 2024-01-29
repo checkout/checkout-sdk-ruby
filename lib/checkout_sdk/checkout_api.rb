@@ -39,6 +39,10 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Financial::FinancialClient]
   # @!attribute issuing
   #   @return [CheckoutSdk::Issuing::IssuingClient]
+  # @!attribute contexts
+  #   @return [CheckoutSdk::Payments::PaymentContextsClient]
+  # @!attribute payment_sessions
+  #   @return [CheckoutSdk::Payments::PaymentSessionsClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -59,7 +63,8 @@ module CheckoutSdk
                 :metadata,
                 :financial,
                 :issuing,
-                :contexts
+                :contexts,
+                :payment_sessions
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -84,6 +89,7 @@ module CheckoutSdk
       @financial = CheckoutSdk::Financial::FinancialClient.new api_client, configuration
       @issuing = CheckoutSdk::Issuing::IssuingClient.new api_client, configuration
       @contexts = CheckoutSdk::Payments::PaymentContextsClient.new api_client, configuration
+      @payment_sessions = CheckoutSdk::Payments::PaymentSessionsClient.new api_client, configuration
     end
 
     private

@@ -158,3 +158,6 @@ require 'checkout_sdk/payments/links/payments_links_client'
 
 # Payment Contexts
 require 'checkout_sdk/payments/contexts/payment_contexts_client'
+
+# Payment Sessions
+require 'checkout_sdk/payments/sessions/payment_sessions_client'
