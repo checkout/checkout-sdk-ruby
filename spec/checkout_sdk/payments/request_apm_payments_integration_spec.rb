@@ -359,7 +359,7 @@ RSpec.describe CheckoutSdk::Payments do
         request = CheckoutSdk::Payments::PaymentRequest.new
         request.source = source
         request.reference = Helpers::DataFactory::REFERENCE
-        request.currency = CheckoutSdk::Common::Currency::EUR
+        request.currency = CheckoutSdk::Common::Currency::GBP
         request.amount = 10
         request.capture = true
         request.success_url = 'https://testing.checkout.com/sucess'
@@ -507,7 +507,7 @@ RSpec.describe CheckoutSdk::Payments do
 
       expect { default_sdk.payments.request_payment(request) }
         .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
-          expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+          expect(e.error_details[:error_codes].first).to eq 'payment_type_required' }
     end
   end
 
