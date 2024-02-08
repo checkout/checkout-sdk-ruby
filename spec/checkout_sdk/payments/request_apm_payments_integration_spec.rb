@@ -352,7 +352,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when requesting Klarna source payment' do
-      it 'raises an error (payee_not_onboarded)' do
+      it 'raises an error (amount_and_item_total_amounts_mismatch)' do
         source = CheckoutSdk::Payments::KlarnaSource.new
         source.account_holder = common_account_holder
 
@@ -366,7 +366,7 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'custom_data_required' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'amount_and_item_total_amounts_mismatch' }
       end
     end
 
@@ -507,7 +507,7 @@ RSpec.describe CheckoutSdk::Payments do
 
       expect { default_sdk.payments.request_payment(request) }
         .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
-          expect(e.error_details[:error_codes].first).to eq 'payment_type_required' }
+          expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
     end
   end
 
