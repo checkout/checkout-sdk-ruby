@@ -2,6 +2,8 @@
 
 module CheckoutSdk
   module Payments
+    # @!attribute payment_context_id
+    #   @return [String]
     # @!attribute source
     #   @return [PaymentSource]
     # @!attribute amount
@@ -28,6 +30,8 @@ module CheckoutSdk
     #   @return [BillingDescriptor]
     # @!attribute shipping
     #   @return [ShippingDetails]
+    # @!attribute segment
+    #   @return [PaymentSegment]
     # @!attribute three_ds
     #   @return [ThreeDSRequest]
     # @!attribute processing_channel_id
@@ -55,10 +59,13 @@ module CheckoutSdk
     #   @return [ProcessingSettings]
     # @!attribute items
     #   @return [Array(Product)]
+    # @!attribute retry
+    #   @return [PaymentRetryRequest]
     # @!attribute metadata
     #   @return [Hash{String => Object}]
     class PaymentRequest
-      attr_accessor :source,
+      attr_accessor :payment_context_id,
+                    :source,
                     :amount,
                     :currency,
                     :payment_type,
@@ -71,6 +78,7 @@ module CheckoutSdk
                     :customer,
                     :billing_descriptor,
                     :shipping,
+                    :segment,
                     :three_ds,
                     :processing_channel_id,
                     :previous_payment_id,
@@ -84,6 +92,7 @@ module CheckoutSdk
                     :amount_allocations,
                     :processing,
                     :items,
+                    :retry,
                     :metadata
     end
   end

@@ -1,7 +1,7 @@
 RSpec.describe CheckoutSdk::Forex do
 
   skip 'Skipping because processing_channel_id is invalid' do
-    describe '.request_quote' do
+    describe '.request_quote', skip: 'unavailable' do
       context 'when requesting a quote with valid parameters' do
         it 'retrieves valid quotes' do
           request = CheckoutSdk::Forex::QuoteRequest.new
