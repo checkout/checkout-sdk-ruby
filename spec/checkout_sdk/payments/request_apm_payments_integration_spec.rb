@@ -351,7 +351,7 @@ RSpec.describe CheckoutSdk::Payments do
       end
     end
 
-    context 'when requesting Klarna source payment' do
+    context 'when requesting Klarna source payment', skip: 'unavailable' do
       it 'raises an error (amount_and_item_total_amounts_mismatch)' do
         source = CheckoutSdk::Payments::KlarnaSource.new
         source.account_holder = common_account_holder
