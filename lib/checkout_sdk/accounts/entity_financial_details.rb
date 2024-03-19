@@ -10,11 +10,14 @@ module CheckoutSdk
     #   @return [Integer]
     # @!attribute documents
     #   @return [EntityFinancialDocuments]
+    # @!attribute currency
+    #   @return [String] {CheckoutSdk::Common::Currency}
     class EntityFinancialDetails
       attr_accessor :annual_processing_volume,
                     :average_transaction_value,
                     :highest_transaction_value,
-                    :documents
+                    :documents,
+                    :currency
     end
   end
 end

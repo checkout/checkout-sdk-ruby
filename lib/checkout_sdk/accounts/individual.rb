@@ -22,6 +22,8 @@ module CheckoutSdk
     #   @return [PlaceOfBirth]
     # @!attribute identification
     #   @return [Identification]
+    # @!attribute financial_details
+    #   @return [EntityFinancialDetails]
     class Individual
       attr_accessor :first_name,
                     :middle_name,
@@ -32,7 +34,8 @@ module CheckoutSdk
                     :registered_address,
                     :date_of_birth,
                     :place_of_birth,
-                    :identification
+                    :identification,
+                    :financial_details
     end
   end
 end
