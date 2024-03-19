@@ -12,12 +12,15 @@ module CheckoutSdk
     #   @return [Company]
     # @!attribute individual
     #   @return [Individual]
+    # @!attribute documents
+    #   @return [OnboardSubEntityDocuments]
     class OnboardEntity
       attr_accessor :reference,
                     :contact_details,
                     :profile,
                     :company,
-                    :individual
+                    :individual,
+                    :documents
     end
   end
 end
