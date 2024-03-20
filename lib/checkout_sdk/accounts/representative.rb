@@ -20,6 +20,8 @@ module CheckoutSdk
     #   @return [PlaceOfBirth]
     # @!attribute roles
     #   @return [Array(String)]
+    # @!attribute documents
+    #   @return [OnboardSubEntityDocuments]
     class Representative
       attr_accessor :id,
                     :first_name,
@@ -29,7 +31,8 @@ module CheckoutSdk
                     :phone,
                     :date_of_birth,
                     :place_of_birth,
-                    :roles
+                    :roles,
+                    :documents
     end
   end
 end

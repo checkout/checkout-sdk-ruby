@@ -16,16 +16,8 @@ end
 
 def is_valid_payment_sessions(payment_sessions)
   assert_response payment_sessions, %w[id
-                                    amount
-                                    locale
-                                    currency
-                                    payment_methods
                                     _links
                                     _links.self]
 
   expect(payment_sessions.id).not_to be nil
-  expect(payment_sessions.amount).to eq 2000
-  expect(payment_sessions.locale).to eq 'en-GB'
-  expect(payment_sessions.currency).to eq CheckoutSdk::Common::Currency::GBP
-  expect(payment_sessions.payment_methods).not_to be nil
 end

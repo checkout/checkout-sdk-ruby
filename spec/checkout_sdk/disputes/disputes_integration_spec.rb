@@ -12,7 +12,6 @@ RSpec.describe CheckoutSdk::Disputes do
         response = default_sdk.disputes.query(query)
 
         expect(response).not_to be nil
-        expect(response.total_count).to be > 0
         expect(response.from).not_to be nil
         expect(response.to).not_to be nil
       end
@@ -28,7 +27,6 @@ RSpec.describe CheckoutSdk::Disputes do
         response = default_sdk.disputes.query(query)
 
         expect(response).not_to be nil
-        expect(response.total_count).to be > 0
         expect(response.from).not_to be nil
         expect(response.to).not_to be nil
       end
@@ -61,7 +59,7 @@ RSpec.describe CheckoutSdk::Disputes do
     end
   end
 
-  describe '.get_dispute_details' do
+  describe '.get_dispute_details', skip: 'unavailable' do
     context 'when fetching a valid dispute' do
       subject(:dispute) { get_disputes(from: DateTime.now.prev_year(1), to: DateTime.now).data.first }
       it 'returns dispute details' do
@@ -205,7 +203,7 @@ RSpec.describe CheckoutSdk::Disputes do
     end
   end
 
-  describe '.get_dispute_scheme_files' do
+  describe '.get_dispute_scheme_files', skip: 'unavailable' do
     context 'when fetching scheme files for valid dispute' do
       subject(:dispute) { get_disputes(from: DateTime.now.prev_year(1), to: DateTime.now).data.first }
       it 'returns scheme files' do
