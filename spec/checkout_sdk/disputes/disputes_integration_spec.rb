@@ -123,6 +123,13 @@ RSpec.describe CheckoutSdk::Disputes do
           expect(response.http_metadata.status_code).to eq 204
         end
 
+        it 'should compiled submitted evidence successfully' do
+          response = default_sdk.disputes.get_compiled_submitted_evidence(@dispute.id, request)
+
+          expect(response).not_to be nil
+          expect(response).file_id.not_to be nil
+        end
+
         it 'should have new values for updated fields' do
           response = default_sdk.disputes.get_evidence(@dispute.id)
 
