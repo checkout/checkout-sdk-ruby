@@ -7,6 +7,7 @@ module CheckoutSdk
       FILES = 'files'
       ACCEPT = 'accept'
       EVIDENCE = 'evidence'
+      SUBMITTED = 'submitted'
       SCHEME_FILES = 'schemefiles'
       private_constant :DISPUTES, :FILES, :ACCEPT, :EVIDENCE, :SCHEME_FILES
 
@@ -45,6 +46,11 @@ module CheckoutSdk
       # @param [String] dispute_id
       def submit_evidence(dispute_id)
         api_client.invoke_post(build_path(DISPUTES, dispute_id, EVIDENCE), sdk_authorization)
+      end
+
+      # @param [String] dispute_id
+      def get_compiled_submitted_evidence(dispute_id)
+        api_client.invoke_get(build_path(DISPUTES, dispute_id, EVIDENCE, SUBMITTED), sdk_authorization)
       end
 
       # @param [String] dispute_id
