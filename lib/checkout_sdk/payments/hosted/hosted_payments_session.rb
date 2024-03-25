@@ -28,6 +28,8 @@ module CheckoutSdk
     #   @return [ProcessingSettings]
     # @!attribute allow_payment_methods
     #   @return [Array(CheckoutSdk::Common::PaymentSourceType)]
+    # @!attribute disabled_payment_methods
+    #   @return [Array(CheckoutSdk::Common::PaymentSourceType)]
     # @!attribute products
     #   @return [Array(CheckoutSdk::Common::Product)]
     # @!attribute risk
@@ -66,6 +68,7 @@ module CheckoutSdk
                     :recipient,
                     :processing,
                     :allow_payment_methods,
+                    :disabled_payment_methods,
                     :products,
                     :risk,
                     :success_url,
