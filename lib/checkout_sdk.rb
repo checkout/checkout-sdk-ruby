@@ -9,7 +9,6 @@ require 'faraday/net_http'
 require 'faraday/follow_redirects'
 require 'mime/types'
 require 'logger'
-require 'ostruct'
 
 # Version
 require 'checkout_sdk/version'
