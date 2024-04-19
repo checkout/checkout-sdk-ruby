@@ -30,6 +30,33 @@ RSpec.describe CheckoutSdk::Instruments do
       end
     end
 
+    context 'when requesting a sepa instrument' do
+      it 'returns a sepa instrument response' do
+        instruments_data = CheckoutSdk::Instruments::InstrumentData.new
+        instruments_data.account_number = "FR7630006000011234567890189"
+        instruments_data.country = CheckoutSdk::Common::Country::FR
+        instruments_data.currency = CheckoutSdk::Common::Currency::EUR
+        instruments_data.payment_type = CheckoutSdk::Payments::PaymentType::RECURRING
+
+        account_holder = CheckoutSdk::Common::AccountHolder.new
+        account_holder.first_name = 'John'
+        account_holder.last_name = 'Smith'
+        account_holder.billing_address = address
+        account_holder.phone = phone
+
+        request = CheckoutSdk::Instruments::InstrumentSepa.new
+        request.instrument_data = instruments_data
+        request.account_holder = account_holder
+
+        response = default_sdk.instruments.create(request)
+
+        expect(response).not_to be nil
+        expect(response.id).not_to be nil
+        expect(response.fingerprint).not_to be nil
+
+      end
+    end
+
     context 'when requesting card token instrument with missing data' do
       it 'raises an error' do
         request = CheckoutSdk::Instruments::InstrumentToken.new
