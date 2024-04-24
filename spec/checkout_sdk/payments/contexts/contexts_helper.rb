@@ -2,12 +2,12 @@
 
 module ContextsHelper
 
-  def create_payment_contexts
+  def create_payment_contexts_paypal
     request = {
       'source' => {
         'type' => 'paypal'
       },
-      'amount' => 2000,
+      'amount' => 1000,
       'currency' => CheckoutSdk::Common::Currency::EUR,
       'payment_type' => CheckoutSdk::Payments::PaymentType::REGULAR,
       'capture' => true,
@@ -17,8 +17,9 @@ module ContextsHelper
       'items' => [
         {
           'name' => 'mask',
-          'unit_price' => 2000,
-          'quantity' => 1
+          'unit_price' => 1000,
+          'quantity' => 1,
+          'total_amount' => 1000
         }
       ]
     }
@@ -26,6 +27,7 @@ module ContextsHelper
     response = default_sdk.contexts.create_payment_contexts(request)
     expect(response).not_to be nil
     expect(response.id).not_to be nil
+    expect(response.partner_metadata.order_id).not_to be nil
     response
   end
 
