@@ -63,6 +63,8 @@ module CheckoutSdk
     #   @return [PaymentRetryRequest]
     # @!attribute metadata
     #   @return [Hash{String => Object}]
+    # @!attribute instruction
+    #   @return [PaymentInstruction]
     class PaymentRequest
       attr_accessor :payment_context_id,
                     :source,
@@ -93,7 +95,8 @@ module CheckoutSdk
                     :processing,
                     :items,
                     :retry,
-                    :metadata
+                    :metadata,
+                    :instruction
     end
   end
 end

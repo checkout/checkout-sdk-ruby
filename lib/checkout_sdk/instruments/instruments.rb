@@ -12,6 +12,8 @@ require 'checkout_sdk/instruments/get/bank_account_field_query'
 require 'checkout_sdk/instruments/create/instrument'
 require 'checkout_sdk/instruments/create/instrument_token'
 require 'checkout_sdk/instruments/create/instrument_bank_account'
+require 'checkout_sdk/instruments/create/instrument_sepa'
+require 'checkout_sdk/instruments/create/instrument_data'
 # Client
 require 'checkout_sdk/instruments/base_instruments_client'
 require 'checkout_sdk/instruments/instruments_client'
