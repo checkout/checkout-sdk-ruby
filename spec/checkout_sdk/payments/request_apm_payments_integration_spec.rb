@@ -119,10 +119,9 @@ RSpec.describe CheckoutSdk::Payments do
       end
     end
 
-    context 'when requesting Ideal source payment' do
+    context 'when requesting Ideal source payment', skip: 'unavailable' do
       it 'should request payment correctly' do
         source = CheckoutSdk::Payments::IdealSource.new
-        source.bic = 'INGBNL2A'
         source.description = 'ORD50234E89'
         source.language = 'nl'
 

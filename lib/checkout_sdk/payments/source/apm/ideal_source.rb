@@ -2,15 +2,12 @@
 
 module CheckoutSdk
   module Payments
-    # @!attribute bic
-    #   @return [String]
     # @!attribute description
     #   @return [String]
     # @!attribute language
     #   @return [String]
     class IdealSource < PaymentSource
-      attr_accessor :bic,
-                    :description,
+      attr_accessor :description,
                     :language
 
       def initialize
