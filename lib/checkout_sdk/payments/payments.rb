@@ -161,3 +161,8 @@ require 'checkout_sdk/payments/contexts/payment_contexts_client'
 
 # Payment Sessions
 require 'checkout_sdk/payments/sessions/payment_sessions_client'
+require 'checkout_sdk/payments/sessions/payment_sessions_request'
+require 'checkout_sdk/payments/sessions/payment_methods_type'
+require 'checkout_sdk/payments/sessions/payment_method_configuration'
+require 'checkout_sdk/payments/sessions/card'
+require 'checkout_sdk/payments/sessions/store_payment_details_type'
