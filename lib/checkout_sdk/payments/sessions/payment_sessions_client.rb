@@ -11,7 +11,7 @@ module CheckoutSdk
         super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
       end
 
-      # @param [Hash] payment_sessions
+      # @param [Hash, PaymentSessionsRequest] payment_sessions
       def create_payment_sessions(payment_sessions)
         api_client.invoke_post(PAYMENT_SESSIONS, sdk_authorization, payment_sessions)
       end

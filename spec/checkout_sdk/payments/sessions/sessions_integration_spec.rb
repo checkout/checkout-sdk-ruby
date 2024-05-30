@@ -16,6 +16,7 @@ end
 
 def is_valid_payment_sessions(payment_sessions)
   assert_response payment_sessions, %w[id
+                                    payment_session_token
                                     _links
                                     _links.self]
 
