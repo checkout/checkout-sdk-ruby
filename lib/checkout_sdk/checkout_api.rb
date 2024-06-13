@@ -97,7 +97,12 @@ module CheckoutSdk
     # @param [CheckoutConfiguration] configuration
     # @return [ApiClient]
     def base_api_client(configuration)
-      ApiClient.new(configuration, configuration.environment.base_uri)
+      base_uri = configuration.environment.base_uri
+      subdomain = configuration.environment_subdomain
+
+      base_uri = subdomain.base_uri if subdomain&.base_uri
+
+      ApiClient.new(configuration, base_uri)
     end
 
     # @param [CheckoutConfiguration] configuration

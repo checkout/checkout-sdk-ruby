@@ -41,21 +41,23 @@ module CheckoutSdk
     # @return [CheckoutSdk::CheckoutApi]
     def build
       super
-      CheckoutSdk::CheckoutApi.new(
-        CheckoutConfiguration.new(
-          OAuthSdkCredentials.new(client_id,
-                                  client_secret,
-                                  scopes,
-                                  http_client,
-                                  environment,
-                                  logger,
-                                  authorization_uri),
-          environment,
-          http_client,
-          multipart_http_client,
-          logger
-        )
+      configuration = CheckoutConfiguration.new(
+        OAuthSdkCredentials.new(client_id,
+                                client_secret,
+                                scopes,
+                                http_client,
+                                environment,
+                                logger,
+                                authorization_uri),
+        environment,
+        http_client,
+        multipart_http_client,
+        logger
       )
+
+      configuration.environment_subdomain = environment_subdomain if environment_subdomain
+
+      CheckoutApi.new(configuration)
     end
   end
 end
