@@ -11,15 +11,17 @@ module CheckoutSdk
       @secret_key_pattern = SECRET_KEY_PATTERN
       @public_key_pattern = PUBLIC_KEY_PATTERN
       super
-      CheckoutApi.new(
-        CheckoutConfiguration.new(
-          StaticKeysSdkCredentials.new(secret_key, public_key),
-          environment,
-          http_client,
-          multipart_http_client,
-          logger
-        )
+      configuration = CheckoutConfiguration.new(
+        StaticKeysSdkCredentials.new(secret_key, public_key),
+        environment,
+        http_client,
+        multipart_http_client,
+        logger
       )
+
+      configuration.environment_subdomain = environment_subdomain if environment_subdomain
+
+      CheckoutApi.new(configuration)
     end
   end
 end

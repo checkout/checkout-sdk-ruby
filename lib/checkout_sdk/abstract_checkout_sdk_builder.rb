@@ -8,7 +8,9 @@ module CheckoutSdk
     #   @return [Faraday::Connection]
     # @!attribute multipart_http_client
     #   @return [Faraday::Connection]
-    attr_accessor :environment, :http_client, :multipart_http_client, :logger
+    # @!attribute environment_subdomain
+    #   @return [EnvironmentSubdomain, nil]
+    attr_accessor :environment, :http_client, :multipart_http_client, :logger, :environment_subdomain
 
     # @param [Environment] environment
     def with_environment(environment)
@@ -30,6 +32,12 @@ module CheckoutSdk
 
     def with_logger(logger)
       @logger = logger
+      self
+    end
+
+    # @param [String, nil] subdomain
+    def with_environment_subdomain(subdomain)
+      @environment_subdomain = EnvironmentSubdomain.new(@environment, subdomain)
       self
     end
 
