@@ -41,6 +41,16 @@ module CheckoutSdk
                                void_request,
                                idempotency_key)
       end
+
+      # @param [String] payment_id
+      # @param [Hash, ReverseRequest] reverse_request
+      # @param [String, nil] idempotency_key
+      def reverse_payment(payment_id, reverse_request = nil, idempotency_key = nil)
+        api_client.invoke_post(build_path(PAYMENTS_PATH, payment_id, 'reversals'),
+                               sdk_authorization,
+                               reverse_request,
+                               idempotency_key)
+      end
     end
   end
 end
