@@ -149,27 +149,29 @@ RSpec.describe CheckoutSdk::Previous::Payments do
       end
     end
 
-    context 'when requesting Giropay source payment' do
-      it 'requests payment correctly' do
-        source = CheckoutSdk::Previous::Payments::GiropaySource.new
-        source.purpose = 'test purpose'
+    skip 'unavailable' do
+      context 'when requesting Giropay source payment' do
+        it 'requests payment correctly' do
+          source = CheckoutSdk::Previous::Payments::GiropaySource.new
+          source.purpose = 'test purpose'
 
-        request = CheckoutSdk::Previous::Payments::PaymentRequest.new
-        request.source = source
-        request.reference = Helpers::DataFactory::REFERENCE
-        request.currency = CheckoutSdk::Common::Currency::EUR
-        request.amount = 100
-        request.capture = true
-        request.success_url = 'https://testing.checkout.com/sucess'
-        request.failure_url = 'https://testing.checkout.com/failure'
+          request = CheckoutSdk::Previous::Payments::PaymentRequest.new
+          request.source = source
+          request.reference = Helpers::DataFactory::REFERENCE
+          request.currency = CheckoutSdk::Common::Currency::EUR
+          request.amount = 100
+          request.capture = true
+          request.success_url = 'https://testing.checkout.com/sucess'
+          request.failure_url = 'https://testing.checkout.com/failure'
 
-        response = previous_sdk.payments.request_payment(request)
+          response = previous_sdk.payments.request_payment(request)
 
-        assert_response response, %w[id
+          assert_response response, %w[id
                                      status
                                      reference
                                      customer
                                      _links]
+        end
       end
     end
 
