@@ -29,8 +29,7 @@ module CheckoutSdk
       api_url = environment.base_uri
       new_environment = api_url
 
-      # Regex to match a subdomain consisting of 8 to 11 lowercase alphanumeric characters
-      if subdomain =~ /^[0-9a-z]{8,11}$/
+      if subdomain =~ /^[0-9a-z]+$/
         url_parts = URI.parse(api_url)
         new_host = "#{subdomain}.#{url_parts.host}"
 
