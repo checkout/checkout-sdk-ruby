@@ -7,7 +7,7 @@ RSpec.describe CheckoutSdk::Workflows do
   end
 
   after(:all) do
-    #delete_workflow @workflow.id
+    # delete_workflow @workflow.id
   end
 
   describe '.retrieve_workflows' do
@@ -121,6 +121,20 @@ RSpec.describe CheckoutSdk::Workflows do
         response = default_sdk.workflows.remove_workflow_action @workflow.id, action.id
 
         assert_response response
+      end
+    end
+  end
+
+  describe '.test_workflow' do
+    context 'when having a workflow' do
+      it 'should test workflow' do
+        event_types_request = {
+          "event_types": %w[payment_approved payment_declined card_verification_declined card_verified payment_authorization_incremented payment_authorization_increment_declined payment_capture_declined payment_captured payment_refund_declined payment_refunded payment_void_declined payment_voided dispute_canceled dispute_evidence_required dispute_expired dispute_lost dispute_resolved dispute_won]
+        }
+
+        workflow_response = default_sdk.workflows.test_workflow(@workflow.id, event_types_request)
+
+        expect(workflow_response).not_to be_nil
       end
     end
   end

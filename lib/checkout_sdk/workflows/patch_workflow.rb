@@ -6,9 +6,15 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute active
     #   @return [TrueClass, FalseClass]
+    # @!attribute conditions
+    #   @return [Array(WorkflowCondition)]
+    # @!attribute actions
+    #   @return [Array(WorkflowAction)]
     class PatchWorkflow
       attr_accessor :name,
-                    :active
+                    :active,
+                    :conditions,
+                    :actions
     end
   end
 end

@@ -203,8 +203,14 @@ RSpec.describe CheckoutSdk::Previous::Payments do
 
     context 'when requesting Knet source payment' do
       it 'requests payment correctly' do
+        payment_method_details = CheckoutSdk::Payments::PaymentMethodDetails.new
+        payment_method_details.display_name = "name"
+        payment_method_details.type = "type"
+        payment_method_details.network = "card_network"
+
         source = CheckoutSdk::Previous::Payments::KnetSource.new
         source.language = 'en'
+        source.payment_method_details = payment_method_details
 
         request = CheckoutSdk::Previous::Payments::PaymentRequest.new
         request.source = source
