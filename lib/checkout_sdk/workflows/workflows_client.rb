@@ -12,8 +12,9 @@ module CheckoutSdk
       REFLOW = 'reflow'
       SUBJECT = 'subject'
       WORKFLOW_ID = 'workflowId'
+      TEST = 'test'
       private_constant :WORKFLOWS, :WORKFLOW, :ACTIONS, :CONDITIONS, :EVENT_TYPES, :EVENTS, :REFLOW,
-                       :SUBJECT, :WORKFLOW_ID
+                       :SUBJECT, :WORKFLOW_ID, :TEST
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -84,6 +85,12 @@ module CheckoutSdk
       # @param [String] condition_id
       def remove_workflow_condition(workflow_id, condition_id)
         api_client.invoke_delete(build_path(WORKFLOWS, workflow_id, CONDITIONS, condition_id), sdk_authorization)
+      end
+
+      # @param [String] workflow_id
+      # @param [Hash] event_types_request
+      def test_workflow(workflow_id, event_types_request)
+        api_client.invoke_post(build_path(WORKFLOWS, workflow_id, TEST), sdk_authorization, event_types_request)
       end
 
       def retrieve_event_types

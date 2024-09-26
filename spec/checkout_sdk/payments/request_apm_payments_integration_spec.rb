@@ -147,8 +147,14 @@ RSpec.describe CheckoutSdk::Payments do
 
     context 'when requesting Knet source payment' do
       it 'raises an error (payee_not_onboarded)' do
+        payment_method_details = CheckoutSdk::Payments::PaymentMethodDetails.new
+        payment_method_details.display_name = "name"
+        payment_method_details.type = "type"
+        payment_method_details.network = "card_network"
+
         source = CheckoutSdk::Payments::KnetSource.new
         source.language = 'en'
+        source.payment_method_details = payment_method_details
 
         request = CheckoutSdk::Payments::PaymentRequest.new
         request.source = source
