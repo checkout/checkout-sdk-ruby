@@ -12,6 +12,8 @@ module CheckoutSdk
       OUT_OF_SCA_SCOPE = 'out_of_sca_scope'
       OTHER = 'other'
       LOW_RISK_PROGRAM = 'low_risk_program'
+      DATA_SHARE = 'data_share'
+      RECURRING_OPERATION = 'recurring_operation'
     end
   end
 end

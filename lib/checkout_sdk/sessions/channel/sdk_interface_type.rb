@@ -3,9 +3,9 @@
 module CheckoutSdk
   module Sessions
     module SdkInterfaceType
-      NATIVE = 'native'
-      HTML = 'html'
       BOTH = 'both'
+      HTML = 'html'
+      NATIVE = 'native'
     end
   end
 end

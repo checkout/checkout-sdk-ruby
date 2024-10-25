@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require 'checkout_sdk/sessions/authentication_type'
+require 'checkout_sdk/sessions/category'
+require 'checkout_sdk/sessions/transaction_type'
+require 'checkout_sdk/common/challenge_indicator'
+
 module CheckoutSdk
   module Sessions
     # @!attribute source
@@ -35,13 +40,17 @@ module CheckoutSdk
     # @!attribute shipping_address_matches_billing
     #   @return [TrueClass, FalseClass]
     # @!attribute completion
-    #   @return [CompletionInfo]
+    #   @return [Completion]
     # @!attribute channel_data
     #   @return [ChannelData]
     # @!attribute recurring
     #   @return [Recurring]
     # @!attribute installment
     #   @return [Installment]
+    # @!attribute optimization
+    #   @return [Optimization]
+    # @!attribute initial_transaction
+    #   @return [InitialTransaction]
     class SessionRequest
       attr_accessor :source,
                     :amount,
@@ -62,7 +71,21 @@ module CheckoutSdk
                     :completion,
                     :channel_data,
                     :recurring,
-                    :installment
+                    :installment,
+                    :optimization,
+                    :initial_transaction
+
+      def initialize(source: CardSource.new,
+                     authentication_type: CheckoutSdk::Sessions::AuthenticationType::REGULAR,
+                     authentication_category: CheckoutSdk::Sessions::Category::PAYMENT,
+                     challenge_indicator: CheckoutSdk::Common::ChallengeIndicator::NO_PREFERENCE,
+                     transaction_type: CheckoutSdk::Sessions::TransactionType::GOODS_SERVICE)
+        @source = source
+        @authentication_type = authentication_type
+        @authentication_category = authentication_category
+        @challenge_indicator = challenge_indicator
+        @transaction_type = transaction_type
+      end
     end
   end
 end

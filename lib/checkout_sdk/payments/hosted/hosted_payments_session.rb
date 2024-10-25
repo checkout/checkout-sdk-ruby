@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'checkout_sdk/payments/payment_type'
+
 module CheckoutSdk
   module Payments
     # @!attribute amount
@@ -15,6 +17,8 @@ module CheckoutSdk
     # @!attribute reference
     #   @return [String]
     # @!attribute description
+    #   @return [String]
+    # @!attribute display_name
     #   @return [String]
     # @!attribute customer
     #   @return [CheckoutSdk::Common::CustomerRequest]
@@ -34,6 +38,10 @@ module CheckoutSdk
     #   @return [Array(CheckoutSdk::Common::Product)]
     # @!attribute risk
     #   @return [RiskRequest]
+    # @!attribute customer_retry
+    #   @return [PaymentRetryRequest]
+    # @!attribute sender
+    #   @return [CheckoutSdk::Payments::Sender]
     # @!attribute success_url
     #   @return [String]
     # @!attribute cancel_url
@@ -57,11 +65,13 @@ module CheckoutSdk
     class HostedPaymentsSession
       attr_accessor :amount,
                     :currency,
-                    :payment_type,
                     :payment_ip,
                     :billing_descriptor,
                     :reference,
                     :description,
+                    :display_name,
+                    :processing_channel_id,
+                    :amount_allocations,
                     :customer,
                     :shipping,
                     :billing,
@@ -71,6 +81,8 @@ module CheckoutSdk
                     :disabled_payment_methods,
                     :products,
                     :risk,
+                    :customer_retry,
+                    :sender,
                     :success_url,
                     :cancel_url,
                     :failure_url,
@@ -78,9 +90,11 @@ module CheckoutSdk
                     :locale,
                     :three_ds,
                     :capture,
-                    :capture_on,
-                    :processing_channel_id,
-                    :amount_allocations
+                    :capture_on
+
+      def initialize(payment_type: CheckoutSdk::Payments::PaymentType::REGULAR)
+        @payment_type = payment_type
+      end
     end
   end
 end

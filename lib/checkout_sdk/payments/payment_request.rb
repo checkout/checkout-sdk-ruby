@@ -18,6 +18,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute description
     #   @return [String]
+    # @!attribute partial_authorization
+    #   @return [PartialAuthorization]
     # @!attribute authorization_type
     #   @return [String] {AuthorizationType}
     # @!attribute capture
@@ -74,6 +76,7 @@ module CheckoutSdk
                     :merchant_initiated,
                     :reference,
                     :description,
+                    :partial_authorization,
                     :authorization_type,
                     :capture,
                     :capture_on,

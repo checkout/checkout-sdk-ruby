@@ -20,6 +20,8 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute phone
     #   @return [CheckoutSdk::Common::Phone]
+    # @!attribute account_holder
+    #   @return [CheckoutSdk::Common::AccountHolder]
     class CardSource < PaymentSource
       attr_accessor :number,
                     :expiry_month,
@@ -29,7 +31,8 @@ module CheckoutSdk
                     :stored,
                     :store_for_future_use,
                     :billing_address,
-                    :phone
+                    :phone,
+                    :account_holder
 
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::CARD

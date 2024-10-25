@@ -71,7 +71,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -90,7 +91,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -115,7 +117,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -166,7 +169,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -185,7 +189,8 @@ RSpec.describe CheckoutSdk::Payments do
           request.failure_url = 'https://testing.checkout.com/failure'
 
           expect { default_sdk.payments.request_payment(request) }
-            .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+            .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+              expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
         end
       end
     end
@@ -207,7 +212,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -229,7 +235,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -250,7 +257,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -272,7 +280,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -333,7 +342,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -352,7 +362,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -371,7 +382,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'amount_and_item_total_amounts_mismatch' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'amount_and_item_total_amounts_mismatch' }
       end
     end
 
@@ -401,7 +413,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.items = [product]
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
 
@@ -429,7 +442,8 @@ RSpec.describe CheckoutSdk::Payments do
         request.failure_url = 'https://testing.checkout.com/failure'
 
         expect { default_sdk.payments.request_payment(request) }
-          .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+            expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
       end
     end
   end
@@ -449,7 +463,7 @@ RSpec.describe CheckoutSdk::Payments do
 
       expect { default_sdk.payments.request_payment(request) }
         .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
-              expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
     end
   end
 
@@ -513,6 +527,100 @@ RSpec.describe CheckoutSdk::Payments do
       expect { default_sdk.payments.request_payment(request) }
         .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
           expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+    end
+  end
+
+  context 'when requesting EPS source payment' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::EPSSource.new
+      source.purpose = 'Mens black t-shirt L'
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 100
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+    end
+  end
+
+  context 'when requesting Bizum source payment' do
+    it 'raises an error (apm_service_unavailable)' do
+      source = CheckoutSdk::Payments::BizumSource.new
+      source.mobile_number = '+447700900986'
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 10
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
+    end
+  end
+
+  context 'when requesting Octopus source payment' do
+    it 'raises an error (apm_currency_not_supported)' do
+      source = CheckoutSdk::Payments::OctopusSource.new
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 10
+      request.currency = CheckoutSdk::Common::Currency::USD
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'currency_not_supported' }
+    end
+  end
+
+  context 'when requesting Plaid source payment', skip: 'unavailable' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::PlaidSource.new
+      source.token = 'token'
+      source.account_holder = common_account_holder
+
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 10
+      request.currency = CheckoutSdk::Common::Currency::USD
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
+    end
+  end
+
+  context 'when requesting Sequra source payment' do
+    it 'raises an error (payee_not_onboarded)' do
+      source = CheckoutSdk::Payments::SequraSource.new
+      source.billing_address = address
+      request = CheckoutSdk::Payments::PaymentRequest.new
+      request.source = source
+      request.amount = 10
+      request.currency = CheckoutSdk::Common::Currency::EUR
+      request.capture = true
+      request.success_url = Helpers::DataFactory::SUCCESS_URL
+      request.failure_url = Helpers::DataFactory::FAILURE_URL
+
+      expect { default_sdk.payments.request_payment(request) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
+          expect(e.error_details[:error_codes].first).to eq 'payee_not_onboarded' }
     end
   end
 

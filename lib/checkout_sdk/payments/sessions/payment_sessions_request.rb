@@ -60,6 +60,8 @@ module CheckoutSdk
     #   @return [TrueClass, FalseClass]
     # @!attribute ip_address
     #   @return [String]
+    # @!attribute capture_on
+    #   @return [Time]
     # @!attribute tax_amount
     #   @return [Integer]
     class PaymentSessionsRequest
@@ -92,6 +94,7 @@ module CheckoutSdk
                     :sender,
                     :capture,
                     :ip_address,
+                    :capture_on,
                     :tax_amount
     end
   end

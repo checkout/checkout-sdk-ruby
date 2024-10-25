@@ -33,6 +33,29 @@ RSpec.describe CheckoutSdk::Sessions do
                                      session_secret]
       end
     end
+
+    context 'when requesting card session using merchant initiated session', skip: 'unavailable' do
+      it 'creates a merchant initiated session and retrieves session details' do
+
+        browser_session = get_merchant_initiated_session
+        request = get_non_hosted_session(browser_session,
+                                         CheckoutSdk::Sessions::Category::PAYMENT,
+                                         CheckoutSdk::Common::ChallengeIndicator::NO_PREFERENCE,
+                                         CheckoutSdk::Sessions::TransactionType::GOODS_SERVICE)
+
+        response = oauth_sdk.sessions.request_session(request)
+        assert_response(response, %w[id session_secret])
+
+        session_id = response.id
+        session_secret = response.session_secret
+
+        response_with_id = oauth_sdk.sessions.get_session_details(session_id)
+        assert_response(response_with_id, %w[id session_secret])
+
+        response_with_secret = oauth_sdk.sessions.get_session_details(session_id, session_secret)
+        assert_response(response_with_secret, %w[id])
+      end
+    end
   end
 
   describe '.get_session_details' do

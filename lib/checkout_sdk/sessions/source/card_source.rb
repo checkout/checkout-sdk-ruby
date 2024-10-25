@@ -22,8 +22,9 @@ module CheckoutSdk
                     :stored,
                     :store_for_future_use
 
-      def initialize
+      def initialize(stored: false)
         super SessionSourceType::CARD
+        @stored = stored
       end
     end
   end

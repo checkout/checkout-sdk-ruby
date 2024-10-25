@@ -38,6 +38,12 @@ module SessionsHelper
     app_session
   end
 
+  def get_merchant_initiated_session
+    merchant_initiated_session = CheckoutSdk::Sessions::MerchantInitiatedSession.new
+    merchant_initiated_session.request_type = CheckoutSdk::Sessions::RequestType::RECURRING_TRANSACTION
+    merchant_initiated_session
+  end
+
   def get_non_hosted_session(channel_data, authentication_category, challenge_indicator_type, transaction_type)
     billing_address = CheckoutSdk::Sessions::SessionAddress.new
     billing_address.address_line1 = 'CheckoutSdk.com'

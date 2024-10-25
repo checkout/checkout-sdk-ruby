@@ -16,6 +16,13 @@ require 'checkout_sdk/sessions/sessions_billing_descriptor'
 require 'checkout_sdk/sessions/shipping_indicator'
 require 'checkout_sdk/sessions/transaction_type'
 require 'checkout_sdk/sessions/three_ds_method_completion_request'
+require 'checkout_sdk/sessions/three_ds_req_auth_method'
+require 'checkout_sdk/sessions/three_ds_requestor_authentication_info'
+require 'checkout_sdk/sessions/reorder_items_indicator_type'
+require 'checkout_sdk/sessions/pre_order_purchase_indicator_type'
+require 'checkout_sdk/sessions/optimized_properties'
+require 'checkout_sdk/sessions/optimization'
+require 'checkout_sdk/sessions/initial_transaction'
 
 # channel
 require 'checkout_sdk/sessions/channel/channel_data'
@@ -26,6 +33,8 @@ require 'checkout_sdk/sessions/channel/three_ds_method_completion'
 require 'checkout_sdk/sessions/channel/uie_elements'
 require 'checkout_sdk/sessions/channel/app_session'
 require 'checkout_sdk/sessions/channel/browser_session'
+require 'checkout_sdk/sessions/channel/request_type'
+require 'checkout_sdk/sessions/channel/merchant_initiated_session'
 
 # completion
 require 'checkout_sdk/sessions/completion/completion_info'

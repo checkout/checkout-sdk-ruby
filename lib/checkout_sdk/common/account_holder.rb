@@ -4,7 +4,7 @@ module CheckoutSdk
   module Common
     # @!attribute type
     #   @return [String] {AccountHolderType}
-    # @!attribute title
+    # @!attribute full_name
     #   @return [String]
     # @!attribute first_name
     #   @return [String]
@@ -21,7 +21,7 @@ module CheckoutSdk
     # @!attribute country_of_birth
     #   @return [Country]
     # @!attribute residential_status
-    #   @return [String]
+    #   @return [String] {ResidentialStatusType}
     # @!attribute billing_address
     #   @return [Address]
     # @!attribute phone
@@ -32,9 +32,11 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute gender
     #   @return [String]
+    # @!attribute account_name_inquiry
+    #   @return [Boolean]
     class AccountHolder
       attr_accessor :type,
-                    :title,
+                    :full_name,
                     :first_name,
                     :middle_name,
                     :last_name,
@@ -47,7 +49,8 @@ module CheckoutSdk
                     :phone,
                     :identification,
                     :email,
-                    :gender
+                    :gender,
+                    :account_name_inquiry
     end
   end
 end
