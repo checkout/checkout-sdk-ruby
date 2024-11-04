@@ -4,23 +4,32 @@ module CheckoutSdk
   module Accounts
     # @!attribute reference
     #   @return [String]
-    # @!attribute contact_details
-    #   @return [ContactDetails]
+    # @!attribute is_draft
+    #   @return [Boolean]
     # @!attribute profile
     #   @return [Profile]
+    # @!attribute contact_details
+    #   @return [ContactDetails]
     # @!attribute company
     #   @return [Company]
+    # @!attribute processing_details
+    #   @return [ProcessingDetails]
     # @!attribute individual
     #   @return [Individual]
     # @!attribute documents
     #   @return [OnboardSubEntityDocuments]
+    # @!attribute additional_info
+    #   @return [AdditionalInfo]
     class OnboardEntity
       attr_accessor :reference,
-                    :contact_details,
+                    :is_draft,
                     :profile,
+                    :contact_details,
                     :company,
+                    :processing_details,
                     :individual,
-                    :documents
+                    :documents,
+                    :additional_info
     end
   end
 end

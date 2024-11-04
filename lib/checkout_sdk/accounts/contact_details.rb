@@ -6,9 +6,12 @@ module CheckoutSdk
     #   @return [Phone]
     # @!attribute email_addresses
     #   @return [EntityEmailAddresses]
+    # @!attribute invitee
+    #   @return [Invitee]
     class ContactDetails
       attr_accessor :phone,
-                    :email_addresses
+                    :email_addresses,
+                    :invitee
     end
   end
 end

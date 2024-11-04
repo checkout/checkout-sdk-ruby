@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'checkout_sdk/sessions/channel/three_ds_method_completion'
+
 module CheckoutSdk
   module Sessions
     # @!attribute three_ds_method_completion
@@ -37,8 +39,9 @@ module CheckoutSdk
                     :user_agent,
                     :ip_address
 
-      def initialize
+      def initialize(three_ds_method_completion: CheckoutSdk::Sessions::ThreeDsMethodCompletion::U)
         super ChannelDataType::BROWSER
+        @three_ds_method_completion = three_ds_method_completion
       end
     end
   end

@@ -3,11 +3,11 @@
 module CheckoutSdk
   module Sessions
     module AuthenticationType
-      REGULAR = 'regular'
-      RECURRING = 'recurring'
+      ADD_CARD = 'add_card'
       INSTALLMENT = 'installment'
       MAINTAIN_CARD = 'maintain_card'
-      ADD_CARD = 'add_card'
+      RECURRING = 'recurring'
+      REGULAR = 'regular'
     end
   end
 end

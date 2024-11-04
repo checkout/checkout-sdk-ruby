@@ -10,12 +10,16 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute trading_name
     #   @return [String]
+    # @!attribute date_of_incorporation
+    #   @return [DateOfIncorporation]
+    # @!attribute regulatory_licence_number
+    #   @return [String]
     # @!attribute principal_address
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute registered_address
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute representatives
-    #   @return [Array(Representative)]
+    #   @return [Array(EntityRepresentative)]
     # @!attribute document
     #   @return [EntityDocument]
     # @!attribute financial_details
@@ -25,6 +29,8 @@ module CheckoutSdk
                     :business_type,
                     :legal_name,
                     :trading_name,
+                    :date_of_incorporation,
+                    :regulatory_licence_number,
                     :principal_address,
                     :registered_address,
                     :representatives,

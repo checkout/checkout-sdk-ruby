@@ -52,6 +52,11 @@ module CheckoutSdk
       TRUSTLY = 'trustly'
       ILLICADO = 'illicado'
       SEPA = 'sepa'
+      ACH = 'ach'
+      BIZUM = 'bizum'
+      OCTOPUS = 'octopus'
+      PLAID = 'plaid'
+      SEQURA = 'sequra'
     end
   end
 end

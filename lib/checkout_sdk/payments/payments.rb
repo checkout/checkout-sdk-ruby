@@ -82,7 +82,11 @@ require 'checkout_sdk/payments/source/apm/cv_connect_source'
 require 'checkout_sdk/payments/source/apm/trustly_source'
 require 'checkout_sdk/payments/source/apm/illicado_source'
 require 'checkout_sdk/payments/source/apm/sepa_source'
-
+require 'checkout_sdk/payments/source/apm/ach_source'
+require 'checkout_sdk/payments/source/apm/bizum_source'
+require 'checkout_sdk/payments/source/apm/octopus_source'
+require 'checkout_sdk/payments/source/apm/plaid_source'
+require 'checkout_sdk/payments/source/apm/sequra_source'
 # Sender
 require 'checkout_sdk/payments/sender/sender'
 require 'checkout_sdk/payments/sender/sender_type'

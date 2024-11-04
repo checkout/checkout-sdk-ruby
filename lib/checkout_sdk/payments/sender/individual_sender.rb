@@ -14,6 +14,8 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute identification
     #   @return [CheckoutSdk::Common::AccountHolderIdentification]
+    # @!attribute reference
+    #   @return [String]
     # @!attribute reference_type
     #   @return [String]
     # @!attribute date_of_birth
@@ -31,6 +33,7 @@ module CheckoutSdk
                     :dob,
                     :address,
                     :identification,
+                    :reference,
                     :reference_type,
                     :date_of_birth,
                     :source_of_funds,

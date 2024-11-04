@@ -12,6 +12,11 @@ module CheckoutSdk
       attr_accessor :number_of_payments,
                     :days_between_payments,
                     :expiry
+
+      def initialize(days_between_payments: 1, expiry: '99991231')
+        @days_between_payments = days_between_payments
+        @expiry = expiry
+      end
     end
   end
 end

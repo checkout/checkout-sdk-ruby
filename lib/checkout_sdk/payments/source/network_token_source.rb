@@ -24,6 +24,8 @@ module CheckoutSdk
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute phone
     #   @return [CheckoutSdk::Common::Phone]
+    # @!attribute account_holder
+    #   @return [CheckoutSdk::Common::AccountHolder]
     class NetworkTokenSource < PaymentSource
       attr_accessor :token,
                     :expiry_month,
@@ -35,7 +37,8 @@ module CheckoutSdk
                     :name,
                     :cvv,
                     :billing_address,
-                    :phone
+                    :phone,
+                    :account_holder
 
       def initialize
         super CheckoutSdk::Common::PaymentSourceType::NETWORK_TOKEN
