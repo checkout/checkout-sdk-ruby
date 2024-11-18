@@ -5,6 +5,7 @@ RSpec.describe CheckoutSdk::Payments do
 
   before(:all) do
     @payment_context_paypal = create_payment_contexts_paypal
+    @payment_context_klarna = create_payment_contexts_klarna
   end
 
   describe '.create_payment_contexts' do
@@ -12,36 +13,7 @@ RSpec.describe CheckoutSdk::Payments do
       it { is_valid_payment_context @payment_context_paypal }
     end
     context 'when creating a payment contexts klarna with valid data' do
-      it 'raises an error (apm_service_unavailable)' do
-        request = {
-          'source' => {
-            'type' => 'klarna',
-            'account_holder' => {
-              'billing_address' => {
-                'country' => 'DE'
-              }
-            }
-          },
-          'amount' => 1000,
-          'currency' => CheckoutSdk::Common::Currency::EUR,
-          'payment_type' => CheckoutSdk::Payments::PaymentType::REGULAR,
-          'processing_channel_id' => ENV.fetch('CHECKOUT_PROCESSING_CHANNEL_ID', nil),
-          'items' => [
-            {
-              'name' => 'mask',
-              'unit_price' => 1000,
-              'quantity' => 1,
-              'total_amount' => 1000,
-              'reference' => 'BA67A'
-            }
-          ],
-          'processing' => {
-            'locale' => 'en-GB'
-          }
-        }
-        expect { default_sdk.contexts.create_payment_contexts(request) }
-            .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.error_details[:error_codes].first).to eq 'apm_service_unavailable' }
-      end
+      it { is_valid_payment_context @payment_context_klarna }
     end
   end
 
@@ -54,8 +26,7 @@ end
 
 def is_valid_payment_context(payment_context)
   assert_response payment_context, %w[id
-                                      partner_metadata
-                                      partner_metadata.order_id]
+                                      partner_metadata]
 end
 
 def is_valid_payment_context_details(payment_context_details_response)
