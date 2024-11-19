@@ -11,7 +11,8 @@ module CheckoutSdk
     attr_reader :api_client,
                 :authorization_type,
                 :configuration
-    protected :api_client, :authorization_type, :configuration
+
+    protected
 
     # @param [CheckoutSdk::ApiClient] api_client
     # @param [CheckoutConfiguration] configuration
@@ -21,8 +22,6 @@ module CheckoutSdk
       @authorization_type = authorization_type
       @configuration = configuration
     end
-
-    protected
 
     # @param [Array] args
     def build_path(*args)

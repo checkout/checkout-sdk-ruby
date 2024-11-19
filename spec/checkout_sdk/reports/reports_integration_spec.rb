@@ -72,7 +72,8 @@ RSpec.describe CheckoutSdk::Reports do
       it 'should retrieve report file contents' do
         response = default_sdk.reports.get_report_file report.id, report.files[0].id
         expect(response).not_to be_nil
-        expect(response.contents).not_to be_nil
+        expect(response.contents).to be_nil
+        expect(response.csv).not_to be_nil
         expect(response.http_metadata.status_code).to eq 200
       end
 
