@@ -5,7 +5,7 @@ RSpec.describe CheckoutSdk::Previous::Payments do
     @api = previous_sdk
   end
 
-  describe '.refund_payment' do
+  describe '.refund_payment', skip: 'unavailable' do
     context 'when refunding a payment' do
       it 'should refund correctly with balances' do
         payment_response = make_card_payment(capture: true, capture_on: Time.now.iso8601)

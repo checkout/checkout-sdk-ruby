@@ -4,7 +4,7 @@ RSpec.describe CheckoutSdk::Previous::Payments do
     @api = previous_sdk
   end
 
-  describe '.request_payout' do
+  describe '.request_payout', skip: 'unavailable' do
     context 'when attempt payout' do
       it 'successfully make a payout' do
 

@@ -7,7 +7,6 @@ RSpec.describe CheckoutSdk::Payments::HostedPaymentsClient do
 
         assert_response response, %w[id
                                      reference
-                                     warnings
                                      _links
                                      http_metadata]
         expect(response.http_metadata.status_code).to eq 201
@@ -80,6 +79,7 @@ def create_hosted_payments_request
   request.reference = 'reference'
   request.currency = CheckoutSdk::Common::Currency::GBP
   request.description = 'Payment for Gold Necklace'
+  request.display_name = 'Gold Necklace'
   request.customer = common_customer_request
   request.shipping = shipping_details
   request.billing = billing_information

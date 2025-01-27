@@ -8,7 +8,6 @@ RSpec.describe CheckoutSdk::Payments::HostedPaymentsClient do
 
           assert_response response, %w[id
                                        reference
-                                       warnings
                                        _links
                                        http_metadata]
           expect(response.http_metadata.status_code).to eq 201

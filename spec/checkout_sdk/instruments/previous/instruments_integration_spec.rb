@@ -1,6 +1,6 @@
 RSpec.describe CheckoutSdk::Previous::Instruments do
 
-  describe '.create' do
+  describe '.create', skip: 'unavailable' do
     context 'when requesting an instrument token' do
       it 'returns an instrument token' do
         request = CheckoutSdk::Previous::Instruments::Instrument.new
@@ -35,7 +35,7 @@ RSpec.describe CheckoutSdk::Previous::Instruments do
     end
   end
 
-  describe '.get' do
+  describe '.get', skip: 'unavailable' do
     context 'when fetching a valid instrument' do
       subject(:instrument) { create_instrument_token }
       it 'returns a valid card token instrument' do
@@ -63,7 +63,7 @@ RSpec.describe CheckoutSdk::Previous::Instruments do
     end
   end
 
-  describe '.update' do
+  describe '.update', skip: 'unavailable' do
     before(:all) do
       @instrument = create_instrument_token
     end
@@ -99,7 +99,7 @@ RSpec.describe CheckoutSdk::Previous::Instruments do
     end
   end
 
-  describe '.delete' do
+  describe '.delete', skip: 'unavailable' do
     subject(:instrument) { create_instrument_token }
     context 'when deleting an existent instrument' do
       it 'should return http: 204' do

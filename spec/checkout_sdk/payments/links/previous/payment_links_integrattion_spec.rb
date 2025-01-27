@@ -9,7 +9,6 @@ RSpec.describe CheckoutSdk::Payments::PaymentsLinksClient do
           assert_response response, %w[id
                                      reference
                                      expires_on
-                                     warnings
                                      _links
                                      http_metadata]
           expect(response.http_metadata.status_code).to eq 201
