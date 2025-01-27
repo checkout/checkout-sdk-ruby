@@ -143,7 +143,7 @@ RSpec.describe CheckoutSdk::Instruments do
     end
   end
 
-  describe '.get_bank_account_field_formatting' do
+  describe '.get_bank_account_field_formatting', skip: 'unavailable' do
     context 'when fetching for bank account field formatting with correct parameters' do
       it 'retrieves bank account field formatting' do
         query = CheckoutSdk::Instruments::BankAccountFieldQuery.new

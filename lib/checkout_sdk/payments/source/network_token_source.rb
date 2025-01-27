@@ -16,6 +16,8 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute stored
     #   @return [TrueClass, FalseClass]
+    # @!attribute store_for_future_use
+    #   @return [TrueClass, FalseClass]
     # @!attribute name
     #   @return [String]
     # @!attribute cvv
@@ -34,6 +36,7 @@ module CheckoutSdk
                     :cryptogram,
                     :eci,
                     :stored,
+                    :store_for_future_use,
                     :name,
                     :cvv,
                     :billing_address,
