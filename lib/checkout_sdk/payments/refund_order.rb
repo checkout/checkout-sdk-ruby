@@ -30,7 +30,9 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute sku
     #   @return [String]
-    class Product
+    # @!attribute service_ends_on
+    #   @return [Time]
+    class RefundOrder
       attr_accessor :name,
                     :quantity,
                     :unit_price,
@@ -44,7 +46,8 @@ module CheckoutSdk
                     :wxpay_goods_id,
                     :image_url,
                     :url,
-                    :sku
+                    :sku,
+                    :service_ends_on
     end
   end
 end

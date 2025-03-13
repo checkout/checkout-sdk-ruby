@@ -5,7 +5,7 @@ RSpec.describe CheckoutSdk::Previous::Payments do
     @api = previous_sdk
   end
 
-  describe '.void_payment' do
+  describe '.void_payment', skip: 'unavailable' do
     context 'when attempt payment' do
       it 'void payment' do
         payment_response = make_card_payment

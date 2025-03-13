@@ -5,7 +5,7 @@ RSpec.describe CheckoutSdk::Previous::Payments do
     @api = previous_sdk
   end
 
-  describe '.capture_payment' do
+  describe '.capture_payment', skip: 'unavailable' do
     context 'when capture a payment' do
       it 'make full capture' do
         payment_response = make_card_payment

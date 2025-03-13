@@ -4,10 +4,18 @@ require 'checkout_sdk/payments/payment_type'
 
 module CheckoutSdk
   module Payments
-    # @!attribute amount
-    #   @return [Integer]
     # @!attribute currency
     #   @return [String] {CheckoutSdk::Common::Currency}
+    # @!attribute billing
+    #   @return [BillingInformation]
+    # @!attribute success_url
+    #   @return [String]
+    # @!attribute cancel_url
+    #   @return [String]
+    # @!attribute failure_url
+    #   @return [String]
+    # @!attribute amount
+    #   @return [Integer]
     # @!attribute payment_type
     #   @return [String] {PaymentType}
     # @!attribute payment_ip
@@ -20,12 +28,14 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute display_name
     #   @return [String]
+    # @!attribute processing_channel_id
+    #   @return [String]
+    # @!attribute amount_allocations
+    #   @return [Array(CheckoutSdk::Common::AmountAllocations)]
     # @!attribute customer
     #   @return [CheckoutSdk::Common::CustomerRequest]
     # @!attribute shipping
     #   @return [ShippingDetails]
-    # @!attribute billing
-    #   @return [BillingInformation]
     # @!attribute recipient
     #   @return [PaymentRecipient]
     # @!attribute processing
@@ -42,29 +52,28 @@ module CheckoutSdk
     #   @return [PaymentRetryRequest]
     # @!attribute sender
     #   @return [CheckoutSdk::Payments::Sender]
-    # @!attribute success_url
-    #   @return [String]
-    # @!attribute cancel_url
-    #   @return [String]
-    # @!attribute failure_url
-    #   @return [String]
     # @!attribute metadata
     #   @return [Hash(String=>Object)]
     # @!attribute locale
-    #   @return [String]
+    #   @return [String] {LocaleType}
     # @!attribute three_ds
     #   @return [ThreeDSRequest]
     # @!attribute capture
     #   @return [TrueClass, FalseClass]
     # @!attribute capture_on
     #   @return [Time]
-    # @!attribute processing_channel_id
-    #   @return [String] - Not available on Previous.
-    # @!attribute amount_allocations
-    #   @return [Array(CheckoutSdk::Common::AmountAllocations)] - Not available on Previous.
+    # @!attribute instruction
+    #   @return [HostedPaymentInstruction]
+    # @!attribute payment_method_configuration
+    #   @return [PaymentMethodConfiguration]
     class HostedPaymentsSession
-      attr_accessor :amount,
-                    :currency,
+      attr_accessor :currency,
+                    :billing,
+                    :success_url,
+                    :cancel_url,
+                    :failure_url,
+                    :amount,
+                    :payment_type,
                     :payment_ip,
                     :billing_descriptor,
                     :reference,
@@ -74,7 +83,6 @@ module CheckoutSdk
                     :amount_allocations,
                     :customer,
                     :shipping,
-                    :billing,
                     :recipient,
                     :processing,
                     :allow_payment_methods,
@@ -83,14 +91,13 @@ module CheckoutSdk
                     :risk,
                     :customer_retry,
                     :sender,
-                    :success_url,
-                    :cancel_url,
-                    :failure_url,
                     :metadata,
                     :locale,
                     :three_ds,
                     :capture,
-                    :capture_on
+                    :capture_on,
+                    :instruction,
+                    :payment_method_configuration
 
       def initialize(payment_type: CheckoutSdk::Payments::PaymentType::REGULAR)
         @payment_type = payment_type
