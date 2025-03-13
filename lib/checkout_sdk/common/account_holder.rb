@@ -12,6 +12,10 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute last_name
     #   @return [String]
+    # @!attribute email
+    #   @return [String]
+    # @!attribute gender
+    #   @return [String]
     # @!attribute company_name
     #   @return [String]
     # @!attribute tax_id
@@ -28,10 +32,6 @@ module CheckoutSdk
     #   @return [Phone]
     # @!attribute identification
     #   @return [AccountHolderIdentification]
-    # @!attribute email
-    #   @return [String]
-    # @!attribute gender
-    #   @return [String]
     # @!attribute account_name_inquiry
     #   @return [Boolean]
     class AccountHolder
@@ -40,6 +40,8 @@ module CheckoutSdk
                     :first_name,
                     :middle_name,
                     :last_name,
+                    :email,
+                    :gender,
                     :company_name,
                     :tax_id,
                     :date_of_birth,
@@ -48,8 +50,6 @@ module CheckoutSdk
                     :billing_address,
                     :phone,
                     :identification,
-                    :email,
-                    :gender,
                     :account_name_inquiry
     end
   end

@@ -1,5 +1,5 @@
 RSpec.describe CheckoutSdk::Customers do
-  describe 'Previous' do
+  describe 'Previous', skip: 'unavailable' do
 
     describe '.create' do
       context 'when creating a customer with valid data' do

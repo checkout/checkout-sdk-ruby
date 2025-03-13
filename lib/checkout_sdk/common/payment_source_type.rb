@@ -57,6 +57,9 @@ module CheckoutSdk
       OCTOPUS = 'octopus'
       PLAID = 'plaid'
       SEQURA = 'sequra'
+      TABBY = 'tabby'
+      APPLEPAY = 'applepay'
+      GOOGLEPAY = 'googlepay'
     end
   end
 end

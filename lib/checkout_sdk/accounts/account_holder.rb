@@ -21,8 +21,8 @@ module CheckoutSdk
     # @!attribute email
     #   @return [String]
     class AccountHolder
-      attr_accessor :type,
-                    :tax_id,
+      attr_reader :type
+      attr_accessor :tax_id,
                     :date_of_birth,
                     :country_of_birth,
                     :residential_status,
@@ -30,6 +30,14 @@ module CheckoutSdk
                     :phone,
                     :identification,
                     :email
+
+      protected
+
+      # @abstract
+      # @param [String] type {MetadataSourceType}
+      def initialize(type)
+        @type = type
+      end
     end
   end
 end

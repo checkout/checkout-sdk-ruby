@@ -1,7 +1,7 @@
 RSpec.describe CheckoutSdk::Previous::Payments do
   include Previous::PaymentsHelper
 
-  describe '.request_payments (APMs)' do
+  describe '.request_payments (APMs)', skip: 'unavailable' do
     context 'when requesting Alipay source payment' do
       it 'requests payment correctly' do
         source = CheckoutSdk::Previous::Payments::AlipaySource.new
