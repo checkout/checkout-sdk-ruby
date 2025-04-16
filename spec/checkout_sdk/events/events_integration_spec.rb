@@ -2,7 +2,7 @@ RSpec.describe CheckoutSdk::Previous::Webhooks do
 
   describe '.retrieve_all_event_types' do
     context 'when fetching event types' do
-      it 'should return even types for both versions' do
+      it 'should return even types for both versions', skip: 'unavailable' do
         response = previous_sdk.events.retrieve_all_event_types
         expect(response).not_to be_nil
         expect(response.items).not_to be_nil
@@ -10,7 +10,7 @@ RSpec.describe CheckoutSdk::Previous::Webhooks do
         expect(response.items[1].version).to eq '2.0'
       end
 
-      it 'should return even types for version one' do
+      it 'should return even types for version one', skip: 'unavailable' do
         response = previous_sdk.events.retrieve_all_event_types '1.0'
         expect(response).not_to be_nil
         expect(response.items).not_to be_nil

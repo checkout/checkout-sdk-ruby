@@ -2,7 +2,7 @@ RSpec.describe CheckoutSdk::Payments::HostedPaymentsClient do
   describe 'Previous' do
     describe '.create_hosted_payments_page_session' do
       context 'when creating a hosted payment session with valid parameters' do
-        it 'creates hosted payments session' do
+        it 'creates hosted payments session', skip: 'unavailable' do
           request = create_hosted_payments_request
           response = previous_sdk.hosted.create_hosted_payments_page_session request
 
@@ -18,7 +18,7 @@ RSpec.describe CheckoutSdk::Payments::HostedPaymentsClient do
     describe '.get_hosted_payments_page_details' do
       subject(:session) { previous_sdk.hosted.create_hosted_payments_page_session create_hosted_payments_request }
       context 'when fetching an existing hosted payment session' do
-        it 'retrieves hosted payments session details' do
+        it 'retrieves hosted payments session details', skip: 'unavailable' do
           response = previous_sdk.hosted.get_hosted_payments_page_details session.id
 
           assert_response response, %w[id

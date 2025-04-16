@@ -1,7 +1,7 @@
 RSpec.describe CheckoutSdk::Previous::Apm::KlarnaClient do
   describe '.create_credit_session' do
     context 'when creating session with valid parameters' do
-      it 'creates credit session correctly' do
+      it 'creates credit session correctly', skip: 'unavailable' do
         response = previous_sdk.klarna.create_credit_session get_credit_session_request
 
         expect(response).not_to be nil
@@ -12,7 +12,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::KlarnaClient do
     end
 
     context 'when creating session with invalid parameters' do
-      it 'raises an error' do
+      it 'raises an error', skip: 'unavailable' do
         request = CheckoutSdk::Previous::Apm::CreditSessionRequest.new
 
         expect { previous_sdk.klarna.create_credit_session request }
@@ -26,7 +26,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::KlarnaClient do
       before(:example) {
         @session = previous_sdk.klarna.create_credit_session get_credit_session_request
       }
-      it 'retrieves credit session details' do
+      it 'retrieves credit session details', skip: 'unavailable' do
         response = previous_sdk.klarna.get_credit_session @session.session_id
 
         expect(response).not_to be nil
@@ -39,7 +39,7 @@ RSpec.describe CheckoutSdk::Previous::Apm::KlarnaClient do
     end
 
     context 'when fetching inexistant credit session' do
-      it 'raises an error' do
+      it 'raises an error', skip: 'unavailable' do
         expect { previous_sdk.klarna.get_credit_session 'not_found' }
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.http_metadata.status_code).to eq 404 }
       end
