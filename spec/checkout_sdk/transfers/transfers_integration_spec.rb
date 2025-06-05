@@ -19,7 +19,7 @@ RSpec.describe CheckoutSdk::Transfers do
       it 'should fail when initiating transfer of funds without idempotency key' do
         request = create_transfer
 
-        expect { oauth_sdk.transfers.initiate_transfer_of_funds(request) }
+        expect { oauth_sdk.transfers.initiate_transfer_of_funds(request, '') }
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e| expect(e.http_metadata.status_code).to eq 422 }
       end
 
@@ -49,6 +49,7 @@ def create_transfer
   transfer_source = CheckoutSdk::Transfers::TransferSource.new
   transfer_source.id = 'ent_kidtcgc3ge5unf4a5i6enhnr5m'
   transfer_source.amount = 100
+  transfer_source.currency = CheckoutSdk::Common::Currency::GBP
   transfer_destination = CheckoutSdk::Transfers::TransferDestination.new
   transfer_destination.id = 'ent_w4jelhppmfiufdnatam37wrfc4'
   create_transfer = CheckoutSdk::Transfers::CreateTransfer.new

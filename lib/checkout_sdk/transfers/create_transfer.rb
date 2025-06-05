@@ -2,19 +2,19 @@
 
 module CheckoutSdk
   module Transfers
-    # @!attribute reference
-    #   @return [String]
     # @!attribute transfer_type
     #   @return [String] {TransferType}
     # @!attribute source
     #   @return [TransferSource]
     # @!attribute destination
     #   @return [TransferDestination]
+    # @!attribute reference
+    #   @return [String]
     class CreateTransfer
-      attr_accessor :reference,
-                    :transfer_type,
+      attr_accessor :transfer_type,
                     :source,
-                    :destination
+                    :destination,
+                    :reference
     end
   end
 end

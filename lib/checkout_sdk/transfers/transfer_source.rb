@@ -6,9 +6,12 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute amount
     #   @return [Integer]
+    # @!attribute currency
+    #   @return [CheckoutSdk::Common::Currency]
     class TransferSource
       attr_accessor :id,
-                    :amount
+                    :amount,
+                    :currency
     end
   end
 end
