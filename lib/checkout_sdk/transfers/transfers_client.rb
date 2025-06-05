@@ -13,8 +13,8 @@ module CheckoutSdk
       end
 
       # @param [Hash, CreateTransfer] create_transfer
-      # @param [String, nil] idempotency_key
-      def initiate_transfer_of_funds(create_transfer, idempotency_key = nil)
+      # @param [String] idempotency_key
+      def initiate_transfer_of_funds(create_transfer, idempotency_key)
         api_client.invoke_post(TRANSFERS, sdk_authorization, create_transfer, idempotency_key)
       end
 

@@ -59,9 +59,9 @@ module CheckoutSdk
       return @access_token unless @access_token.nil? || @access_token.token.nil? || !@access_token.valid?
 
       data = {
+        grant_type: 'client_credentials',
         client_id: @client_id,
         client_secret: @client_secret,
-        grant_type: 'client_credentials',
         scope: @scopes.join(' ')
       }
 
@@ -81,6 +81,7 @@ module CheckoutSdk
         oauth_response = JSON.parse(response.body, object_class: OpenStruct)
 
         @access_token = OAuthAccessToken.new(oauth_response.access_token,
+                                             oauth_response.token_type,
                                              Time.now + oauth_response.expires_in)
       end
 

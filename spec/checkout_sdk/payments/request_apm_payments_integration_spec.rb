@@ -505,7 +505,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
   end
 
-  context 'when requesting Sepa source payment' do
+  context 'when requesting Sepa source payment', skip: 'unavailable' do
     it 'raises an error (apm_service_unavailable)' do
       source = CheckoutSdk::Payments::SepaSource.new
       source.country = CheckoutSdk::Common::Country::ES
