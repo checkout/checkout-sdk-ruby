@@ -43,6 +43,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Payments::PaymentContextsClient]
   # @!attribute payment_sessions
   #   @return [CheckoutSdk::Payments::PaymentSessionsClient]
+  # @!attribute forward
+  #   @return [CheckoutSdk::Forward::ForwardClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -64,7 +66,8 @@ module CheckoutSdk
                 :financial,
                 :issuing,
                 :contexts,
-                :payment_sessions
+                :payment_sessions,
+                :forward
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -90,6 +93,7 @@ module CheckoutSdk
       @issuing = CheckoutSdk::Issuing::IssuingClient.new api_client, configuration
       @contexts = CheckoutSdk::Payments::PaymentContextsClient.new api_client, configuration
       @payment_sessions = CheckoutSdk::Payments::PaymentSessionsClient.new api_client, configuration
+      @forward = CheckoutSdk::Forward::ForwardClient.new(api_client, configuration)
     end
 
     private

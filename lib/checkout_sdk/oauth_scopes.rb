@@ -47,5 +47,6 @@ module CheckoutSdk
     ISSUING_CARD_MGMT = 'issuing:card-mgmt'
     ISSUING_CONTROLS_READ = 'issuing:controls-read'
     ISSUING_CONTROLS_WRITE = 'issuing:controls-write'
+    FORWARD = 'forward'
   end
 end
