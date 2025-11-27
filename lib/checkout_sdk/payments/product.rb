@@ -2,6 +2,10 @@
 
 module CheckoutSdk
   module Payments
+    # @!attribute type
+    #   @return [String]
+    # @!attribute sub_type
+    #   @return [String] {ProductSubType}
     # @!attribute name
     #   @return [String]
     # @!attribute quantity
@@ -31,7 +35,9 @@ module CheckoutSdk
     # @!attribute sku
     #   @return [String]
     class Product
-      attr_accessor :name,
+      attr_accessor :type,
+                    :sub_type,
+                    :name,
                     :quantity,
                     :unit_price,
                     :reference,

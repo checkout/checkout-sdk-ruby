@@ -68,6 +68,10 @@ module CheckoutSdk
     #   @return [SenderInformation]
     # @!attribute purpose
     #   @return [String]
+    # @!attribute affiliate_id
+    #   @return [string]
+    # @!attribute affiliate_url
+    #   @return [string]
     class ProcessingSettings
       attr_accessor :order_id,
                     :tax_amount,
@@ -101,7 +105,9 @@ module CheckoutSdk
                     :shipping_info,
                     :dlocal,
                     :senderInformation,
-                    :purpose
+                    :purpose,
+                    :affiliate_id,
+                    :affiliate_url
     end
   end
 end
