@@ -558,6 +558,7 @@ RSpec.describe CheckoutSdk::Payments do
       request.source = source
       request.amount = 10
       request.currency = CheckoutSdk::Common::Currency::EUR
+      request.customer = common_customer_request
       request.capture = true
       request.success_url = Helpers::DataFactory::SUCCESS_URL
       request.failure_url = Helpers::DataFactory::FAILURE_URL
