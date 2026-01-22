@@ -13,6 +13,7 @@ require './spec/checkout_sdk/workflows/workflows_helper'
 require './spec/checkout_sdk/webhooks/webhooks_helper'
 require './spec/checkout_sdk/payments/contexts/contexts_helper'
 require './spec/checkout_sdk/payments/sessions/sessions_helper'
+require './spec/checkout_sdk/payments/setups/payment_setups_helper'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
