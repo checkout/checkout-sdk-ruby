@@ -17,7 +17,7 @@ module CheckoutSdk
                     :billing_descriptor
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::P24
+        super(CheckoutSdk::Common::PaymentSourceType::P24)
       end
     end
   end

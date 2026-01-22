@@ -29,7 +29,7 @@ module CheckoutSdk
                     :sdk_ui_elements
 
       def initialize
-        super ChannelDataType::APP
+        super(ChannelDataType::APP)
       end
     end
   end

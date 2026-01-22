@@ -17,7 +17,7 @@ module CheckoutSdk
                     :language
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::BANCONTACT
+        super(CheckoutSdk::Common::PaymentSourceType::BANCONTACT)
       end
     end
   end

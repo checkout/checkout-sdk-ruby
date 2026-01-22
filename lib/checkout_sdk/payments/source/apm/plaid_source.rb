@@ -10,7 +10,7 @@ module CheckoutSdk
       attr_accessor :token, :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::PLAID
+        super(CheckoutSdk::Common::PaymentSourceType::PLAID)
       end
     end
   end

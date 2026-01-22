@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :token
 
       def initialize
-        super MetadataSourceType::TOKEN
+        super(MetadataSourceType::TOKEN)
       end
     end
   end

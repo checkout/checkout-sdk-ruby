@@ -40,7 +40,7 @@ module CheckoutSdk
                     :ip_address
 
       def initialize(three_ds_method_completion: CheckoutSdk::Sessions::ThreeDsMethodCompletion::U)
-        super ChannelDataType::BROWSER
+        super(ChannelDataType::BROWSER)
         @three_ds_method_completion = three_ds_method_completion
       end
     end

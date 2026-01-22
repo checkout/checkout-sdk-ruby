@@ -20,7 +20,7 @@ module CheckoutSdk
                     :identification
 
       def initialize
-        super CheckoutSdk::Payments::SenderType::CORPORATE
+        super(CheckoutSdk::Payments::SenderType::CORPORATE)
       end
     end
   end

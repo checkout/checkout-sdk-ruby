@@ -20,7 +20,7 @@ module CheckoutSdk
                     :customer
 
       def initialize
-        super CheckoutSdk::Common::InstrumentType::CARD
+        super(CheckoutSdk::Common::InstrumentType::CARD)
       end
     end
   end

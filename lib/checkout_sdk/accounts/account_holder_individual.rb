@@ -11,7 +11,7 @@ module CheckoutSdk
                     :last_name
 
       def initialize
-        super AccountHolderType::INDIVIDUAL
+        super(AccountHolderType::INDIVIDUAL)
       end
     end
   end

@@ -23,7 +23,7 @@ module CheckoutSdk
                     :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::TOKEN
+        super(CheckoutSdk::Common::PaymentSourceType::TOKEN)
       end
     end
   end

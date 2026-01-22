@@ -30,7 +30,7 @@ module CheckoutSdk
                       :phone
 
         def initialize
-          super CheckoutSdk::Payments::DestinationType::CARD
+          super(CheckoutSdk::Payments::DestinationType::CARD)
         end
       end
     end

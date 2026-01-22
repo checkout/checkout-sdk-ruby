@@ -33,7 +33,7 @@ module CheckoutSdk
                       :phone
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::D_LOCAL
+          super(CheckoutSdk::Common::PaymentSourceType::D_LOCAL)
         end
       end
     end

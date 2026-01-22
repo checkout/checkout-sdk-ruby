@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     class EntitySource < PayoutSource
       def initialize
-        super PayoutSourceType::ENTITY
+        super(PayoutSourceType::ENTITY)
       end
     end
   end

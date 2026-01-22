@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :token_data
 
       def initialize
-        super CheckoutSdk::Tokens::TokenType::APPLE_PAY
+        super(CheckoutSdk::Tokens::TokenType::APPLE_PAY)
       end
     end
   end

@@ -18,7 +18,7 @@ module CheckoutSdk
                       :payer
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::PAGOFACIL
+          super(CheckoutSdk::Common::PaymentSourceType::PAGOFACIL)
         end
       end
     end

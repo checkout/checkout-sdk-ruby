@@ -11,7 +11,7 @@ module CheckoutSdk
                     :challenge_notification_url
 
       def initialize
-        super CompletionInfoType::NON_HOSTED
+        super(CompletionInfoType::NON_HOSTED)
       end
     end
   end

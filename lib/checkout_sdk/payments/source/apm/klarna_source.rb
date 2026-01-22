@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::KLARNA
+        super(CheckoutSdk::Common::PaymentSourceType::KLARNA)
       end
     end
   end

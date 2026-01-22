@@ -14,7 +14,7 @@ module CheckoutSdk
                     :signature
 
       def initialize
-        super CheckoutSdk::Workflows::WorkflowActionType::WEBHOOK
+        super(CheckoutSdk::Workflows::WorkflowActionType::WEBHOOK)
       end
     end
   end

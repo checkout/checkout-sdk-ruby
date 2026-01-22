@@ -15,7 +15,7 @@ module CheckoutSdk
                       :info_fields
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::GIROPAY
+          super(CheckoutSdk::Common::PaymentSourceType::GIROPAY)
         end
       end
 

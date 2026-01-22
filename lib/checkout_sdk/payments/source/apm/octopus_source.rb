@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     class OctopusSource < PaymentSource
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::OCTOPUS
+        super(CheckoutSdk::Common::PaymentSourceType::OCTOPUS)
       end
     end
   end

@@ -44,7 +44,7 @@ module CheckoutSdk
                     :customer
 
       def initialize
-        super CheckoutSdk::Common::InstrumentType::BANK_ACCOUNT
+        super(CheckoutSdk::Common::InstrumentType::BANK_ACCOUNT)
       end
     end
   end

@@ -23,7 +23,7 @@ module CheckoutSdk
                     :products
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::FAWRY
+        super(CheckoutSdk::Common::PaymentSourceType::FAWRY)
       end
     end
   end

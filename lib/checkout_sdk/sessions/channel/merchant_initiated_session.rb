@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :request_type
 
       def initialize
-        super ChannelDataType::MERCHANT_INITIATED
+        super(ChannelDataType::MERCHANT_INITIATED)
       end
     end
   end

@@ -41,7 +41,7 @@ module CheckoutSdk
                     :nationality
 
       def initialize
-        super CheckoutSdk::Payments::SenderType::INDIVIDUAL
+        super(CheckoutSdk::Payments::SenderType::INDIVIDUAL)
       end
     end
   end

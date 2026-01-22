@@ -17,7 +17,7 @@ module CheckoutSdk
                     :national_id
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::QPAY
+        super(CheckoutSdk::Common::PaymentSourceType::QPAY)
       end
     end
   end

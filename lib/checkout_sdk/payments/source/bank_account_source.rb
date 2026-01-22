@@ -23,7 +23,7 @@ module CheckoutSdk
                     :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::BANK_ACCOUNT
+        super(CheckoutSdk::Common::PaymentSourceType::BANK_ACCOUNT)
       end
     end
   end

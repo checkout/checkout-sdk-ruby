@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :plan
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::PAYPAL
+        super(CheckoutSdk::Common::PaymentSourceType::PAYPAL)
       end
     end
   end

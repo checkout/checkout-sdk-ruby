@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     class BenefitSource < PaymentSource
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::BENEFIT
+        super(CheckoutSdk::Common::PaymentSourceType::BENEFIT)
       end
     end
   end

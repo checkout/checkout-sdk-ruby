@@ -38,7 +38,7 @@ module CheckoutSdk
                     :payment_method_details
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::KNET
+        super(CheckoutSdk::Common::PaymentSourceType::KNET)
       end
     end
   end

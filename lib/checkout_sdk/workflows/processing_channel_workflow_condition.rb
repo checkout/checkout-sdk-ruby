@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :processing_channels
 
       def initialize
-        super CheckoutSdk::Workflows::WorkflowConditionType::PROCESSING_CHANNEL
+        super(CheckoutSdk::Workflows::WorkflowConditionType::PROCESSING_CHANNEL)
       end
     end
   end

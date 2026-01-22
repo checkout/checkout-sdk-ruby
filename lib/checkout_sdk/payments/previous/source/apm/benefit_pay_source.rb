@@ -9,7 +9,7 @@ module CheckoutSdk
         attr_accessor :integration_type
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::BENEFITPAY
+          super(CheckoutSdk::Common::PaymentSourceType::BENEFITPAY)
         end
       end
     end

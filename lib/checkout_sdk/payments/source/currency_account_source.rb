@@ -4,7 +4,7 @@ module CheckoutSdk
   module Payments
     class CurrencyAccountSource < PayoutSource
       def initialize
-        super PayoutSourceType::CURRENCY_ACCOUNT
+        super(PayoutSourceType::CURRENCY_ACCOUNT)
       end
     end
   end

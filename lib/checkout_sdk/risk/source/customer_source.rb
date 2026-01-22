@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :id
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::CUSTOMER
+        super(CheckoutSdk::Common::PaymentSourceType::CUSTOMER)
       end
     end
   end

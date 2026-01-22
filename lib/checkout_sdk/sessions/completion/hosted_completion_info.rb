@@ -14,7 +14,7 @@ module CheckoutSdk
                     :failure_url
 
       def initialize
-        super CompletionInfoType::HOSTED
+        super(CompletionInfoType::HOSTED)
       end
     end
   end

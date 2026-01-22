@@ -17,7 +17,7 @@ module CheckoutSdk
                     :store_for_future_use
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::TOKEN
+        super(CheckoutSdk::Common::PaymentSourceType::TOKEN)
       end
     end
   end

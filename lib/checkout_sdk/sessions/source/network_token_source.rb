@@ -20,7 +20,7 @@ module CheckoutSdk
                     :stored
 
       def initialize
-        super SessionSourceType::NETWORK_TOKEN
+        super(SessionSourceType::NETWORK_TOKEN)
       end
     end
   end
