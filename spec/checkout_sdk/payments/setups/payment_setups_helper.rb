@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 module PaymentSetupsHelper
-  def create_payment_setup_request(amount: 1000, currency: 'GBP')
+  def create_payment_setup_request(**opts)
+    amount = opts.fetch(:amount, 1000)
+    currency = opts.fetch(:currency, 'GBP')
+    
     {
-      processing_channel_id: ENV['CHECKOUT_PROCESSING_CHANNEL_ID'],
+      processing_channel_id: ENV.fetch('CHECKOUT_PROCESSING_CHANNEL_ID'),
       amount: amount,
       currency: currency,
       payment_type: 'Regular',
@@ -43,7 +46,10 @@ module PaymentSetupsHelper
     }
   end
 
-  def create_payment_setup(amount: 1000, currency: 'USD')
+  def create_payment_setup(**opts)
+    amount = opts.fetch(:amount, 1000)
+    currency = opts.fetch(:currency, 'USD')
+    
     request = create_payment_setup_request(amount: amount, currency: currency)
     response = default_sdk.payments_setups.create_payment_setup(request)
     expect(response).not_to be nil
