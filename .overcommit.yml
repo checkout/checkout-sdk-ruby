@@ -1,0 +1,30 @@
+# Overcommit configuration
+# See https://github.com/sds/overcommit for more information
+
+PreCommit:
+  RuboCop:
+    enabled: true
+    on_warn: fail
+    command: ['bundle', 'exec', 'rubocop']
+    flags: ['--format', 'emacs', '--force-exclusion', '--display-cop-names']
+    include:
+      - 'lib/**/*.rb'
+      - '**/Gemfile'
+      - '**/Rakefile'
+
+  ALL:
+    problem_on_unmodified_line: ignore
+    requires_stash: true
+    quiet: false
+
+PostCheckout:
+  ALL:
+    enabled: false
+
+PostMerge:
+  ALL:
+    enabled: false
+
+PostRewrite:
+  ALL:
+    enabled: false
