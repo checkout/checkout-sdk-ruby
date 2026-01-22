@@ -19,15 +19,15 @@ module CheckoutSdk
     end
 
     def invoke_post(path, authorization, request = nil, idempotency_key = nil)
-      invoke(:post, path, authorization, request, idempotency_key)
+      invoke(:post, path, authorization, request, idempotency_key, params: nil)
     end
 
     def invoke_put(path, authorization, request)
-      invoke(:put, path, authorization, request)
+      invoke(:put, path, authorization, request, nil, params: nil)
     end
 
     def invoke_patch(path, authorization, request = nil)
-      invoke(:patch, path, authorization, request)
+      invoke(:patch, path, authorization, request, nil, params: nil)
     end
 
     def invoke_delete(path, authorization)
