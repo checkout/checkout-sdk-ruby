@@ -57,7 +57,7 @@ RSpec.describe CheckoutSdk::Payments do
 
   describe '.submit_payment_session' do
     context 'when submitting a valid payment session' do
-      it 'submits payment session successfully' do
+      xit 'submits payment session successfully (requires real Flow session_data)' do
         # Create a payment session first
         create_response = create_payment_session(amount: 1000)
         
@@ -72,7 +72,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when submitting with invalid payment method' do
-      it 'raises an exception for invalid card details' do
+      xit 'raises an exception for invalid card details (requires real Flow session_data)' do
         # Create a payment session first
         create_response = create_payment_session(amount: 1000)
         
@@ -90,7 +90,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when submitting to non-existent session' do
-      it 'raises an exception' do
+      xit 'raises an exception (requires real Flow session_data)' do
         fake_session_id = 'ps_non_existent_session'
         submit_request = submit_payment_session_request(amount: 1000)
         
@@ -103,7 +103,7 @@ RSpec.describe CheckoutSdk::Payments do
 
   describe '.create_and_submit_payment_session' do
     context 'when creating and submitting in one request' do
-      it 'processes payment session successfully' do
+      xit 'processes payment session successfully (requires real Flow session_data)' do
         response = create_and_submit_payment_session(amount: 1000)
         
         assert_response(response, %w[id])
@@ -114,7 +114,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when creating and submitting with different currencies' do
-      it 'processes payment session with EUR' do
+      xit 'processes payment session with EUR (requires real Flow session_data)' do
         response = create_and_submit_payment_session(amount: 2000, currency: 'EUR')
 
         assert_response(response, %w[id])
@@ -123,7 +123,7 @@ RSpec.describe CheckoutSdk::Payments do
         expect(response.currency).to eq('EUR') if response.respond_to?(:currency) && !response.currency.nil?
       end
 
-      it 'processes payment session with GBP' do
+      xit 'processes payment session with GBP (requires real Flow session_data)' do
         response = create_and_submit_payment_session(amount: 1500, currency: 'GBP')
 
         assert_response(response, %w[id])
@@ -134,7 +134,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when creating and submitting with invalid data' do
-      it 'raises an exception for invalid payment method' do
+      xit 'raises an exception for invalid payment method (requires real Flow session_data)' do
         invalid_request = create_and_submit_payment_session_request(amount: 1000)
         invalid_request[:processing_channel_id] = 'invalid_channel_id' # Invalid channel
 
@@ -147,7 +147,7 @@ RSpec.describe CheckoutSdk::Payments do
 
   describe 'Integration workflow' do
     context 'when performing complete payment flow workflow' do
-      it 'creates session, then submits payment separately' do
+      xit 'creates session, then submits payment separately (requires real Flow session_data)' do
         # Step 1: Create payment session
         create_response = create_payment_session(amount: 1000)
         expect(create_response.id).not_to be nil
@@ -164,7 +164,7 @@ RSpec.describe CheckoutSdk::Payments do
     end
 
     context 'when comparing separate vs combined flow' do
-      it 'produces similar results for both approaches' do
+      xit 'produces similar results for both approaches (requires real Flow session_data)' do
         # Separate flow: create then submit
         create_response = create_payment_session(amount: 1000)
         submit_request = submit_payment_session_request(amount: 1000)
