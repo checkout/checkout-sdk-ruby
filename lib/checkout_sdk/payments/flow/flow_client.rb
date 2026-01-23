@@ -5,10 +5,9 @@ module CheckoutSdk
     # Client for Payment Flow API operations
     # [Beta]
     class FlowClient < Client
-      PAYMENTS_PATH = 'payments'
-      SESSIONS_PATH = 'sessions'
+      PAYMENT_SESSIONS_PATH = 'payment-sessions'
       SUBMIT_PATH = 'submit'
-      CREATE_AND_SUBMIT_PATH = 'create-and-submit'
+      COMPLETE_PATH = 'complete'
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -23,7 +22,7 @@ module CheckoutSdk
       # @param [Hash] payment_session_request
       def create_payment_session(payment_session_request)
         api_client.invoke_post(
-          build_path(PAYMENTS_PATH, SESSIONS_PATH),
+          build_path(PAYMENT_SESSIONS_PATH),
           sdk_authorization,
           payment_session_request
         )
@@ -37,7 +36,7 @@ module CheckoutSdk
       # @param [Hash] submit_payment_session_request
       def submit_payment_session(id, submit_payment_session_request)
         api_client.invoke_post(
-          build_path(PAYMENTS_PATH, SESSIONS_PATH, id, SUBMIT_PATH),
+          build_path(PAYMENT_SESSIONS_PATH, id, SUBMIT_PATH),
           sdk_authorization,
           submit_payment_session_request
         )
@@ -50,7 +49,7 @@ module CheckoutSdk
       # @param [Hash] create_and_submit_payment_session_request
       def create_and_submit_payment_session(create_and_submit_payment_session_request)
         api_client.invoke_post(
-          build_path(PAYMENTS_PATH, SESSIONS_PATH, CREATE_AND_SUBMIT_PATH),
+          build_path(PAYMENT_SESSIONS_PATH, COMPLETE_PATH),
           sdk_authorization,
           create_and_submit_payment_session_request
         )

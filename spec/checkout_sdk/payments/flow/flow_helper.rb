@@ -3,67 +3,116 @@
 module FlowHelper
   def create_payment_session_request(**opts)
     amount = opts.fetch(:amount, 1000)
-    currency = opts.fetch(:currency, 'GBP')
+    currency = opts.fetch(:currency, 'USD')
     
     {
-      processing_channel_id: ENV.fetch('CHECKOUT_PROCESSING_CHANNEL_ID'),
       amount: amount,
       currency: currency,
-      reference: "FLOW-TEST-#{SecureRandom.uuid[0..5]}",
-      description: 'Integration test payment session',
-      customer: {
-        name: 'John Doe',
-        email: {
-          address: "john.doe+#{SecureRandom.uuid[0..5]}@example.com",
-          verified: true
-        },
-        phone: {
-          country_code: '+44',
-          number: '207 946 0000'
-        }
-      },
+      payment_type: 'Regular',
       billing: {
         address: {
-          address_line1: '123 High Street',
+          address_line1: '123 High St.',
+          address_line2: 'Flat 456',
           city: 'London',
+          state: 'London',
           zip: 'SW1A 1AA',
           country: 'GB'
+        },
+        phone: {
+          country_code: '+1',
+          number: '415 555 2671'
         }
       },
-      success_url: 'https://example.com/success',
-      failure_url: 'https://example.com/failure'
+      reference: "ORD-#{SecureRandom.uuid[0..8]}",
+      description: 'Integration test payment session',
+      customer: {
+        email: "jia.tsang+#{SecureRandom.uuid[0..5]}@example.com",
+        name: 'Jia Tsang',
+        phone: {
+          country_code: '+1',
+          number: '415 555 2671'
+        }
+      },
+      shipping: {
+        address: {
+          address_line1: '123 High St.',
+          address_line2: 'Flat 456',
+          city: 'London',
+          state: 'London',
+          zip: 'SW1A 1AA',
+          country: 'GB'
+        },
+        phone: {
+          country_code: '+1',
+          number: '415 555 2671'
+        }
+      },
+      processing_channel_id: ENV.fetch('CHECKOUT_PROCESSING_CHANNEL_ID'),
+      success_url: 'https://example.com/payments/success',
+      failure_url: 'https://example.com/payments/failure',
+      enabled_payment_methods: ['card'],
+      metadata: {
+        test_payment: 'flow_integration_test'
+      }
     }
   end
 
   def submit_payment_session_request(**opts)
-    payment_method_type = opts.fetch(:payment_method_type, 'card')
+    amount = opts.fetch(:amount, 1000)
     
-    case payment_method_type
-    when 'card'
-      {
-        payment_method: {
-          type: 'card',
-          number: '4242424242424242',
-          expiry_month: 12,
-          expiry_year: 2025,
-          cvv: '100',
-          name: 'John Doe'
-        }
-      }
-    else
-      {
-        payment_method: {
-          type: payment_method_type
-        }
-      }
-    end
+    {
+      session_data: 'string',
+      amount: amount,
+      reference: "SUBMIT-#{SecureRandom.uuid[0..8]}",
+      payment_type: 'Regular',
+      items: [{
+        reference: "item-#{SecureRandom.uuid[0..5]}",
+        name: 'Test Item',
+        quantity: 1,
+        unit_price: amount,
+        total_amount: amount
+      }],
+      ip_address: '90.197.169.245'
+    }
   end
 
   def create_and_submit_payment_session_request(**opts)
-    session_request = create_payment_session_request(**opts)
-    submit_request = submit_payment_session_request(**opts)
+    amount = opts.fetch(:amount, 1000)
+    currency = opts.fetch(:currency, 'USD')
     
-    session_request.merge(submit_request)
+    {
+      session_data: 'string',
+      amount: amount,
+      currency: currency,
+      payment_type: 'Regular',
+      billing: {
+        address: {
+          address_line1: '123 High St.',
+          address_line2: 'Flat 456',
+          city: 'London',
+          state: 'London',
+          zip: 'SW1A 1AA',
+          country: 'GB'
+        },
+        phone: {
+          country_code: '+1',
+          number: '415 555 2671'
+        }
+      },
+      reference: "CREATE-SUBMIT-#{SecureRandom.uuid[0..8]}",
+      description: 'Integration test create and submit',
+      customer: {
+        email: "jia.tsang+#{SecureRandom.uuid[0..5]}@example.com",
+        name: 'Jia Tsang',
+        phone: {
+          country_code: '+1',
+          number: '415 555 2671'
+        }
+      },
+      processing_channel_id: ENV.fetch('CHECKOUT_PROCESSING_CHANNEL_ID'),
+      success_url: 'https://example.com/payments/success',
+      failure_url: 'https://example.com/payments/failure'
+    }
   end
 
   def create_payment_session(**opts)
