@@ -14,7 +14,7 @@ module CheckoutSdk
                     :billing_descriptor
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::POSTFINANCE
+        super(CheckoutSdk::Common::PaymentSourceType::POSTFINANCE)
       end
     end
   end

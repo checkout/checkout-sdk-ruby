@@ -177,3 +177,6 @@ require 'checkout_sdk/payments/sessions/payment_sessions_client'
 require 'checkout_sdk/payments/sessions/payment_sessions_request'
 require 'checkout_sdk/payments/sessions/payment_methods_type'
 require 'checkout_sdk/payments/sessions/store_payment_details_type'
+
+# Payment Setups
+require 'checkout_sdk/payments/setups/payment_setups_client'

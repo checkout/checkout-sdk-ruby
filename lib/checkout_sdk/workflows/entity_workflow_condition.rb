@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :entities
 
       def initialize
-        super CheckoutSdk::Workflows::WorkflowConditionType::ENTITY
+        super(CheckoutSdk::Workflows::WorkflowConditionType::ENTITY)
       end
     end
   end

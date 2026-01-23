@@ -18,7 +18,7 @@ module CheckoutSdk
                       :payer
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::OXXO
+          super(CheckoutSdk::Common::PaymentSourceType::OXXO)
         end
       end
     end

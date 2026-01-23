@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :number
 
       def initialize
-        super MetadataSourceType::CARD
+        super(MetadataSourceType::CARD)
       end
     end
   end

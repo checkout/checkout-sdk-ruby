@@ -11,7 +11,7 @@ module CheckoutSdk
                     :cvv
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::ID
+        super(CheckoutSdk::Common::PaymentSourceType::ID)
       end
     end
   end

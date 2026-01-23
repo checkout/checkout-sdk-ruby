@@ -20,7 +20,7 @@ module CheckoutSdk
                     :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::ACH
+        super(CheckoutSdk::Common::PaymentSourceType::ACH)
       end
     end
   end

@@ -39,7 +39,7 @@ module CheckoutSdk
                       :phone
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::NETWORK_TOKEN
+          super(CheckoutSdk::Common::PaymentSourceType::NETWORK_TOKEN)
         end
       end
     end

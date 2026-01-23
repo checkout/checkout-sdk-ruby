@@ -4,7 +4,7 @@ module CheckoutSdk
   module Accounts
     class ScheduleFrequencyDaily < ScheduleRequest
       def initialize
-        super ScheduleFrequencyType::DAILY
+        super(ScheduleFrequencyType::DAILY)
       end
     end
   end

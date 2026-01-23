@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::AFTERPAY
+        super(CheckoutSdk::Common::PaymentSourceType::AFTERPAY)
       end
     end
   end

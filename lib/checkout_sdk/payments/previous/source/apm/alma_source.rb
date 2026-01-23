@@ -15,7 +15,7 @@ module CheckoutSdk
         attr_accessor :billing_address
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::ALMA
+          super(CheckoutSdk::Common::PaymentSourceType::ALMA)
         end
       end
     end

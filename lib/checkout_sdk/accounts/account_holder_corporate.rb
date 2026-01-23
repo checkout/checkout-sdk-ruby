@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :company_name
 
       def initialize
-        super AccountHolderType::CORPORATE
+        super(AccountHolderType::CORPORATE)
       end
     end
   end

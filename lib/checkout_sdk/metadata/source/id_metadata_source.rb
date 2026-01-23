@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :id
 
       def initialize
-        super MetadataSourceType::ID
+        super(MetadataSourceType::ID)
       end
     end
   end

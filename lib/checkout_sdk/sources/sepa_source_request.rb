@@ -12,7 +12,7 @@ module CheckoutSdk
                       :source_data
 
         def initialize
-          super CheckoutSdk::Previous::Sources::SourceType::SEPA
+          super(CheckoutSdk::Previous::Sources::SourceType::SEPA)
         end
       end
     end

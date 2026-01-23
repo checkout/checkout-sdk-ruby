@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :bin
 
       def initialize
-        super MetadataSourceType::BIN
+        super(MetadataSourceType::BIN)
       end
     end
   end

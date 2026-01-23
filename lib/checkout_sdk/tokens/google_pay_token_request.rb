@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :token_data
 
       def initialize
-        super CheckoutSdk::Tokens::TokenType::GOOGLE_PAY
+        super(CheckoutSdk::Tokens::TokenType::GOOGLE_PAY)
       end
     end
   end

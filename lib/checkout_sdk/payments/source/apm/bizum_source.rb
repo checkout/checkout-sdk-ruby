@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :mobile_number
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::BIZUM
+        super(CheckoutSdk::Common::PaymentSourceType::BIZUM)
       end
     end
   end

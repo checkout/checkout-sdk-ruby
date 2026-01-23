@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :billing_address
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::CV_CONNECT
+        super(CheckoutSdk::Common::PaymentSourceType::CV_CONNECT)
       end
     end
   end

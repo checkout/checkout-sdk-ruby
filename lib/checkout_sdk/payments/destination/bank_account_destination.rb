@@ -35,7 +35,7 @@ module CheckoutSdk
                     :bank
 
       def initialize
-        super CheckoutSdk::Payments::DestinationType::BANK_ACCOUNT
+        super(CheckoutSdk::Payments::DestinationType::BANK_ACCOUNT)
       end
     end
   end

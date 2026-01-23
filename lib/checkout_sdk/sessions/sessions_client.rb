@@ -12,7 +12,7 @@ module CheckoutSdk
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
       def initialize(api_client, configuration)
-        super api_client, configuration, CheckoutSdk::AuthorizationType::OAUTH
+        super(api_client, configuration, CheckoutSdk::AuthorizationType::OAUTH)
       end
 
       # @param [Hash, SessionRequest] session_request
@@ -55,7 +55,7 @@ module CheckoutSdk
         if session_secret.nil?
           sdk_authorization
         else
-          SessionSecretCredentials.new(session_secret) \
+          SessionSecretCredentials.new(session_secret)
                                   .get_authorization(AuthorizationType::CUSTOM)
         end
       end

@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :purpose
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::EPS
+        super(CheckoutSdk::Common::PaymentSourceType::EPS)
       end
     end
   end

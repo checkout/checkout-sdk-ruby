@@ -26,7 +26,7 @@ module CheckoutSdk
                     :account_holder
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::SEPA
+        super(CheckoutSdk::Common::PaymentSourceType::SEPA)
       end
     end
   end

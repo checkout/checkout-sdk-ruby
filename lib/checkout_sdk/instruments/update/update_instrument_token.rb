@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :token
 
       def initialize
-        super CheckoutSdk::Common::InstrumentType::TOKEN
+        super(CheckoutSdk::Common::InstrumentType::TOKEN)
       end
     end
   end

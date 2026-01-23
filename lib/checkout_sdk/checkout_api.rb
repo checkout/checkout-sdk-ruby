@@ -43,6 +43,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Payments::PaymentContextsClient]
   # @!attribute payment_sessions
   #   @return [CheckoutSdk::Payments::PaymentSessionsClient]
+  # @!attribute payments_setups
+  #   @return [CheckoutSdk::Payments::PaymentSetupsClient]
   # @!attribute forward
   #   @return [CheckoutSdk::Forward::ForwardClient]
   class CheckoutApi
@@ -53,6 +55,7 @@ module CheckoutSdk
                 :instruments,
                 :links,
                 :payments,
+                :payments_setups,
                 :reports,
                 :sessions,
                 :tokens,
@@ -93,6 +96,7 @@ module CheckoutSdk
       @issuing = CheckoutSdk::Issuing::IssuingClient.new api_client, configuration
       @contexts = CheckoutSdk::Payments::PaymentContextsClient.new api_client, configuration
       @payment_sessions = CheckoutSdk::Payments::PaymentSessionsClient.new api_client, configuration
+      @payments_setups = CheckoutSdk::Payments::PaymentSetupsClient.new api_client, configuration
       @forward = CheckoutSdk::Forward::ForwardClient.new(api_client, configuration)
     end
 

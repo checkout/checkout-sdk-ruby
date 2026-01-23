@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :billing_address
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::TAMARA
+        super(CheckoutSdk::Common::PaymentSourceType::TAMARA)
       end
     end
   end

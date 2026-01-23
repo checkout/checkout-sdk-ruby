@@ -13,7 +13,7 @@ module CheckoutSdk
         # @param [ApiClient] api_client
         # @param [CheckoutConfiguration] configuration
         def initialize(api_client, configuration)
-          super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY
+          super(api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY)
         end
 
         # @param mandate_id [String]

@@ -23,7 +23,7 @@ module CheckoutSdk
                     :identification
 
       def initialize
-        super CheckoutSdk::Payments::SenderType::GOVERNMENT
+        super(CheckoutSdk::Payments::SenderType::GOVERNMENT)
       end
     end
   end

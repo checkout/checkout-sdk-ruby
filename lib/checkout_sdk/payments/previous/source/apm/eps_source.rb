@@ -12,7 +12,7 @@ module CheckoutSdk
                       :bic
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::EPS
+          super(CheckoutSdk::Common::PaymentSourceType::EPS)
         end
       end
     end

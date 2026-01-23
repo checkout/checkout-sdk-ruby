@@ -15,6 +15,13 @@
 > We improved the initialization of SDK making it easier to understand the available options. <br/>
 > Now `NAS` accounts are the default instance for the SDK and `ABC` structure was moved to a `previous` prefixes. <br/>
 
+## Requirements
+
+- **Ruby**: 2.7.0 or higher
+- **Tested on**: Ruby 2.7, 3.1, and 3.3
+
+> **Note**: Ruby 2.6 reached end-of-life in March 2022 and is no longer supported. Please upgrade to Ruby 2.7 or later for security and compatibility.
+
 ### Gem installer
 
 ```sh
@@ -228,6 +235,37 @@ The execution of integration tests require the following environment variables s
 * For default account systems (NAS): `CHECKOUT_DEFAULT_PUBLIC_KEY` & `CHECKOUT_DEFAULT_SECRET_KEY`
 * For default account systems (OAuth): `CHECKOUT_DEFAULT_OAUTH_CLIENT_ID` & `CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET`
 * For Previous account systems (ABC): `CHECKOUT_PREVIOUS_PUBLIC_KEY` & `CHECKOUT_PREVIOUS_SECRET_KEY`
+
+## Development Setup
+
+### Git Hooks with Overcommit
+
+This project uses [Overcommit](https://github.com/sds/overcommit) to manage Git hooks and ensure code quality.
+
+After cloning the repository, install the hooks:
+
+```bash
+bundle install
+bundle exec overcommit --install
+```
+
+This will automatically run RuboCop on staged Ruby files before each commit. If there are any offenses, the commit will be blocked.
+
+#### Auto-fixing issues
+
+To automatically fix some RuboCop offenses:
+
+```bash
+bundle exec rubocop -a
+```
+
+#### Skipping hooks (not recommended)
+
+If you absolutely need to skip the pre-commit hooks:
+
+```bash
+OVERCOMMIT_DISABLE=1 git commit -m "your message"
+```
 
 ## Code of Conduct
 

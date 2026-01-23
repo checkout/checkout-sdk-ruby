@@ -11,7 +11,7 @@ module CheckoutSdk
                     :account_holder
 
       def initialize
-        super CheckoutSdk::Payments::DestinationType::ID
+        super(CheckoutSdk::Payments::DestinationType::ID)
       end
     end
   end

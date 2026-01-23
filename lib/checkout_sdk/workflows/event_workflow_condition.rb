@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :events
 
       def initialize
-        super CheckoutSdk::Workflows::WorkflowConditionType::EVENT
+        super(CheckoutSdk::Workflows::WorkflowConditionType::EVENT)
       end
     end
   end

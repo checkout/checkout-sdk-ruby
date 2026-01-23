@@ -5,7 +5,7 @@ module CheckoutSdk
     module Payments
       class AlipaySource < PaymentSource
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::ALIPAY
+          super(CheckoutSdk::Common::PaymentSourceType::ALIPAY)
         end
       end
     end

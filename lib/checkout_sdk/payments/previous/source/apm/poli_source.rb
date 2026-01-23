@@ -5,7 +5,7 @@ module CheckoutSdk
     module Payments
       class PoliSource < PaymentSource
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::POLI
+          super(CheckoutSdk::Common::PaymentSourceType::POLI)
         end
       end
     end

@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 sellers and service providers."
   spec.homepage = 'https://www.checkout.com/'
   spec.license = 'MIT'
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 2.7.0'
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/checkout/checkout-sdk-ruby'
   spec.metadata['documentation_uri'] = 'https://www.checkout.com/docs'
@@ -30,9 +30,10 @@ sellers and service providers."
   spec.require_paths = ['lib']
   spec.add_development_dependency 'rake', '>= 13.0'
   spec.add_development_dependency 'rspec', '>= 3.0'
-  spec.add_development_dependency 'rubocop', '~> 1.36.0'
-  spec.add_dependency 'faraday', '>= 1.10.0'
-  spec.add_dependency 'faraday-follow_redirects', '~> 0.3.0'
-  spec.add_dependency 'faraday-multipart', '~> 1.0.4'
+  spec.add_development_dependency 'rubocop', '~> 1.82'
+  spec.add_development_dependency 'overcommit', '~> 0.60'
+  spec.add_dependency 'faraday', '>= 2.0'
+  spec.add_dependency 'faraday-follow_redirects', '~> 0.5'
+  spec.add_dependency 'faraday-multipart', '~> 1.2'
   spec.add_dependency 'mime-types', '~> 3.0'
 end

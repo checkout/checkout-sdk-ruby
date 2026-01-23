@@ -14,7 +14,7 @@ module CheckoutSdk
                     :billing_descriptor
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::MULTIBANCO
+        super(CheckoutSdk::Common::PaymentSourceType::MULTIBANCO)
       end
     end
   end

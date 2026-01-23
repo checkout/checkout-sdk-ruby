@@ -11,7 +11,7 @@ module CheckoutSdk
                     :languageCode
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::SOFORT
+        super(CheckoutSdk::Common::PaymentSourceType::SOFORT)
       end
     end
   end

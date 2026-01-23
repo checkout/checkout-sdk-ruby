@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :billing_address
 
       def initialize
-        super CheckoutSdk::Common::PaymentSourceType::WECHATPAY
+        super(CheckoutSdk::Common::PaymentSourceType::WECHATPAY)
       end
     end
   end

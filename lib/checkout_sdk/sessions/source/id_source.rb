@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :id
 
       def initialize
-        super SessionSourceType::ID
+        super(SessionSourceType::ID)
       end
     end
   end

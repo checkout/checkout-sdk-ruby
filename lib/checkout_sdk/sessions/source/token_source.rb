@@ -11,7 +11,7 @@ module CheckoutSdk
                     :store_for_future_use
 
       def initialize
-        super SessionSourceType::TOKEN
+        super(SessionSourceType::TOKEN)
       end
     end
   end

@@ -18,7 +18,7 @@ module CheckoutSdk
                       :payer
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::BOLETO
+          super(CheckoutSdk::Common::PaymentSourceType::BOLETO)
         end
       end
     end

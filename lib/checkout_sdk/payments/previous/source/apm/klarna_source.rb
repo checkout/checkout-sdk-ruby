@@ -48,7 +48,7 @@ module CheckoutSdk
                       :custom_payment_method_ids
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::KLARNA
+          super(CheckoutSdk::Common::PaymentSourceType::KLARNA)
         end
       end
     end

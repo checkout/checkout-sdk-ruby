@@ -18,7 +18,7 @@ module CheckoutSdk
                       :payer
 
         def initialize
-          super CheckoutSdk::Common::PaymentSourceType::RAPIPAGO
+          super(CheckoutSdk::Common::PaymentSourceType::RAPIPAGO)
         end
       end
     end

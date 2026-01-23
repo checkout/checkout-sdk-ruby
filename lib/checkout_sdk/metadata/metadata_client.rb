@@ -10,7 +10,7 @@ module CheckoutSdk
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
       def initialize(api_client, configuration)
-        super api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH
+        super(api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH)
       end
 
       # @param [Hash, MetadataRequest] metadata_request

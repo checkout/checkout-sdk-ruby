@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :by_day
 
       def initialize
-        super ScheduleFrequencyType::WEEKLY
+        super(ScheduleFrequencyType::WEEKLY)
       end
     end
   end

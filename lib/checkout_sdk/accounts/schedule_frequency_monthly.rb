@@ -8,7 +8,7 @@ module CheckoutSdk
       attr_accessor :by_month_day
 
       def initialize
-        super ScheduleFrequencyType::MONTHLY
+        super(ScheduleFrequencyType::MONTHLY)
       end
     end
   end
