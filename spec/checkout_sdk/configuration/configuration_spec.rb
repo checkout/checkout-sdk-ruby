@@ -53,6 +53,7 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
       expect(configuration.environment.base_uri).to eq(CheckoutSdk::Environment.sandbox.base_uri)
       expect(configuration.http_client).to eq(@http_client)
       expect(configuration.environment_subdomain.base_uri).to eq(expected_url)
+      expect(configuration.environment_subdomain.authorization_uri).to eq("https://#{subdomain}.access.sandbox.checkout.com/connect/token")
     end
   end
 
@@ -80,6 +81,27 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
       expect(configuration.environment.base_uri).to eq(CheckoutSdk::Environment.sandbox.base_uri)
       expect(configuration.http_client).to eq(@http_client)
       expect(configuration.environment_subdomain.base_uri).to eq(expected_url)
+      expect(configuration.environment_subdomain.authorization_uri).to eq('https://access.sandbox.checkout.com/connect/token')
     end
+  end
+
+  it 'should create configuration with subdomain for production' do
+    subdomain = '1234prod'
+    environment_subdomain = CheckoutSdk::EnvironmentSubdomain.new(CheckoutSdk::Environment.production, subdomain)
+
+    configuration = CheckoutSdk::CheckoutConfiguration.new(
+      @credentials,
+      CheckoutSdk::Environment.production,
+      @http_client,
+      @multipart_http_client,
+      @logger,
+      environment_subdomain
+    )
+
+    expect(configuration.credentials).to eq(@credentials)
+    expect(configuration.environment.base_uri).to eq(CheckoutSdk::Environment.production.base_uri)
+    expect(configuration.http_client).to eq(@http_client)
+    expect(configuration.environment_subdomain.base_uri).to eq("https://#{subdomain}.api.checkout.com/")
+    expect(configuration.environment_subdomain.authorization_uri).to eq("https://#{subdomain}.access.checkout.com/connect/token")
   end
 end
