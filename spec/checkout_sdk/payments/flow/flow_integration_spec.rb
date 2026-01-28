@@ -7,10 +7,10 @@ RSpec.describe CheckoutSdk::Payments do
     @api = default_sdk
   end
 
-  describe '.create_payment_session' do
+  describe '.request_payment_session' do
     context 'when creating a payment session with hash request' do
       it 'creates payment session successfully' do
-        response = create_payment_session
+        response = request_payment_session
 
         # Only check the essential fields that are likely to be returned
         assert_response(response, %w[id])
@@ -23,7 +23,7 @@ RSpec.describe CheckoutSdk::Payments do
 
     context 'when creating with different currencies' do
       it 'creates payment session with EUR' do
-        response = create_payment_session(amount: 2000, currency: 'EUR')
+        response = request_payment_session(amount: 2000, currency: 'EUR')
 
         assert_response(response, %w[id])
         expect(response.id).not_to be nil
@@ -32,7 +32,7 @@ RSpec.describe CheckoutSdk::Payments do
       end
 
       it 'creates payment session with GBP' do
-        response = create_payment_session(amount: 1500, currency: 'GBP')
+        response = request_payment_session(amount: 1500, currency: 'GBP')
 
         assert_response(response, %w[id])
         expect(response.id).not_to be nil
@@ -49,7 +49,7 @@ RSpec.describe CheckoutSdk::Payments do
         }
 
         expect {
-          @api.flow.create_payment_session(invalid_request)
+          @api.flow.request_payment_session(invalid_request)
         }.to raise_error(CheckoutSdk::CheckoutApiException)
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe CheckoutSdk::Payments do
     context 'when submitting a valid payment session' do
       xit 'submits payment session successfully (requires real Flow session_data)' do
         # Create a payment session first
-        create_response = create_payment_session(amount: 1000)
+        create_response = request_payment_session(amount: 1000)
         
         # Submit the payment session
         submit_request = submit_payment_session_request(amount: 1000)
@@ -74,7 +74,7 @@ RSpec.describe CheckoutSdk::Payments do
     context 'when submitting with invalid payment method' do
       xit 'raises an exception for invalid card details (requires real Flow session_data)' do
         # Create a payment session first
-        create_response = create_payment_session(amount: 1000)
+        create_response = request_payment_session(amount: 1000)
         
         invalid_submit_request = {
           amount: 1000,
@@ -101,10 +101,10 @@ RSpec.describe CheckoutSdk::Payments do
     end
   end
 
-  describe '.create_and_submit_payment_session' do
+  describe '.request_payment_session_with_payment' do
     context 'when creating and submitting in one request' do
       xit 'processes payment session successfully (requires real Flow session_data)' do
-        response = create_and_submit_payment_session(amount: 1000)
+        response = request_payment_session_with_payment(amount: 1000)
         
         assert_response(response, %w[id])
         expect(response.id).not_to be nil
@@ -115,7 +115,7 @@ RSpec.describe CheckoutSdk::Payments do
 
     context 'when creating and submitting with different currencies' do
       xit 'processes payment session with EUR (requires real Flow session_data)' do
-        response = create_and_submit_payment_session(amount: 2000, currency: 'EUR')
+        response = request_payment_session_with_payment(amount: 2000, currency: 'EUR')
 
         assert_response(response, %w[id])
         expect(response.id).not_to be nil
@@ -124,7 +124,7 @@ RSpec.describe CheckoutSdk::Payments do
       end
 
       xit 'processes payment session with GBP (requires real Flow session_data)' do
-        response = create_and_submit_payment_session(amount: 1500, currency: 'GBP')
+        response = request_payment_session_with_payment(amount: 1500, currency: 'GBP')
 
         assert_response(response, %w[id])
         expect(response.id).not_to be nil
@@ -135,11 +135,11 @@ RSpec.describe CheckoutSdk::Payments do
 
     context 'when creating and submitting with invalid data' do
       xit 'raises an exception for invalid payment method (requires real Flow session_data)' do
-        invalid_request = create_and_submit_payment_session_request(amount: 1000)
+        invalid_request = request_payment_session_with_payment_request(amount: 1000)
         invalid_request[:processing_channel_id] = 'invalid_channel_id' # Invalid channel
 
         expect {
-          @api.flow.create_and_submit_payment_session(invalid_request)
+          @api.flow.request_payment_session_with_payment(invalid_request)
         }.to raise_error(CheckoutSdk::CheckoutApiException)
       end
     end
@@ -149,7 +149,7 @@ RSpec.describe CheckoutSdk::Payments do
     context 'when performing complete payment flow workflow' do
       xit 'creates session, then submits payment separately (requires real Flow session_data)' do
         # Step 1: Create payment session
-        create_response = create_payment_session(amount: 1000)
+        create_response = request_payment_session(amount: 1000)
         expect(create_response.id).not_to be nil
         expect(create_response.amount).to eq(1000) if create_response.respond_to?(:amount) && !create_response.amount.nil?
         expect(create_response.currency).to eq('USD') if create_response.respond_to?(:currency) && !create_response.currency.nil?
@@ -166,12 +166,12 @@ RSpec.describe CheckoutSdk::Payments do
     context 'when comparing separate vs combined flow' do
       xit 'produces similar results for both approaches (requires real Flow session_data)' do
         # Separate flow: create then submit
-        create_response = create_payment_session(amount: 1000)
+        create_response = request_payment_session(amount: 1000)
         submit_request = submit_payment_session_request(amount: 1000)
         separate_response = @api.flow.submit_payment_session(create_response.id, submit_request)
         
         # Combined flow: create and submit together
-        combined_response = create_and_submit_payment_session(amount: 1000)
+        combined_response = request_payment_session_with_payment(amount: 1000)
         
         # Both should have similar structure
         expect(separate_response.amount).to eq(combined_response.amount) if separate_response.respond_to?(:amount) && combined_response.respond_to?(:amount)

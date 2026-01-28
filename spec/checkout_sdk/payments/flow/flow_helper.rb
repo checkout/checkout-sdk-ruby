@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlowHelper
-  def create_payment_session_request(**opts)
+  def request_payment_session_request(**opts)
     amount = opts.fetch(:amount, 1000)
     currency = opts.fetch(:currency, 'USD')
     
@@ -76,7 +76,7 @@ module FlowHelper
     }
   end
 
-  def create_and_submit_payment_session_request(**opts)
+  def request_payment_session_with_payment_request(**opts)
     amount = opts.fetch(:amount, 1000)
     currency = opts.fetch(:currency, 'USD')
     
@@ -115,12 +115,12 @@ module FlowHelper
     }
   end
 
-  def create_payment_session(**opts)
+  def request_payment_session(**opts)
     amount = opts.fetch(:amount, 1000)
     currency = opts.fetch(:currency, 'USD')
     
-    request = create_payment_session_request(amount: amount, currency: currency)
-    response = default_sdk.flow.create_payment_session(request)
+    request = request_payment_session_request(amount: amount, currency: currency)
+    response = default_sdk.flow.request_payment_session(request)
     expect(response).not_to be nil
     expect(response.id).not_to be nil
     response
@@ -133,12 +133,12 @@ module FlowHelper
     response
   end
 
-  def create_and_submit_payment_session(**opts)
+  def request_payment_session_with_payment(**opts)
     amount = opts.fetch(:amount, 1000)
     currency = opts.fetch(:currency, 'USD')
     
-    request = create_and_submit_payment_session_request(amount: amount, currency: currency)
-    response = default_sdk.flow.create_and_submit_payment_session(request)
+    request = request_payment_session_with_payment_request(amount: amount, currency: currency)
+    response = default_sdk.flow.request_payment_session_with_payment(request)
     expect(response).not_to be nil
     response
   end

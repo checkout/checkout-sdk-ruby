@@ -19,12 +19,12 @@ module CheckoutSdk
       # Use this endpoint to set up a payment session before collecting payment details from your customer.
       # [Beta]
       #
-      # @param [Hash] payment_session_request
-      def create_payment_session(payment_session_request)
+      # @param [Hash] request_payment_session_request
+      def request_payment_session(request_payment_session_request)
         api_client.invoke_post(
           build_path(PAYMENT_SESSIONS_PATH),
           sdk_authorization,
-          payment_session_request
+          request_payment_session_request
         )
       end
 
@@ -46,12 +46,12 @@ module CheckoutSdk
       # Use this endpoint to create a payment session and immediately process the payment.
       # [Beta]
       #
-      # @param [Hash] create_and_submit_payment_session_request
-      def create_and_submit_payment_session(create_and_submit_payment_session_request)
+      # @param [Hash] request_payment_session_with_payment_request
+      def request_payment_session_with_payment(request_payment_session_with_payment_request)
         api_client.invoke_post(
           build_path(PAYMENT_SESSIONS_PATH, COMPLETE_PATH),
           sdk_authorization,
-          create_and_submit_payment_session_request
+          request_payment_session_with_payment_request
         )
       end
     end
