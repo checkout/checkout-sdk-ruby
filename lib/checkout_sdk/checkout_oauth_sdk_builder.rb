@@ -41,14 +41,14 @@ module CheckoutSdk
     # @return [CheckoutSdk::CheckoutApi]
     def build
       super
-      
+
       # Use subdomain-aware authorization URI if environment_subdomain is available
       auth_uri = if environment_subdomain
                    environment_subdomain.authorization_uri
                  else
                    authorization_uri
                  end
-      
+
       configuration = CheckoutConfiguration.new(
         OAuthSdkCredentials.new(client_id,
                                 client_secret,
