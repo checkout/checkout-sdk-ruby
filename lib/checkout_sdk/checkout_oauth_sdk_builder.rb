@@ -42,12 +42,15 @@ module CheckoutSdk
     def build
       super
 
-      # Use subdomain-aware authorization URI if environment_subdomain is available
-      auth_uri = if environment_subdomain
-                   environment_subdomain.authorization_uri
-                 else
-                   authorization_uri
-                 end
+      # Determine authorization URI following Go logic
+      auth_uri = authorization_uri
+      if auth_uri.nil? || auth_uri.empty?
+        auth_uri = if environment_subdomain
+                     environment_subdomain.authorization_uri
+                   else
+                     environment.authorization_uri
+                   end
+      end
 
       configuration = CheckoutConfiguration.new(
         OAuthSdkCredentials.new(client_id,
