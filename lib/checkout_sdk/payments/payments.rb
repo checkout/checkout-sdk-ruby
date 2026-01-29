@@ -180,3 +180,6 @@ require 'checkout_sdk/payments/sessions/store_payment_details_type'
 
 # Payment Setups
 require 'checkout_sdk/payments/setups/payment_setups_client'
+
+# Payment Flow
+require 'checkout_sdk/payments/flow/flow_client'
