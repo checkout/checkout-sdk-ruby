@@ -15,3 +15,7 @@
 # rspec failure tracking
 .rspec_status
 .idea
+
+.claude/
+.cursor/
+CLAUDE.md
