@@ -26,8 +26,21 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
     expect(configuration.credentials).to eq(@credentials)
     expect(configuration.environment.base_uri).to eq(CheckoutSdk::Environment.sandbox.base_uri)
     expect(configuration.environment.base_uri).to eq("https://api.sandbox.checkout.com/")
+    expect(configuration.environment.forward_uri).to eq("https://forward.sandbox.checkout.com/")
     expect(configuration.http_client).to eq(@http_client)
     expect(configuration.environment_subdomain).to be_nil
+  end
+
+  it 'should have correct forward URL for production' do
+    configuration = CheckoutSdk::CheckoutConfiguration.new(
+      @credentials,
+      CheckoutSdk::Environment.production,
+      @http_client,
+      @multipart_http_client,
+      @logger
+    )
+
+    expect(configuration.environment.forward_uri).to eq("https://forward.checkout.com/")
   end
 
   [
@@ -35,7 +48,9 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
     %w[ab https://ab.api.sandbox.checkout.com/],
     %w[abc https://abc.api.sandbox.checkout.com/],
     %w[abc1 https://abc1.api.sandbox.checkout.com/],
-    %w[12345domain https://12345domain.api.sandbox.checkout.com/]
+    %w[12345domain https://12345domain.api.sandbox.checkout.com/],
+    %w[test-123 https://test-123.api.sandbox.checkout.com/],
+    %w[pl-abc123 https://pl-abc123.api.sandbox.checkout.com/]
   ].each do |subdomain, expected_url|
     it "should create configuration with subdomain #{subdomain}" do
       environment_subdomain = CheckoutSdk::EnvironmentSubdomain.new(CheckoutSdk::Environment.sandbox, subdomain)
@@ -63,7 +78,11 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
     ['  ', 'https://api.sandbox.checkout.com/'],
     [' - ', 'https://api.sandbox.checkout.com/'],
     ['a b', 'https://api.sandbox.checkout.com/'],
-    ['ab bc1', 'https://api.sandbox.checkout.com/']
+    ['ab bc1', 'https://api.sandbox.checkout.com/'],
+    ['foo-', 'https://api.sandbox.checkout.com/'],
+    ['-foo', 'https://api.sandbox.checkout.com/'],
+    ['FOO', 'https://api.sandbox.checkout.com/'],
+    ['Foo-Bar', 'https://api.sandbox.checkout.com/']
   ].each do |subdomain, expected_url|
     it "should create configuration with bad subdomain #{subdomain}" do
       environment_subdomain = CheckoutSdk::EnvironmentSubdomain.new(CheckoutSdk::Environment.sandbox, subdomain)
