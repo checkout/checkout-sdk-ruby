@@ -92,17 +92,14 @@ module CheckoutSdk
     def upload(path, authorization, file_request)
       headers = default_headers(authorization)
 
-      file = File.open(file_request.file)
-
-      form = build_multipart_request(file_request, file)
-
-      begin
-        @log.info "post: /#{path}"
-        response = @multipart_client.run_request(:post, path, form, headers)
-      rescue Faraday::ClientError => e
-        raise CheckoutApiException, e.response
-      ensure
-        file.close
+      response = File.open(file_request.file) do |file|
+        form = build_multipart_request(file_request, file)
+        begin
+          @log.info "post: /#{path}"
+          @multipart_client.run_request(:post, path, form, headers)
+        rescue Faraday::ClientError => e
+          raise CheckoutApiException, e.response
+        end
       end
 
       parse_response(response)
