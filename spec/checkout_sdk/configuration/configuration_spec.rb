@@ -49,7 +49,7 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
     %w[abc https://abc.api.sandbox.checkout.com/],
     %w[abc1 https://abc1.api.sandbox.checkout.com/],
     %w[12345domain https://12345domain.api.sandbox.checkout.com/],
-    %w[test-123 https://test-123.api.sandbox.checkout.com/],
+    %w[pl-vkuhvk4v https://pl-vkuhvk4v.api.sandbox.checkout.com/],
     %w[pl-abc123 https://pl-abc123.api.sandbox.checkout.com/]
   ].each do |subdomain, expected_url|
     it "should create configuration with subdomain #{subdomain}" do
@@ -82,7 +82,10 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
     ['foo-', 'https://api.sandbox.checkout.com/'],
     ['-foo', 'https://api.sandbox.checkout.com/'],
     ['FOO', 'https://api.sandbox.checkout.com/'],
-    ['Foo-Bar', 'https://api.sandbox.checkout.com/']
+    ['Foo-Bar', 'https://api.sandbox.checkout.com/'],
+    ['test-123', 'https://api.sandbox.checkout.com/'],
+    ['foo-bar', 'https://api.sandbox.checkout.com/'],
+    ['pl-', 'https://api.sandbox.checkout.com/']
   ].each do |subdomain, expected_url|
     it "should create configuration with bad subdomain #{subdomain}" do
       environment_subdomain = CheckoutSdk::EnvironmentSubdomain.new(CheckoutSdk::Environment.sandbox, subdomain)

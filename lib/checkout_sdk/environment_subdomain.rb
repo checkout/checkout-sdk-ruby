@@ -33,7 +33,7 @@ module CheckoutSdk
     def create_url_with_subdomain(original_url, subdomain)
       new_environment = original_url
 
-      if subdomain =~ /^[a-z0-9]+(-[a-z0-9]+)*$/
+      if subdomain =~ /^(?:pl-)?[a-z0-9]+$/
         url_parts = URI.parse(original_url)
         new_host = "#{subdomain}.#{url_parts.host}"
 
