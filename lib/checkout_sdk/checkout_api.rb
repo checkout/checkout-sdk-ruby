@@ -101,7 +101,7 @@ module CheckoutSdk
       @payment_sessions = CheckoutSdk::Payments::PaymentSessionsClient.new api_client, configuration
       @payments_setups = CheckoutSdk::Payments::PaymentSetupsClient.new api_client, configuration
       @flow = CheckoutSdk::Payments::FlowClient.new api_client, configuration
-      @forward = CheckoutSdk::Forward::ForwardClient.new(api_client, configuration)
+      @forward = CheckoutSdk::Forward::ForwardClient.new(forward_client(configuration), configuration)
     end
 
     private
@@ -133,6 +133,12 @@ module CheckoutSdk
     # @return [ApiClient]
     def transfers_client(configuration)
       ApiClient.new(configuration, configuration.environment.transfers_uri)
+    end
+
+    # @param [CheckoutConfiguration] configuration
+    # @return [ApiClient]
+    def forward_client(configuration)
+      ApiClient.new(configuration, configuration.environment.forward_uri)
     end
   end
 end

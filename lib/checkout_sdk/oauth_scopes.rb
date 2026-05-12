@@ -48,5 +48,7 @@ module CheckoutSdk
     ISSUING_CONTROLS_READ = 'issuing:controls-read'
     ISSUING_CONTROLS_WRITE = 'issuing:controls-write'
     FORWARD = 'forward'
+    FORWARD_SECRETS = 'forward:secrets'
+    IDENTITY_VERIFICATION = 'identity-verification'
   end
 end

@@ -11,6 +11,8 @@ module CheckoutSdk
   #   @return [String]
   # @!attribute balances_uri
   #   @return [String]
+  # @!attribute forward_uri
+  #   @return [String]
   # @!attribute is_sandbox
   #   @return [String]
   class Environment
@@ -19,6 +21,7 @@ module CheckoutSdk
                 :files_uri,
                 :transfers_uri,
                 :balances_uri,
+                :forward_uri,
                 :is_sandbox
 
     # @param [String] base_uri
@@ -26,13 +29,15 @@ module CheckoutSdk
     # @param [String] files_uri
     # @param [String] transfers_uri
     # @param [String] balances_uri
+    # @param [String] forward_uri
     # @param [TrueClass, FalseClass] is_sandbox
-    def initialize(base_uri, authorization_uri, files_uri, transfers_uri, balances_uri, is_sandbox)
+    def initialize(base_uri, authorization_uri, files_uri, transfers_uri, balances_uri, forward_uri, is_sandbox)
       @base_uri = base_uri
       @authorization_uri = authorization_uri
       @files_uri = files_uri
       @transfers_uri = transfers_uri
       @balances_uri = balances_uri
+      @forward_uri = forward_uri
       @is_sandbox = is_sandbox
     end
 
@@ -43,6 +48,7 @@ module CheckoutSdk
                       'https://files.sandbox.checkout.com/',
                       'https://transfers.sandbox.checkout.com/',
                       'https://balances.sandbox.checkout.com/',
+                      'https://forward.sandbox.checkout.com/',
                       true)
     end
 
@@ -53,6 +59,7 @@ module CheckoutSdk
                       'https://files.checkout.com/',
                       'https://transfers.checkout.com/',
                       'https://balances.checkout.com/',
+                      'https://forward.checkout.com/',
                       false)
     end
   end
