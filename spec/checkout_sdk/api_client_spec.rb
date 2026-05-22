@@ -72,6 +72,25 @@ RSpec.describe CheckoutSdk::ApiClient do
       end
     end
 
+    context 'when the response status is a 3xx redirect' do
+      it 'does not raise an exception for 302 Found' do
+        response = double('Response', status: 302, body: '', headers: { 'Location' => 'https://example.com/file' })
+        allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).with(response).and_return(
+          OpenStruct.new(status_code: 302, headers: response.headers)
+        )
+        expect { api_client.send(:parse_response, response) }.not_to raise_error
+      end
+
+      it 'returns metadata with the redirect status code' do
+        response = double('Response', status: 302, body: '', headers: { 'Location' => 'https://example.com/file' })
+        allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).with(response).and_return(
+          OpenStruct.new(status_code: 302, headers: response.headers)
+        )
+        parsed_response = api_client.send(:parse_response, response)
+        expect(parsed_response.http_metadata.status_code).to eq(302)
+      end
+    end
+
     context 'when the response status is not in the 2xx range' do
       it 'raises a CheckoutApiException for status code less than 200' do
         response = double('Response', status: 199, body: '{}')
