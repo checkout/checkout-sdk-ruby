@@ -49,6 +49,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Payments::FlowClient]
   # @!attribute forward
   #   @return [CheckoutSdk::Forward::ForwardClient]
+  # @!attribute onboarding_simulator
+  #   @return [CheckoutSdk::OnboardingSimulator::OnboardingSimulatorClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -73,7 +75,8 @@ module CheckoutSdk
                 :issuing,
                 :contexts,
                 :payment_sessions,
-                :forward
+                :forward,
+                :onboarding_simulator
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -102,6 +105,7 @@ module CheckoutSdk
       @payments_setups = CheckoutSdk::Payments::PaymentSetupsClient.new api_client, configuration
       @flow = CheckoutSdk::Payments::FlowClient.new api_client, configuration
       @forward = CheckoutSdk::Forward::ForwardClient.new(api_client, configuration)
+      @onboarding_simulator = CheckoutSdk::OnboardingSimulator::OnboardingSimulatorClient.new(api_client, configuration)
     end
 
     private

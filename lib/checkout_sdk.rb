@@ -68,6 +68,7 @@ require 'checkout_sdk/metadata/metadata'
 require 'checkout_sdk/financial/financial'
 require 'checkout_sdk/issuing/issuing'
 require 'checkout_sdk/forward/forward'
+require 'checkout_sdk/onboarding_simulator/onboarding_simulator'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'

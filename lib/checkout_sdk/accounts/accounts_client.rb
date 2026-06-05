@@ -11,7 +11,9 @@ module CheckoutSdk
       PAYOUT_SCHEDULE = 'payout-schedules'
       FILES = 'files'
       PAYMENT_INSTRUMENTS = 'payment-instruments'
-      private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES, :PAYMENT_INSTRUMENTS
+      REQUIREMENTS = 'requirements'
+      private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES, :PAYMENT_INSTRUMENTS,
+                       :REQUIREMENTS
 
       # @param [ApiClient] api_client
       # @param [ApiClient] files_client
@@ -92,6 +94,37 @@ module CheckoutSdk
       # @param [Hash, FileRequest] file_request
       def upload_file(file_request)
         files_client.submit_file(FILES, sdk_authorization, file_request)
+      end
+
+      # Retrieve the list of pending requirements that a sub-entity must resolve.
+      # @param [String] entity_id
+      def get_entity_requirements(entity_id)
+        api_client.invoke_get(
+          build_path(ACCOUNTS, ENTITIES, entity_id, REQUIREMENTS),
+          sdk_authorization
+        )
+      end
+
+      # Retrieve detailed information for a single requirement.
+      # @param [String] entity_id
+      # @param [String] requirement_id
+      def get_entity_requirement_details(entity_id, requirement_id)
+        api_client.invoke_get(
+          build_path(ACCOUNTS, ENTITIES, entity_id, REQUIREMENTS, requirement_id),
+          sdk_authorization
+        )
+      end
+
+      # Submit a response to resolve a requirement.
+      # @param [String] entity_id
+      # @param [String] requirement_id
+      # @param [Hash, EntityRequirementUpdateRequest] update_request
+      def resolve_entity_requirement(entity_id, requirement_id, update_request)
+        api_client.invoke_put(
+          build_path(ACCOUNTS, ENTITIES, entity_id, REQUIREMENTS, requirement_id),
+          sdk_authorization,
+          update_request
+        )
       end
     end
   end
