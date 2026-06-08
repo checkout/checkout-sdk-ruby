@@ -120,7 +120,7 @@ module CheckoutSdk
                                sdk_authorization)
       end
 
-      # @param [Reflow] reflow
+      # @param [Hash, Reflow] reflow
       def reflow(reflow)
         api_client.invoke_post(build_path(WORKFLOWS, EVENTS, REFLOW), sdk_authorization, reflow)
       end

@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+require 'checkout_sdk/compliance_requests/compliance_request_responded_field'
+require 'checkout_sdk/compliance_requests/compliance_request_responded_fields'
+require 'checkout_sdk/compliance_requests/compliance_response_request'
+require 'checkout_sdk/compliance_requests/compliance_requests_client'

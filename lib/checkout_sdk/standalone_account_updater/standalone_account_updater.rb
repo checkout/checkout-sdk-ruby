@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+require 'checkout_sdk/standalone_account_updater/account_updater_card'
+require 'checkout_sdk/standalone_account_updater/account_updater_instrument'
+require 'checkout_sdk/standalone_account_updater/account_updater_source_options'
+require 'checkout_sdk/standalone_account_updater/account_updater_request'
+require 'checkout_sdk/standalone_account_updater/standalone_account_updater_client'

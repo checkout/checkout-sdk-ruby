@@ -51,6 +51,26 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Forward::ForwardClient]
   # @!attribute onboarding_simulator
   #   @return [CheckoutSdk::OnboardingSimulator::OnboardingSimulatorClient]
+  # @!attribute agentic_commerce
+  #   @return [CheckoutSdk::AgenticCommerce::AgenticCommerceClient]
+  # @!attribute compliance_requests
+  #   @return [CheckoutSdk::ComplianceRequests::ComplianceRequestsClient]
+  # @!attribute standalone_account_updater
+  #   @return [CheckoutSdk::StandaloneAccountUpdater::StandaloneAccountUpdaterClient]
+  # @!attribute network_tokens
+  #   @return [CheckoutSdk::NetworkTokens::NetworkTokensClient]
+  # @!attribute payment_methods
+  #   @return [CheckoutSdk::PaymentMethods::PaymentMethodsClient]
+  # @!attribute applicants
+  #   @return [CheckoutSdk::Identities::Applicants::ApplicantsClient]
+  # @!attribute aml_screening
+  #   @return [CheckoutSdk::Identities::AmlScreening::AmlScreeningClient]
+  # @!attribute id_document_verification
+  #   @return [CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient]
+  # @!attribute identity_verification
+  #   @return [CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient]
+  # @!attribute face_authentication
+  #   @return [CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -76,7 +96,17 @@ module CheckoutSdk
                 :contexts,
                 :payment_sessions,
                 :forward,
-                :onboarding_simulator
+                :onboarding_simulator,
+                :agentic_commerce,
+                :compliance_requests,
+                :standalone_account_updater,
+                :network_tokens,
+                :payment_methods,
+                :applicants,
+                :aml_screening,
+                :id_document_verification,
+                :identity_verification,
+                :face_authentication
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -106,6 +136,16 @@ module CheckoutSdk
       @flow = CheckoutSdk::Payments::FlowClient.new api_client, configuration
       @forward = CheckoutSdk::Forward::ForwardClient.new(api_client, configuration)
       @onboarding_simulator = CheckoutSdk::OnboardingSimulator::OnboardingSimulatorClient.new(api_client, configuration)
+      @agentic_commerce = CheckoutSdk::AgenticCommerce::AgenticCommerceClient.new(api_client, configuration)
+      @compliance_requests = CheckoutSdk::ComplianceRequests::ComplianceRequestsClient.new(api_client, configuration)
+      @standalone_account_updater = CheckoutSdk::StandaloneAccountUpdater::StandaloneAccountUpdaterClient.new(api_client, configuration)
+      @network_tokens = CheckoutSdk::NetworkTokens::NetworkTokensClient.new(api_client, configuration)
+      @payment_methods = CheckoutSdk::PaymentMethods::PaymentMethodsClient.new(api_client, configuration)
+      @applicants = CheckoutSdk::Identities::Applicants::ApplicantsClient.new(api_client, configuration)
+      @aml_screening = CheckoutSdk::Identities::AmlScreening::AmlScreeningClient.new(api_client, configuration)
+      @id_document_verification = CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient.new(api_client, configuration)
+      @identity_verification = CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient.new(api_client, configuration)
+      @face_authentication = CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient.new(api_client, configuration)
     end
 
     private

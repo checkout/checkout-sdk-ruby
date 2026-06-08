@@ -16,6 +16,11 @@ module CheckoutSdk
       AUTHORIZATIONS = 'authorizations'
       PRESENTMENTS = 'presentments'
       REVERSALS = 'reversals'
+      ACCESS = 'access'
+      CONNECT = 'connect'
+      TOKEN = 'token'
+      OOB = 'oob'
+      AUTHENTICATION = 'authentication'
       private_constant :ISSUING,
                        :CARDHOLDERS,
                        :CARDS,
@@ -159,6 +164,27 @@ module CheckoutSdk
           build_path(ISSUING, SIMULATE, AUTHORIZATIONS, transaction_id, REVERSALS),
           sdk_authorization,
           reversal_request
+        )
+      end
+
+      # Request a Cardholder access token.
+      # The api_client serializes the body as application/x-www-form-urlencoded.
+      # @param [Hash, CardholderAccessTokenRequest] cardholder_token_request
+      def request_cardholder_access_token(cardholder_token_request)
+        api_client.invoke_post(
+          build_path(ISSUING, ACCESS, CONNECT, TOKEN),
+          sdk_authorization(CheckoutSdk::AuthorizationType::OAUTH),
+          cardholder_token_request
+        )
+      end
+
+      # Simulate an out-of-band (OOB) authentication request.
+      # @param [Hash, OobAuthenticationRequest] oob_authentication_request
+      def simulate_oob_authentication(oob_authentication_request)
+        api_client.invoke_post(
+          build_path(ISSUING, SIMULATE, OOB, AUTHENTICATION),
+          sdk_authorization(CheckoutSdk::AuthorizationType::OAUTH),
+          oob_authentication_request
         )
       end
     end
