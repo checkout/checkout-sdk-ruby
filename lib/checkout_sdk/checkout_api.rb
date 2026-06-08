@@ -71,6 +71,10 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient]
   # @!attribute face_authentication
   #   @return [CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient]
+  # @!attribute apple_pay
+  #   @return [CheckoutSdk::Payments::ApplePayClient]
+  # @!attribute google_pay
+  #   @return [CheckoutSdk::Payments::GooglePayClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -106,7 +110,9 @@ module CheckoutSdk
                 :aml_screening,
                 :id_document_verification,
                 :identity_verification,
-                :face_authentication
+                :face_authentication,
+                :apple_pay,
+                :google_pay
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -146,6 +152,8 @@ module CheckoutSdk
       @id_document_verification = CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient.new(api_client, configuration)
       @identity_verification = CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient.new(api_client, configuration)
       @face_authentication = CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient.new(api_client, configuration)
+      @apple_pay = CheckoutSdk::Payments::ApplePayClient.new(api_client, configuration)
+      @google_pay = CheckoutSdk::Payments::GooglePayClient.new(api_client, configuration)
     end
 
     private

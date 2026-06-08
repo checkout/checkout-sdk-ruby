@@ -28,9 +28,9 @@ module CheckoutSdk
         # @param [String] applicant_id
         # @param [Hash, UpdateApplicantRequest] update_applicant_request
         def update_applicant(applicant_id, update_applicant_request)
-          api_client.invoke_put(build_path(APPLICANTS, applicant_id),
-                                sdk_authorization,
-                                update_applicant_request)
+          api_client.invoke_patch(build_path(APPLICANTS, applicant_id),
+                                  sdk_authorization,
+                                  update_applicant_request)
         end
 
         # @param [String] applicant_id

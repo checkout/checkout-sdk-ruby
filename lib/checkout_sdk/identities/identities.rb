@@ -16,9 +16,12 @@ require 'checkout_sdk/identities/id_document_verification/id_document_verificati
 
 # Identity Verification
 require 'checkout_sdk/identities/identity_verification/idv_declared_data'
+require 'checkout_sdk/identities/identity_verification/idv_client_information'
+require 'checkout_sdk/identities/identity_verification/identity_verification_attempt_request'
 require 'checkout_sdk/identities/identity_verification/identity_verification_request'
 require 'checkout_sdk/identities/identity_verification/identity_verification_client'
 
 # Face Authentication
+require 'checkout_sdk/identities/face_authentication/face_authentication_attempt_request'
 require 'checkout_sdk/identities/face_authentication/face_authentication_request'
 require 'checkout_sdk/identities/face_authentication/face_authentication_client'

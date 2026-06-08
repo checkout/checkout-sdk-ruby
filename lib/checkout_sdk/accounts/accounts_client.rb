@@ -12,8 +12,10 @@ module CheckoutSdk
       FILES = 'files'
       PAYMENT_INSTRUMENTS = 'payment-instruments'
       REQUIREMENTS = 'requirements'
+      RESERVE_RULES = 'reserve-rules'
+      MEMBERS = 'members'
       private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES, :PAYMENT_INSTRUMENTS,
-                       :REQUIREMENTS
+                       :REQUIREMENTS, :RESERVE_RULES, :MEMBERS
 
       # @param [ApiClient] api_client
       # @param [ApiClient] files_client
@@ -124,6 +126,90 @@ module CheckoutSdk
           build_path(ACCOUNTS, ENTITIES, entity_id, REQUIREMENTS, requirement_id),
           sdk_authorization,
           update_request
+        )
+      end
+
+      # Add a reserve rule for a sub-entity.
+      # @param [String] entity_id
+      # @param [Hash, ReserveRuleCreateRequest] reserve_rule_request
+      def add_reserve_rule(entity_id, reserve_rule_request)
+        api_client.invoke_post(
+          build_path(ACCOUNTS, ENTITIES, entity_id, RESERVE_RULES),
+          sdk_authorization,
+          reserve_rule_request
+        )
+      end
+
+      # Query reserve rules for a sub-entity.
+      # @param [String] entity_id
+      def query_reserve_rules(entity_id)
+        api_client.invoke_get(
+          build_path(ACCOUNTS, ENTITIES, entity_id, RESERVE_RULES),
+          sdk_authorization
+        )
+      end
+
+      # Retrieve a reserve rule by id.
+      # @param [String] entity_id
+      # @param [String] reserve_rule_id
+      def get_reserve_rule(entity_id, reserve_rule_id)
+        api_client.invoke_get(
+          build_path(ACCOUNTS, ENTITIES, entity_id, RESERVE_RULES, reserve_rule_id),
+          sdk_authorization
+        )
+      end
+
+      # Update a reserve rule.
+      # @param [String] entity_id
+      # @param [String] reserve_rule_id
+      # @param [Hash, ReserveRuleUpdateRequest] reserve_rule_request
+      def update_reserve_rule(entity_id, reserve_rule_id, reserve_rule_request)
+        api_client.invoke_put(
+          build_path(ACCOUNTS, ENTITIES, entity_id, RESERVE_RULES, reserve_rule_id),
+          sdk_authorization,
+          reserve_rule_request
+        )
+      end
+
+      # List sub-entity members.
+      # @param [String] entity_id
+      def get_sub_entity_members(entity_id)
+        api_client.invoke_get(
+          build_path(ACCOUNTS, ENTITIES, entity_id, MEMBERS),
+          sdk_authorization
+        )
+      end
+
+      # Reinvite a sub-entity member.
+      # @param [String] entity_id
+      # @param [String] user_id
+      # @param [Hash] reinvite_request Optional body per swagger.
+      def reinvite_sub_entity_member(entity_id, user_id, reinvite_request = nil)
+        api_client.invoke_put(
+          build_path(ACCOUNTS, ENTITIES, entity_id, MEMBERS, user_id),
+          sdk_authorization,
+          reinvite_request
+        )
+      end
+
+      # Upload a file scoped to a sub-entity. Hits POST /entities/{entityId}/files.
+      # @param [String] entity_id
+      # @param [Hash, EntityFilesRequest] file_request
+      def upload_entity_file(entity_id, file_request)
+        files_client.submit_file(
+          build_path(ENTITIES, entity_id, FILES),
+          sdk_authorization,
+          file_request
+        )
+      end
+
+      # Retrieve a file scoped to a sub-entity. Hits GET /entities/{entityId}/files/{fileId}.
+      # @param [String] entity_id
+      # @param [String] file_id
+      def get_entity_file(entity_id, file_id)
+        files_client.invoke_get(
+          build_path(ENTITIES, entity_id, FILES, file_id),
+          sdk_authorization
         )
       end
     end

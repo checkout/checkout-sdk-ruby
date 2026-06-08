@@ -12,34 +12,40 @@ module CheckoutSdk
       REVOKE = 'revoke'
       SUSPEND = 'suspend'
       CONTROLS = 'controls'
+      CONTROL_GROUPS = 'control-groups'
+      CONTROL_PROFILES = 'control-profiles'
       SIMULATE = 'simulate'
       AUTHORIZATIONS = 'authorizations'
       PRESENTMENTS = 'presentments'
       REVERSALS = 'reversals'
+      REFUNDS = 'refunds'
+      RENEW = 'renew'
+      SCHEDULE_REVOCATION = 'schedule-revocation'
+      DISPUTES = 'disputes'
+      CANCEL = 'cancel'
+      ESCALATE = 'escalate'
+      TRANSACTIONS = 'transactions'
+      DIGITAL_CARDS = 'digital-cards'
+      ADD = 'add'
+      REMOVE = 'remove'
       ACCESS = 'access'
       CONNECT = 'connect'
       TOKEN = 'token'
       OOB = 'oob'
       AUTHENTICATION = 'authentication'
-      private_constant :ISSUING,
-                       :CARDHOLDERS,
-                       :CARDS,
-                       :THREE_DS,
-                       :ACTIVATE,
-                       :CREDENTIALS,
-                       :REVOKE,
-                       :SUSPEND,
-                       :CONTROLS,
-                       :SIMULATE,
-                       :AUTHORIZATIONS,
-                       :PRESENTMENTS,
-                       :REVERSALS
+      private_constant :ISSUING, :CARDHOLDERS, :CARDS, :THREE_DS, :ACTIVATE, :CREDENTIALS,
+                       :REVOKE, :SUSPEND, :CONTROLS, :CONTROL_GROUPS, :CONTROL_PROFILES,
+                       :SIMULATE, :AUTHORIZATIONS, :PRESENTMENTS, :REVERSALS, :REFUNDS,
+                       :RENEW, :SCHEDULE_REVOCATION, :DISPUTES, :CANCEL, :ESCALATE,
+                       :TRANSACTIONS, :DIGITAL_CARDS, :ADD, :REMOVE
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
       def initialize(api_client, configuration)
         super(api_client, configuration, CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH)
       end
+
+      # ====== Cardholders ======
 
       # @param [Hash] cardholder_request
       def create_cardholder(cardholder_request)
@@ -52,9 +58,21 @@ module CheckoutSdk
       end
 
       # @param [String] cardholder_id
+      # @param [Hash, UpdateCardholderRequest] update_cardholder_request
+      def update_cardholder(cardholder_id, update_cardholder_request)
+        api_client.invoke_patch(
+          build_path(ISSUING, CARDHOLDERS, cardholder_id),
+          sdk_authorization,
+          update_cardholder_request
+        )
+      end
+
+      # @param [String] cardholder_id
       def get_cardholder_cards(cardholder_id)
         api_client.invoke_get(build_path(ISSUING, CARDHOLDERS, cardholder_id, CARDS), sdk_authorization)
       end
+
+      # ====== Cards ======
 
       # @param [Hash] card_request
       def create_card(card_request)
@@ -64,6 +82,16 @@ module CheckoutSdk
       # @param [String] card_id
       def get_card_details(card_id)
         api_client.invoke_get(build_path(ISSUING, CARDS, card_id), sdk_authorization)
+      end
+
+      # @param [String] card_id
+      # @param [Hash, UpdateCardRequest] update_card_request
+      def update_card(card_id, update_card_request)
+        api_client.invoke_patch(
+          build_path(ISSUING, CARDS, card_id),
+          sdk_authorization,
+          update_card_request
+        )
       end
 
       # @param [String] card_id
@@ -106,6 +134,39 @@ module CheckoutSdk
         api_client.invoke_post(build_path(ISSUING, CARDS, card_id, SUSPEND), sdk_authorization, suspend_request)
       end
 
+      # Renew a card. POST /issuing/cards/{cardId}/renew.
+      # @param [String] card_id
+      # @param [Hash] renew_request
+      def renew_card(card_id, renew_request = nil)
+        api_client.invoke_post(
+          build_path(ISSUING, CARDS, card_id, RENEW),
+          sdk_authorization,
+          renew_request
+        )
+      end
+
+      # Schedule a card revocation. POST /issuing/cards/{cardId}/schedule-revocation.
+      # @param [String] card_id
+      # @param [Hash, ScheduleRevocationRequest] schedule_revocation_request
+      def schedule_card_revocation(card_id, schedule_revocation_request)
+        api_client.invoke_post(
+          build_path(ISSUING, CARDS, card_id, SCHEDULE_REVOCATION),
+          sdk_authorization,
+          schedule_revocation_request
+        )
+      end
+
+      # Cancel a scheduled card revocation. DELETE /issuing/cards/{cardId}/schedule-revocation.
+      # @param [String] card_id
+      def cancel_scheduled_card_revocation(card_id)
+        api_client.invoke_delete(
+          build_path(ISSUING, CARDS, card_id, SCHEDULE_REVOCATION),
+          sdk_authorization
+        )
+      end
+
+      # ====== Controls (legacy single endpoint) ======
+
       # @param [Hash] control_request
       def create_control(control_request)
         api_client.invoke_post(build_path(ISSUING, CONTROLS), sdk_authorization, control_request)
@@ -131,6 +192,161 @@ module CheckoutSdk
       def remove_card_control(control_id)
         api_client.invoke_delete(build_path(ISSUING, CONTROLS, control_id), sdk_authorization)
       end
+
+      # ====== Control Groups ======
+
+      # @param [Hash, AddControlGroupRequest] control_group_request
+      def create_control_group(control_group_request)
+        api_client.invoke_post(
+          build_path(ISSUING, CONTROLS, CONTROL_GROUPS),
+          sdk_authorization,
+          control_group_request
+        )
+      end
+
+      def get_control_groups
+        api_client.invoke_get(build_path(ISSUING, CONTROLS, CONTROL_GROUPS), sdk_authorization)
+      end
+
+      # @param [String] control_group_id
+      def get_control_group(control_group_id)
+        api_client.invoke_get(
+          build_path(ISSUING, CONTROLS, CONTROL_GROUPS, control_group_id),
+          sdk_authorization
+        )
+      end
+
+      # @param [String] control_group_id
+      def delete_control_group(control_group_id)
+        api_client.invoke_delete(
+          build_path(ISSUING, CONTROLS, CONTROL_GROUPS, control_group_id),
+          sdk_authorization
+        )
+      end
+
+      # ====== Control Profiles ======
+
+      # @param [Hash, AddControlProfileRequest] control_profile_request
+      def create_control_profile(control_profile_request)
+        api_client.invoke_post(
+          build_path(ISSUING, CONTROLS, CONTROL_PROFILES),
+          sdk_authorization,
+          control_profile_request
+        )
+      end
+
+      def get_control_profiles
+        api_client.invoke_get(build_path(ISSUING, CONTROLS, CONTROL_PROFILES), sdk_authorization)
+      end
+
+      # @param [String] control_profile_id
+      def get_control_profile(control_profile_id)
+        api_client.invoke_get(
+          build_path(ISSUING, CONTROLS, CONTROL_PROFILES, control_profile_id),
+          sdk_authorization
+        )
+      end
+
+      # @param [String] control_profile_id
+      # @param [Hash, UpdateControlProfileRequest] update_control_profile_request
+      def update_control_profile(control_profile_id, update_control_profile_request)
+        api_client.invoke_patch(
+          build_path(ISSUING, CONTROLS, CONTROL_PROFILES, control_profile_id),
+          sdk_authorization,
+          update_control_profile_request
+        )
+      end
+
+      # @param [String] control_profile_id
+      def delete_control_profile(control_profile_id)
+        api_client.invoke_delete(
+          build_path(ISSUING, CONTROLS, CONTROL_PROFILES, control_profile_id),
+          sdk_authorization
+        )
+      end
+
+      # @param [String] control_profile_id
+      # @param [String] target_id
+      def add_target_to_control_profile(control_profile_id, target_id)
+        api_client.invoke_post(
+          build_path(ISSUING, CONTROLS, CONTROL_PROFILES, control_profile_id, ADD, target_id),
+          sdk_authorization
+        )
+      end
+
+      # @param [String] control_profile_id
+      # @param [String] target_id
+      def remove_target_from_control_profile(control_profile_id, target_id)
+        api_client.invoke_post(
+          build_path(ISSUING, CONTROLS, CONTROL_PROFILES, control_profile_id, REMOVE, target_id),
+          sdk_authorization
+        )
+      end
+
+      # ====== Issuing Disputes ======
+
+      # @param [Hash, CreateDisputeRequest] create_dispute_request
+      def create_issuing_dispute(create_dispute_request)
+        api_client.invoke_post(
+          build_path(ISSUING, DISPUTES),
+          sdk_authorization,
+          create_dispute_request
+        )
+      end
+
+      # @param [String] dispute_id
+      def get_issuing_dispute(dispute_id)
+        api_client.invoke_get(build_path(ISSUING, DISPUTES, dispute_id), sdk_authorization)
+      end
+
+      # @param [String] dispute_id
+      def cancel_issuing_dispute(dispute_id)
+        api_client.invoke_post(
+          build_path(ISSUING, DISPUTES, dispute_id, CANCEL),
+          sdk_authorization
+        )
+      end
+
+      # @param [String] dispute_id
+      # @param [Hash, EscalateDisputeRequest] escalate_dispute_request
+      def escalate_issuing_dispute(dispute_id, escalate_dispute_request)
+        api_client.invoke_post(
+          build_path(ISSUING, DISPUTES, dispute_id, ESCALATE),
+          sdk_authorization,
+          escalate_dispute_request
+        )
+      end
+
+      # ====== Transactions ======
+
+      # @param [Hash] transactions_query
+      def get_transactions(transactions_query = nil)
+        api_client.invoke_get(
+          build_path(ISSUING, TRANSACTIONS),
+          sdk_authorization,
+          transactions_query
+        )
+      end
+
+      # @param [String] transaction_id
+      def get_transaction(transaction_id)
+        api_client.invoke_get(
+          build_path(ISSUING, TRANSACTIONS, transaction_id),
+          sdk_authorization
+        )
+      end
+
+      # ====== Digital Cards ======
+
+      # @param [String] digital_card_id
+      def get_digital_card(digital_card_id)
+        api_client.invoke_get(
+          build_path(ISSUING, DIGITAL_CARDS, digital_card_id),
+          sdk_authorization
+        )
+      end
+
+      # ====== Simulations ======
 
       # @param [Hash] authorization_request
       def simulate_authorization(authorization_request)
@@ -164,6 +380,17 @@ module CheckoutSdk
           build_path(ISSUING, SIMULATE, AUTHORIZATIONS, transaction_id, REVERSALS),
           sdk_authorization,
           reversal_request
+        )
+      end
+
+      # Simulate a refund for an authorization.
+      # @param [String] transaction_id
+      # @param [Hash, SimulateRefundRequest] refund_request
+      def simulate_refund(transaction_id, refund_request)
+        api_client.invoke_post(
+          build_path(ISSUING, SIMULATE, AUTHORIZATIONS, transaction_id, REFUNDS),
+          sdk_authorization,
+          refund_request
         )
       end
 

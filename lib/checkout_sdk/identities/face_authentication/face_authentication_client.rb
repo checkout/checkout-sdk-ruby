@@ -35,6 +35,17 @@ module CheckoutSdk
           )
         end
 
+        # Create a new attempt for an existing face authentication.
+        # @param [String] face_authentication_id
+        # @param [Hash, FaceAuthenticationAttemptRequest] attempt_request
+        def create_face_authentication_attempt(face_authentication_id, attempt_request)
+          api_client.invoke_post(
+            build_path(FACE_AUTHENTICATIONS, face_authentication_id, ATTEMPTS),
+            sdk_authorization,
+            attempt_request
+          )
+        end
+
         # @param [String] face_authentication_id
         def get_face_authentication_attempts(face_authentication_id)
           api_client.invoke_get(

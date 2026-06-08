@@ -34,16 +34,16 @@ RSpec.describe CheckoutSdk::Identities::Applicants do
   end
 
   describe '#update_applicant' do
-    it 'PUTs typed DTO to applicants/{id}' do
+    it 'PATCHes typed DTO to applicants/{id}' do
       request = CheckoutSdk::Identities::Applicants::UpdateApplicantRequest.new
-      expect(api_client_mock).to receive(:invoke_put)
+      expect(api_client_mock).to receive(:invoke_patch)
         .with('applicants/aplt_x', 'secret_key', request).and_return('response')
       expect(client.update_applicant('aplt_x', request)).to eq('response')
     end
 
     it 'also accepts a raw Hash' do
       hash_request = { 'reference' => 'ref-2' }
-      expect(api_client_mock).to receive(:invoke_put)
+      expect(api_client_mock).to receive(:invoke_patch)
         .with('applicants/aplt_x', 'secret_key', hash_request).and_return('response')
       expect(client.update_applicant('aplt_x', hash_request)).to eq('response')
     end

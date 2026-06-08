@@ -16,6 +16,8 @@ require 'checkout_sdk/payments/os_type'
 require 'checkout_sdk/payments/payment_instruction'
 require 'checkout_sdk/payments/payment_method_details'
 require 'checkout_sdk/payments/refund_request'
+require 'checkout_sdk/payments/payments_search_request'
+require 'checkout_sdk/payments/cancellation_request'
 require 'checkout_sdk/payments/product'
 require 'checkout_sdk/payments/refund_order'
 require 'checkout_sdk/payments/capture_type'
@@ -192,3 +194,14 @@ require 'checkout_sdk/payments/setups/payment_setups_client'
 
 # Payment Flow
 require 'checkout_sdk/payments/flow/flow_client'
+
+# Apple Pay
+require 'checkout_sdk/payments/apple_pay/apple_pay_certificate_request'
+require 'checkout_sdk/payments/apple_pay/apple_pay_enrollment_request'
+require 'checkout_sdk/payments/apple_pay/apple_pay_signing_request'
+require 'checkout_sdk/payments/apple_pay/apple_pay_client'
+
+# Google Pay
+require 'checkout_sdk/payments/google_pay/google_pay_enrollment_request'
+require 'checkout_sdk/payments/google_pay/google_pay_domain_request'
+require 'checkout_sdk/payments/google_pay/google_pay_client'

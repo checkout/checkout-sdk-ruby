@@ -9,7 +9,8 @@ module CheckoutSdk
       EVIDENCE = 'evidence'
       SUBMITTED = 'submitted'
       SCHEME_FILES = 'schemefiles'
-      private_constant :DISPUTES, :FILES, :ACCEPT, :EVIDENCE, :SCHEME_FILES
+      ARBITRATION = 'arbitration'
+      private_constant :DISPUTES, :FILES, :ACCEPT, :EVIDENCE, :SCHEME_FILES, :ARBITRATION
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -66,6 +67,26 @@ module CheckoutSdk
       # @param [String] file_id
       def get_file_details(file_id)
         api_client.invoke_get(build_path(FILES, file_id), sdk_authorization)
+      end
+
+      # Submit arbitration evidence on a dispute.
+      # @param [String] dispute_id
+      # @param [Hash, DisputeArbitrationRequest] arbitration_request
+      def submit_arbitration(dispute_id, arbitration_request = nil)
+        api_client.invoke_post(
+          build_path(DISPUTES, dispute_id, EVIDENCE, ARBITRATION),
+          sdk_authorization,
+          arbitration_request
+        )
+      end
+
+      # Retrieve submitted arbitration evidence.
+      # @param [String] dispute_id
+      def get_submitted_arbitration_evidence(dispute_id)
+        api_client.invoke_get(
+          build_path(DISPUTES, dispute_id, EVIDENCE, ARBITRATION, SUBMITTED),
+          sdk_authorization
+        )
       end
     end
   end

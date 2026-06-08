@@ -51,6 +51,25 @@ module CheckoutSdk
                                reverse_request,
                                idempotency_key)
       end
+
+      # Search payments. POST /payments/search.
+      # @param [Hash, PaymentsSearchRequest] search_request
+      def search_payments(search_request)
+        api_client.invoke_post(build_path(PAYMENTS_PATH, 'search'),
+                               sdk_authorization,
+                               search_request)
+      end
+
+      # Cancel a scheduled retry. POST /payments/{id}/cancellations.
+      # @param [String] payment_id
+      # @param [Hash, CancellationRequest] cancellation_request
+      # @param [String, nil] idempotency_key
+      def cancel_payment(payment_id, cancellation_request = nil, idempotency_key = nil)
+        api_client.invoke_post(build_path(PAYMENTS_PATH, payment_id, 'cancellations'),
+                               sdk_authorization,
+                               cancellation_request,
+                               idempotency_key)
+      end
     end
   end
 end

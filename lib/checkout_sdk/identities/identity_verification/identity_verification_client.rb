@@ -43,6 +43,17 @@ module CheckoutSdk
           )
         end
 
+        # Create a new attempt for an existing identity verification.
+        # @param [String] identity_verification_id
+        # @param [Hash, IdentityVerificationAttemptRequest] attempt_request
+        def create_identity_verification_attempt(identity_verification_id, attempt_request)
+          api_client.invoke_post(
+            build_path(IDENTITY_VERIFICATIONS, identity_verification_id, ATTEMPTS),
+            sdk_authorization,
+            attempt_request
+          )
+        end
+
         # @param [String] identity_verification_id
         def get_identity_verification_attempts(identity_verification_id)
           api_client.invoke_get(

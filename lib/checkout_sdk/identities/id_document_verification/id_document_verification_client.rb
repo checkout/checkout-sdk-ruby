@@ -36,6 +36,17 @@ module CheckoutSdk
           )
         end
 
+        # Create a new attempt for an existing ID document verification.
+        # @param [String] id_document_verification_id
+        # @param [Hash] attempt_request Optional body per swagger.
+        def create_id_document_verification_attempt(id_document_verification_id, attempt_request = nil)
+          api_client.invoke_post(
+            build_path(ID_DOCUMENT_VERIFICATIONS, id_document_verification_id, ATTEMPTS),
+            sdk_authorization,
+            attempt_request
+          )
+        end
+
         # @param [String] id_document_verification_id
         def get_id_document_verification_attempts(id_document_verification_id)
           api_client.invoke_get(
