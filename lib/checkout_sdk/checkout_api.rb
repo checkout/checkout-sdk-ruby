@@ -144,14 +144,18 @@ module CheckoutSdk
       @onboarding_simulator = CheckoutSdk::OnboardingSimulator::OnboardingSimulatorClient.new(api_client, configuration)
       @agentic_commerce = CheckoutSdk::AgenticCommerce::AgenticCommerceClient.new(api_client, configuration)
       @compliance_requests = CheckoutSdk::ComplianceRequests::ComplianceRequestsClient.new(api_client, configuration)
-      @standalone_account_updater = CheckoutSdk::StandaloneAccountUpdater::StandaloneAccountUpdaterClient.new(api_client, configuration)
+      @standalone_account_updater =
+        CheckoutSdk::StandaloneAccountUpdater::StandaloneAccountUpdaterClient.new(api_client, configuration)
       @network_tokens = CheckoutSdk::NetworkTokens::NetworkTokensClient.new(api_client, configuration)
       @payment_methods = CheckoutSdk::PaymentMethods::PaymentMethodsClient.new(api_client, configuration)
       @applicants = CheckoutSdk::Identities::Applicants::ApplicantsClient.new(api_client, configuration)
       @aml_screening = CheckoutSdk::Identities::AmlScreening::AmlScreeningClient.new(api_client, configuration)
-      @id_document_verification = CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient.new(api_client, configuration)
-      @identity_verification = CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient.new(api_client, configuration)
-      @face_authentication = CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient.new(api_client, configuration)
+      @id_document_verification =
+        CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient.new(api_client, configuration)
+      @identity_verification =
+        CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient.new(api_client, configuration)
+      @face_authentication =
+        CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient.new(api_client, configuration)
       @apple_pay = CheckoutSdk::Payments::ApplePayClient.new(api_client, configuration)
       @google_pay = CheckoutSdk::Payments::GooglePayClient.new(api_client, configuration)
     end
