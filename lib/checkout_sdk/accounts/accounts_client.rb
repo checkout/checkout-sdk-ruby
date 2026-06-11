@@ -160,14 +160,25 @@ module CheckoutSdk
       end
 
       # Update a reserve rule.
+      # The API enforces optimistic concurrency: the ETag returned by GET must be
+      # echoed back via {CheckoutSdk::Common::Headers#if_match}, otherwise the
+      # API responds 428 Precondition Required.
       # @param [String] entity_id
       # @param [String] reserve_rule_id
+      # @param [String] etag ETag value to forward as the `If-Match` HTTP header.
       # @param [Hash, ReserveRuleUpdateRequest] reserve_rule_request
-      def update_reserve_rule(entity_id, reserve_rule_id, reserve_rule_request)
+      def update_reserve_rule(entity_id, reserve_rule_id, etag, reserve_rule_request)
+        headers = nil
+        if !etag.nil? && !etag.empty?
+          headers = CheckoutSdk::Common::Headers.new
+          headers.if_match = etag
+        end
+
         api_client.invoke_put(
           build_path(ACCOUNTS, ENTITIES, entity_id, RESERVE_RULES, reserve_rule_id),
           sdk_authorization,
-          reserve_rule_request
+          reserve_rule_request,
+          headers
         )
       end
 
@@ -181,10 +192,13 @@ module CheckoutSdk
       end
 
       # Reinvite a sub-entity member.
+      # The API marks the request body as required; callers must provide a Hash
+      # (or `PlatformsHostedOnboardReinviteRequest`-shaped object), even if it
+      # is empty `{}` per the current swagger contract.
       # @param [String] entity_id
       # @param [String] user_id
-      # @param [Hash] reinvite_request Optional body per swagger.
-      def reinvite_sub_entity_member(entity_id, user_id, reinvite_request = nil)
+      # @param [Hash] reinvite_request Required body per swagger; pass `{}` if no fields are needed.
+      def reinvite_sub_entity_member(entity_id, user_id, reinvite_request)
         api_client.invoke_put(
           build_path(ACCOUNTS, ENTITIES, entity_id, MEMBERS, user_id),
           sdk_authorization,

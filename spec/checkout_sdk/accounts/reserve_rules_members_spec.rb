@@ -38,11 +38,34 @@ RSpec.describe CheckoutSdk::Accounts do
   end
 
   describe '#update_reserve_rule' do
-    it 'PUTs accounts/entities/{id}/reserve-rules/{rid}' do
+    it 'PUTs accounts/entities/{id}/reserve-rules/{rid} forwarding the etag as If-Match' do
+      req = CheckoutSdk::Accounts::ReserveRuleUpdateRequest.new
+      etag = 'W/"3a-fXqMK..."'
+      expect(api_client_mock).to receive(:invoke_put) do |path, auth, body, headers|
+        expect(path).to eq('accounts/entities/ent_1/reserve-rules/rsv_1')
+        expect(auth).to eq('secret_key')
+        expect(body).to eq(req)
+        expect(headers).to be_a(CheckoutSdk::Common::Headers)
+        expect(headers.if_match).to eq(etag)
+        'r'
+      end
+      expect(client.update_reserve_rule('ent_1', 'rsv_1', etag, req)).to eq('r')
+    end
+
+    it 'omits the Headers container when no etag is provided' do
       req = CheckoutSdk::Accounts::ReserveRuleUpdateRequest.new
       expect(api_client_mock).to receive(:invoke_put)
-        .with('accounts/entities/ent_1/reserve-rules/rsv_1', 'secret_key', req).and_return('r')
-      expect(client.update_reserve_rule('ent_1', 'rsv_1', req)).to eq('r')
+        .with('accounts/entities/ent_1/reserve-rules/rsv_1', 'secret_key', req, nil)
+        .and_return('r')
+      expect(client.update_reserve_rule('ent_1', 'rsv_1', nil, req)).to eq('r')
+    end
+
+    it 'omits the Headers container when etag is an empty string' do
+      req = CheckoutSdk::Accounts::ReserveRuleUpdateRequest.new
+      expect(api_client_mock).to receive(:invoke_put)
+        .with('accounts/entities/ent_1/reserve-rules/rsv_1', 'secret_key', req, nil)
+        .and_return('r')
+      expect(client.update_reserve_rule('ent_1', 'rsv_1', '', req)).to eq('r')
     end
   end
 
@@ -55,10 +78,16 @@ RSpec.describe CheckoutSdk::Accounts do
   end
 
   describe '#reinvite_sub_entity_member' do
-    it 'PUTs accounts/entities/{id}/members/{userId}' do
+    it 'PUTs accounts/entities/{id}/members/{userId} with the required body' do
+      body = {}
       expect(api_client_mock).to receive(:invoke_put)
-        .with('accounts/entities/ent_1/members/usr_1', 'secret_key', nil).and_return('r')
-      expect(client.reinvite_sub_entity_member('ent_1', 'usr_1')).to eq('r')
+        .with('accounts/entities/ent_1/members/usr_1', 'secret_key', body).and_return('r')
+      expect(client.reinvite_sub_entity_member('ent_1', 'usr_1', body)).to eq('r')
+    end
+
+    it 'raises when called without a body (required by swagger)' do
+      expect { client.reinvite_sub_entity_member('ent_1', 'usr_1') }
+        .to raise_error(ArgumentError, /wrong number of arguments/)
     end
   end
 

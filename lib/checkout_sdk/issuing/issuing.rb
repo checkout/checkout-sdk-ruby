@@ -6,6 +6,9 @@ require 'checkout_sdk/issuing/oob_simulate_transaction_details'
 require 'checkout_sdk/issuing/oob_authentication_request'
 
 # Cardholders / Cards updates
+require 'checkout_sdk/issuing/issuing_phone_number'
+require 'checkout_sdk/issuing/issuing_address'
+require 'checkout_sdk/issuing/identification_document'
 require 'checkout_sdk/issuing/update_cardholder_request'
 require 'checkout_sdk/issuing/update_card_request'
 require 'checkout_sdk/issuing/schedule_revocation_request'

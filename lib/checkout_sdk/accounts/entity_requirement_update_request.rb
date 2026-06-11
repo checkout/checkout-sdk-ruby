@@ -9,7 +9,12 @@ module CheckoutSdk
     # (e.g. { "file_id": "file_..." }), a primitive value, or a structured object.
     #
     # @!attribute value
-    #   @return [Object] The response to the requirement (any JSON-serialisable value).
+    #   The response to the requirement. Polymorphic per swagger
+    #   (`oneOf [object, array, string, number, boolean]`), so the only valid
+    #   Ruby annotation is `Object`. The concrete shape is dictated at runtime
+    #   by the requirement's `_schema` returned from
+    #   `GET /accounts/entities/{id}/requirements/{requirementId}`.
+    #   @return [Object]
     class EntityRequirementUpdateRequest
       attr_accessor :value
     end
