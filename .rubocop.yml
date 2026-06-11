@@ -26,7 +26,9 @@ Metrics/ParameterLists:
   Max: 10
 
 Metrics/ClassLength:
-  Max: 120
+  # Raised from 120: SDK classes (e.g. ApiClient, response DTOs) grow as new
+  # API conventions and fields are adopted upstream.
+  Max: 150
   Exclude:
     # Endpoint-collection clients: one method per REST endpoint, grow with the API.
     - "**/issuing_client.rb"

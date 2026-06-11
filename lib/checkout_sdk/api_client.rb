@@ -71,10 +71,9 @@ module CheckoutSdk
     # canonical HTTP header.
     def apply_extra_headers(http_headers, extra_headers)
       return if extra_headers.nil?
+      return unless extra_headers.respond_to?(:if_match) && extra_headers.if_match
 
-      if extra_headers.respond_to?(:if_match) && extra_headers.if_match
-        http_headers[:'If-Match'] = extra_headers.if_match
-      end
+      http_headers[:'If-Match'] = extra_headers.if_match
     end
 
     def append_params(path, input_params)
