@@ -2,18 +2,19 @@
 
 module CheckoutSdk
   module AgenticCommerce
-    # Optional risk signal attached to a delegated payment request.
+    # Risk signal attached to a delegated payment request. Mirrors swagger
+    # `DelegatedPaymentRiskSignal`. All three fields are required per spec.
     #
     # @!attribute type
-    #   @return [String] One of "card_testing", "card_takeover", "prompt_injection", etc.
+    #   @return [String] Risk signal type. [Required]
     # @!attribute score
-    #   @return [Integer]
-    # @!attribute action_taken
-    #   @return [String] e.g. "blocked", "manual_review".
+    #   @return [Integer] Risk score. [Required]
+    # @!attribute action
+    #   @return [String] Action taken based on the risk assessment. [Required]
     class DelegatedPaymentRiskSignal
       attr_accessor :type,
                     :score,
-                    :action_taken
+                    :action
     end
   end
 end
