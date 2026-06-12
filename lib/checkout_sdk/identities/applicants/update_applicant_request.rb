@@ -3,7 +3,7 @@
 module CheckoutSdk
   module Identities
     module Applicants
-      # Request body for PUT /applicants/{applicant_id}.
+      # Request body for PATCH /applicants/{applicant_id}.
       #
       # @!attribute email
       #   @return [String]
