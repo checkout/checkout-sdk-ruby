@@ -2,16 +2,30 @@
 
 module CheckoutSdk
   module Payments
-    # @!attribute name
+    # Contains information about a passenger on the flight
+    # (PaymentInterfacesProcessingAirlinePassengerData).
+    #
+    # @!attribute first_name
+    #   @return [String]
+    # @!attribute last_name
     #   @return [String]
     # @!attribute date_of_birth
-    #   @return [String]
-    # @!attribute country_code
-    #   @return [String] {CheckoutSdk::Common::Country}
+    #   @return [String] Format: YYYY-MM-DD
+    # @!attribute address
+    #   @return [PassengerAddress]
     class Passenger
-      attr_accessor :name,
+      attr_accessor :first_name,
+                    :last_name,
                     :date_of_birth,
-                    :country_code
+                    :address
+    end
+
+    # Partial address information for an airline passenger.
+    #
+    # @!attribute country
+    #   @return [String] {CheckoutSdk::Common::Country}
+    class PassengerAddress
+      attr_accessor :country
     end
   end
 end

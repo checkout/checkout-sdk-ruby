@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+require 'checkout_sdk/onboarding_simulator/simulator_entity_status'
+require 'checkout_sdk/onboarding_simulator/simulator_set_requirements_due_request'
+require 'checkout_sdk/onboarding_simulator/simulator_set_status_request'
+require 'checkout_sdk/onboarding_simulator/onboarding_simulator_client'

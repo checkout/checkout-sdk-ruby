@@ -20,6 +20,12 @@ module CheckoutSdk
     #   @return [OnboardSubEntityDocuments]
     # @!attribute additional_info
     #   @return [AdditionalInfo]
+    # @!attribute seller_category
+    #   @return [String] Identifier of a seller category configured on the platform
+    #     during onboarding. Used for US ISV onboarding variants.
+    # @!attribute submitter
+    #   @return [Submitter] Captures evidence of the end-user's consent to onboarding.
+    #     Used for US ISV onboarding variants.
     class OnboardEntity
       attr_accessor :reference,
                     :is_draft,
@@ -29,7 +35,9 @@ module CheckoutSdk
                     :processing_details,
                     :individual,
                     :documents,
-                    :additional_info
+                    :additional_info,
+                    :seller_category,
+                    :submitter
     end
   end
 end

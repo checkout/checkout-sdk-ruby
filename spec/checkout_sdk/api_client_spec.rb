@@ -157,4 +157,54 @@ RSpec.describe CheckoutSdk::ApiClient do
       end
     end
   end
+
+  describe 'header wiring' do
+    let(:auth) { double('auth', authorization_header: 'Bearer xxx') }
+    let(:response) { double('Response', status: 200, body: '{}', headers: { 'Content-Type' => 'application/json' }) }
+    let(:http_client) { api_client.client }
+
+    before do
+      allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).and_return(
+        OpenStruct.new(status_code: 200, body: '{}')
+      )
+    end
+
+    it 'emits the If-Match header on PUT when a Common::Headers carries one' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+      extra = CheckoutSdk::Common::Headers.new
+      extra.if_match = 'W/"etag-123"'
+
+      api_client.invoke_put('accounts/entities/ent_1/reserve-rules/rsv_1', auth, {}, extra)
+
+      expect(captured[:'If-Match']).to eq('W/"etag-123"')
+    end
+
+    it 'omits the If-Match header when no headers container is passed' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+
+      api_client.invoke_put('some/path', auth, {})
+
+      expect(captured).not_to have_key(:'If-Match')
+    end
+
+    it 'omits the If-Match header when the headers container is empty' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+
+      api_client.invoke_put('some/path', auth, {}, CheckoutSdk::Common::Headers.new)
+
+      expect(captured).not_to have_key(:'If-Match')
+    end
+  end
 end

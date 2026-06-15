@@ -18,12 +18,21 @@ Metrics/ModuleLength:
 
 Metrics/MethodLength:
   Max: 25
+  Exclude:
+    # Aggregator that wires up every product client; grows with each new product.
+    - "**/checkout_api.rb"
 
 Metrics/ParameterLists:
   Max: 10
 
 Metrics/ClassLength:
-  Max: 120
+  # Raised from 120: SDK classes (e.g. ApiClient, response DTOs) grow as new
+  # API conventions and fields are adopted upstream.
+  Max: 150
+  Exclude:
+    # Endpoint-collection clients: one method per REST endpoint, grow with the API.
+    - "**/issuing_client.rb"
+    - "**/accounts_client.rb"
 
 Metrics/CyclomaticComplexity:
   Max: 10
@@ -35,6 +44,11 @@ Style/Documentation:
   Enabled: false
 
 Style/OpenStructUse:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  # The SDK consistently prefixes read endpoints with get_ to mirror the REST API
+  # (e.g. get_cardholder, get_card_details). Zero-arg variants would otherwise flag.
   Enabled: false
 
 Naming/MethodName:
