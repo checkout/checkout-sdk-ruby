@@ -64,6 +64,10 @@ module CheckoutSdk
     #   @return [Time]
     # @!attribute tax_amount
     #   @return [Integer]
+    # @!attribute authorization_type
+    #   @return [String] {AuthorizationType}
+    # @!attribute payment_plan
+    #   @return [PaymentPlan]
     class PaymentSessionsRequest
       attr_accessor :amount,
                     :currency,
@@ -95,7 +99,9 @@ module CheckoutSdk
                     :capture,
                     :ip_address,
                     :capture_on,
-                    :tax_amount
+                    :tax_amount,
+                    :authorization_type,
+                    :payment_plan
     end
   end
 end

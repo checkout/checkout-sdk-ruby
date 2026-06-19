@@ -66,6 +66,10 @@ module CheckoutSdk
     #   @return [HostedPaymentInstruction]
     # @!attribute payment_method_configuration
     #   @return [PaymentMethodConfiguration]
+    # @!attribute authorization_type
+    #   @return [String] {AuthorizationType}
+    # @!attribute payment_plan
+    #   @return [PaymentPlan]
     class HostedPaymentsSession
       attr_accessor :currency,
                     :billing,
@@ -97,7 +101,9 @@ module CheckoutSdk
                     :capture,
                     :capture_on,
                     :instruction,
-                    :payment_method_configuration
+                    :payment_method_configuration,
+                    :authorization_type,
+                    :payment_plan
 
       def initialize(payment_type: CheckoutSdk::Payments::PaymentType::REGULAR)
         @payment_type = payment_type

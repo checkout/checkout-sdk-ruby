@@ -60,6 +60,10 @@ module CheckoutSdk
     #   @return [TrueClass, FalseClass]
     # @!attribute capture_on
     #   @return [Time]
+    # @!attribute authorization_type
+    #   @return [String] {AuthorizationType}
+    # @!attribute payment_plan
+    #   @return [PaymentPlan]
     class PaymentLink
       attr_accessor :amount,
                     :currency,
@@ -88,7 +92,9 @@ module CheckoutSdk
                     :return_url,
                     :locale,
                     :capture,
-                    :capture_on
+                    :capture_on,
+                    :authorization_type,
+                    :payment_plan
 
       def initialize(payment_type: CheckoutSdk::Payments::PaymentType::REGULAR)
         @payment_type = payment_type
