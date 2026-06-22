@@ -37,5 +37,14 @@ RSpec.describe CheckoutSdk::Identities::FaceAuthentication do
         expect(response).not_to be_nil
       end
     end
+
+    describe '#get_face_authentication_attempt_assets' do
+      it 'retrieves the assets captured during a face authentication attempt' do
+        response = client.get_face_authentication_attempt_assets(
+          ENV['CHECKOUT_FACE_AUTH_ID'], ENV['CHECKOUT_FACE_AUTH_ATTEMPT_ID'], { skip: 0, limit: 10 }
+        )
+        expect(response).not_to be_nil
+      end
+    end
   end
 end

@@ -66,6 +66,11 @@ module CheckoutSdk
     #   @return [HostedPaymentInstruction]
     # @!attribute payment_method_configuration
     #   @return [PaymentMethodConfiguration]
+    # @!attribute payment_plan
+    #   @return [PaymentPlan] [Optional] The information to process a recurring payment request.
+    #     To be used when the payment_type is Recurring.
+    # @!attribute authorization_type
+    #   @return [String] [Optional] {AuthorizationType} Enum: "Final" "Estimated". Default: "Final".
     class HostedPaymentsSession
       attr_accessor :currency,
                     :billing,
@@ -97,7 +102,9 @@ module CheckoutSdk
                     :capture,
                     :capture_on,
                     :instruction,
-                    :payment_method_configuration
+                    :payment_method_configuration,
+                    :payment_plan,
+                    :authorization_type
 
       def initialize(payment_type: CheckoutSdk::Payments::PaymentType::REGULAR)
         @payment_type = payment_type

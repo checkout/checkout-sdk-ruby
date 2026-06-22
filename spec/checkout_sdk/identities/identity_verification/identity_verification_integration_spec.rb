@@ -60,5 +60,14 @@ RSpec.describe CheckoutSdk::Identities::IdentityVerification do
         expect(response).not_to be_nil
       end
     end
+
+    describe '#get_identity_verification_attempt_assets' do
+      it 'retrieves the assets captured during an identity verification attempt' do
+        response = client.get_identity_verification_attempt_assets(
+          ENV['CHECKOUT_IDENTITY_VERIFICATION_ID'], ENV['CHECKOUT_IDENTITY_VERIFICATION_ATTEMPT_ID'], { skip: 0, limit: 10 }
+        )
+        expect(response).not_to be_nil
+      end
+    end
   end
 end
