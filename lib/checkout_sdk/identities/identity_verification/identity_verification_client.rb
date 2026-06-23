@@ -84,7 +84,7 @@ module CheckoutSdk
         # identity verification attempt.
         # @param [String] identity_verification_id
         # @param [String] attempt_id
-        # @param [Hash] query the pagination query parameters (skip and limit)
+        # @param [Hash, nil] query pagination query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
         def get_identity_verification_attempt_assets(identity_verification_id, attempt_id, query = nil)
           api_client.invoke_get(
             build_path(IDENTITY_VERIFICATIONS, identity_verification_id, ATTEMPTS, attempt_id, ASSETS),

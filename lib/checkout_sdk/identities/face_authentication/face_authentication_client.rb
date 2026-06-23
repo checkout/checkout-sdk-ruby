@@ -67,7 +67,7 @@ module CheckoutSdk
         # Retrieve the assets (face images and videos) captured during a face authentication attempt.
         # @param [String] face_authentication_id
         # @param [String] attempt_id
-        # @param [Hash] query the pagination query parameters (skip and limit)
+        # @param [Hash, nil] query pagination query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
         def get_face_authentication_attempt_assets(face_authentication_id, attempt_id, query = nil)
           api_client.invoke_get(
             build_path(FACE_AUTHENTICATIONS, face_authentication_id, ATTEMPTS, attempt_id, ASSETS),
