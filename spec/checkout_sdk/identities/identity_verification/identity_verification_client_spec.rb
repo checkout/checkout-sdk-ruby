@@ -80,4 +80,19 @@ RSpec.describe CheckoutSdk::Identities::IdentityVerification do
       expect(client.get_identity_verification_pdf_report('idv_x')).to eq('response')
     end
   end
+
+  describe '#get_identity_verification_attempt_assets' do
+    it 'GETs identity-verifications/{id}/attempts/{attempt_id}/assets with query params' do
+      query = { skip: 0, limit: 10 }
+      expect(api_client_mock).to receive(:invoke_get)
+        .with('identity-verifications/idv_x/attempts/att_1/assets', 'secret_key', query).and_return('response')
+      expect(client.get_identity_verification_attempt_assets('idv_x', 'att_1', query)).to eq('response')
+    end
+
+    it 'GETs the assets path with no query params' do
+      expect(api_client_mock).to receive(:invoke_get)
+        .with('identity-verifications/idv_x/attempts/att_1/assets', 'secret_key', nil).and_return('response')
+      expect(client.get_identity_verification_attempt_assets('idv_x', 'att_1')).to eq('response')
+    end
+  end
 end

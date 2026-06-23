@@ -10,7 +10,8 @@ module CheckoutSdk
         ANONYMIZE = 'anonymize'
         ATTEMPTS = 'attempts'
         PDF_REPORT = 'pdf-report'
-        private_constant :IDENTITY_VERIFICATIONS, :CREATE_AND_OPEN_IDV, :ANONYMIZE, :ATTEMPTS, :PDF_REPORT
+        ASSETS = 'assets'
+        private_constant :IDENTITY_VERIFICATIONS, :CREATE_AND_OPEN_IDV, :ANONYMIZE, :ATTEMPTS, :PDF_REPORT, :ASSETS
 
         # @param [ApiClient] api_client
         # @param [CheckoutConfiguration] configuration
@@ -76,6 +77,20 @@ module CheckoutSdk
           api_client.invoke_get(
             build_path(IDENTITY_VERIFICATIONS, identity_verification_id, PDF_REPORT),
             sdk_authorization
+          )
+        end
+
+        # Retrieve the assets (face images, videos, and document images) captured during an
+        # identity verification attempt.
+        # @param [String] identity_verification_id
+        # @param [String] attempt_id
+        # @param [Hash, nil] query pagination query parameters; supports :skip (Integer, default: 0)
+        #   and :limit (Integer, default: 10)
+        def get_identity_verification_attempt_assets(identity_verification_id, attempt_id, query = nil)
+          api_client.invoke_get(
+            build_path(IDENTITY_VERIFICATIONS, identity_verification_id, ATTEMPTS, attempt_id, ASSETS),
+            sdk_authorization,
+            query
           )
         end
       end
