@@ -4,8 +4,13 @@ RSpec.describe CheckoutSdk::Payments do
   include ContextsHelper
 
   before(:all) do
-    @payment_context_paypal = create_payment_contexts_paypal
-    @payment_context_klarna = create_payment_contexts_klarna
+    begin
+      @payment_context_paypal = create_payment_contexts_paypal
+      @payment_context_klarna = create_payment_contexts_klarna
+    rescue CheckoutSdk::CheckoutApiException => e
+      skip 'PayPal/Klarna APM service unavailable in sandbox' if e.message.include?('apm_service_unavailable')
+      raise
+    end
   end
 
   describe '.create_payment_contexts' do
