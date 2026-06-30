@@ -190,5 +190,11 @@ module CheckoutSdk
     def transfers_client(configuration)
       ApiClient.new(configuration, configuration.environment.transfers_uri)
     end
+
+    # @param [CheckoutConfiguration] configuration
+    # @return [ApiClient]
+    def forward_client(configuration)
+      ApiClient.new(configuration, configuration.environment.forward_uri)
+    end
   end
 end
