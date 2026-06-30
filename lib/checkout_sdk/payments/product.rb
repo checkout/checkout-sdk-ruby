@@ -3,9 +3,13 @@
 module CheckoutSdk
   module Payments
     # @!attribute type
-    #   @return [String]
+    #   The item type. For example, +physical+ or +digital+.
+    #   [Optional]
+    #   @return [String, nil] {ProductItemType}
     # @!attribute sub_type
-    #   @return [String] {ProductSubType}
+    #   The digital item type. Required if +type+ is set to +digital+.
+    #   [Optional]
+    #   @return [String, nil] {ProductSubType}
     # @!attribute name
     #   @return [String]
     # @!attribute quantity

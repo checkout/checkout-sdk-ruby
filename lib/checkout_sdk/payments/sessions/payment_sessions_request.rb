@@ -65,9 +65,10 @@ module CheckoutSdk
     # @!attribute tax_amount
     #   @return [Integer]
     # @!attribute authorization_type
-    #   @return [String] {AuthorizationType}
+    #   @return [String] [Optional] {AuthorizationType} Enum: "Final" "Estimated". Default: "Final".
     # @!attribute payment_plan
-    #   @return [PaymentPlan]
+    #   @return [PaymentPlan] [Optional] The information to process a recurring payment request.
+    #     To be used when the payment_type is Recurring.
     class PaymentSessionsRequest
       attr_accessor :amount,
                     :currency,
