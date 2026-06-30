@@ -73,7 +73,8 @@ module CheckoutSdk
                     :recurring,
                     :installment,
                     :optimization,
-                    :initial_transaction
+                    :initial_transaction,
+                    :device_information
 
       def initialize(source: CardSource.new,
                      authentication_type: CheckoutSdk::Sessions::AuthenticationType::REGULAR,

@@ -99,7 +99,8 @@ module CheckoutSdk
                     :items,
                     :retry,
                     :metadata,
-                    :instruction
+                    :instruction,
+                    :fallback_source
     end
   end
 end

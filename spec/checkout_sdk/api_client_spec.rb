@@ -72,6 +72,25 @@ RSpec.describe CheckoutSdk::ApiClient do
       end
     end
 
+    context 'when the response status is a 3xx redirect' do
+      it 'does not raise an exception for 302 Found' do
+        response = double('Response', status: 302, body: '', headers: { 'Location' => 'https://example.com/file' })
+        allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).with(response).and_return(
+          OpenStruct.new(status_code: 302, headers: response.headers)
+        )
+        expect { api_client.send(:parse_response, response) }.not_to raise_error
+      end
+
+      it 'returns metadata with the redirect status code' do
+        response = double('Response', status: 302, body: '', headers: { 'Location' => 'https://example.com/file' })
+        allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).with(response).and_return(
+          OpenStruct.new(status_code: 302, headers: response.headers)
+        )
+        parsed_response = api_client.send(:parse_response, response)
+        expect(parsed_response.http_metadata.status_code).to eq(302)
+      end
+    end
+
     context 'when the response status is not in the 2xx range' do
       it 'raises a CheckoutApiException for status code less than 200' do
         response = double('Response', status: 199, body: '{}')
@@ -136,6 +155,56 @@ RSpec.describe CheckoutSdk::ApiClient do
           api_client.send(:parse_response, response)
         end.to raise_error(StandardError, "Unexpected failure")
       end
+    end
+  end
+
+  describe 'header wiring' do
+    let(:auth) { double('auth', authorization_header: 'Bearer xxx') }
+    let(:response) { double('Response', status: 200, body: '{}', headers: { 'Content-Type' => 'application/json' }) }
+    let(:http_client) { api_client.client }
+
+    before do
+      allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).and_return(
+        OpenStruct.new(status_code: 200, body: '{}')
+      )
+    end
+
+    it 'emits the If-Match header on PUT when a Common::Headers carries one' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+      extra = CheckoutSdk::Common::Headers.new
+      extra.if_match = 'W/"etag-123"'
+
+      api_client.invoke_put('accounts/entities/ent_1/reserve-rules/rsv_1', auth, {}, extra)
+
+      expect(captured[:'If-Match']).to eq('W/"etag-123"')
+    end
+
+    it 'omits the If-Match header when no headers container is passed' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+
+      api_client.invoke_put('some/path', auth, {})
+
+      expect(captured).not_to have_key(:'If-Match')
+    end
+
+    it 'omits the If-Match header when the headers container is empty' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+
+      api_client.invoke_put('some/path', auth, {}, CheckoutSdk::Common::Headers.new)
+
+      expect(captured).not_to have_key(:'If-Match')
     end
   end
 end

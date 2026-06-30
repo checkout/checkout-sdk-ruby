@@ -22,8 +22,8 @@ module CheckoutSdk
       invoke(:post, path, authorization, request, idempotency_key, params: nil)
     end
 
-    def invoke_put(path, authorization, request)
-      invoke(:put, path, authorization, request, nil, params: nil)
+    def invoke_put(path, authorization, request, headers = nil)
+      invoke(:put, path, authorization, request, nil, params: nil, extra_headers: headers)
     end
 
     def invoke_patch(path, authorization, request = nil)
@@ -40,12 +40,14 @@ module CheckoutSdk
 
     private
 
-    def invoke(method, path, authorization, body = nil, idempotency_key = nil, params: nil)
+    def invoke(method, path, authorization, body = nil, idempotency_key = nil, params: nil, extra_headers: nil)
       path = append_params(path, params) unless params.nil?
 
       headers = default_headers(authorization)
       headers[:'Content-Type'] = 'application/json'
       headers[:'Cko-Idempotency-Key'] = idempotency_key unless idempotency_key.nil?
+
+      apply_extra_headers(headers, extra_headers)
 
       json_body = CheckoutSdk::JsonSerializer.to_custom_hash(body).to_json
 
@@ -62,6 +64,16 @@ module CheckoutSdk
     def default_headers(authorization)
       { 'User-Agent': "checkout-sdk-ruby/#{VERSION}", Accept: 'application/json',
         Authorization: authorization.authorization_header }
+    end
+
+    # Map a typed headers container (e.g. {CheckoutSdk::Common::Headers}) onto the underlying
+    # HTTP header hash. Each attribute that's set is emitted as the corresponding
+    # canonical HTTP header.
+    def apply_extra_headers(http_headers, extra_headers)
+      return if extra_headers.nil?
+      return unless extra_headers.respond_to?(:if_match) && extra_headers.if_match
+
+      http_headers[:'If-Match'] = extra_headers.if_match
     end
 
     def append_params(path, input_params)
@@ -92,21 +104,22 @@ module CheckoutSdk
     def upload(path, authorization, file_request)
       headers = default_headers(authorization)
 
-      response = File.open(file_request.file) do |file|
+      File.open(file_request.file) do |file|
         form = build_multipart_request(file_request, file)
+
         begin
           @log.info "post: /#{path}"
-          @multipart_client.run_request(:post, path, form, headers)
+          response = @multipart_client.run_request(:post, path, form, headers)
         rescue Faraday::ClientError => e
           raise CheckoutApiException, e.response
         end
-      end
 
-      parse_response(response)
+        parse_response(response)
+      end
     end
 
     def parse_response(response)
-      raise CheckoutApiException, response if response.status < 200 || response.status >= 300
+      raise CheckoutApiException, response if response.status < 200 || response.status >= 400
 
       metadata = CheckoutUtils.map_to_http_metadata(response)
       body = parse_body(response)

@@ -68,6 +68,13 @@ require 'checkout_sdk/metadata/metadata'
 require 'checkout_sdk/financial/financial'
 require 'checkout_sdk/issuing/issuing'
 require 'checkout_sdk/forward/forward'
+require 'checkout_sdk/onboarding_simulator/onboarding_simulator'
+require 'checkout_sdk/agentic_commerce/agentic_commerce'
+require 'checkout_sdk/compliance_requests/compliance_requests'
+require 'checkout_sdk/standalone_account_updater/standalone_account_updater'
+require 'checkout_sdk/network_tokens/network_tokens'
+require 'checkout_sdk/payment_methods/payment_methods'
+require 'checkout_sdk/identities/identities'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'

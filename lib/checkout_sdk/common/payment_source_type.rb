@@ -44,6 +44,7 @@ module CheckoutSdk
       TNG = 'tng'
       AFTERPAY = 'afterpay'
       BENEFIT = 'benefit'
+      BLIK = 'blik'
       MBWAY = 'mbway'
       POSTFINANCE = 'postfinance'
       STCPAY = 'stcpay'

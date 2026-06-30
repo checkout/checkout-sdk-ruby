@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+require 'checkout_sdk/agentic_commerce/delegated_payment_method_card'
+require 'checkout_sdk/agentic_commerce/delegated_payment_allowance'
+require 'checkout_sdk/agentic_commerce/delegated_payment_billing_address'
+require 'checkout_sdk/agentic_commerce/delegated_payment_risk_signal'
+require 'checkout_sdk/agentic_commerce/delegated_payment_request'
+require 'checkout_sdk/agentic_commerce/agentic_commerce_client'

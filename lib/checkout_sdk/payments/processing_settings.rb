@@ -72,6 +72,11 @@ module CheckoutSdk
     #   @return [string]
     # @!attribute affiliate_url
     #   @return [string]
+    # @!attribute partner_code
+    #   @return [String] The customer's 6-digit BLIK code. Required when source.type is "blik"
+    #     and merchant_initiated is false. Pattern: ^\d{6}$
+    # @!attribute scheme_transaction_link_id
+    #   @return [String] [Optional] The scheme transaction link identifier.
     class ProcessingSettings
       attr_accessor :order_id,
                     :tax_amount,
@@ -107,7 +112,9 @@ module CheckoutSdk
                     :senderInformation,
                     :purpose,
                     :affiliate_id,
-                    :affiliate_url
+                    :affiliate_url,
+                    :partner_code,
+                    :scheme_transaction_link_id
     end
   end
 end

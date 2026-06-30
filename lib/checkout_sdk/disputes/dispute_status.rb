@@ -13,6 +13,7 @@ module CheckoutSdk
       ARBITRATION_LOST = 'arbitration_lost'
       EVIDENCE_REQUIRED = 'evidence_required'
       EVIDENCE_UNDER_REVIEW = 'evidence_under_review'
+      ARB_EVIDENCE_SUBMITTED = 'arb_evidence_submitted'
       ARBITRATION_UNDER_REVIEW = 'arbitration_under_review'
     end
   end
