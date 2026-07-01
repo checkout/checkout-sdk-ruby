@@ -35,23 +35,6 @@ RSpec.describe CheckoutSdk::Issuing do
     end
   end
 
-  describe '#schedule_card_revocation' do
-    it 'POSTs issuing/cards/{id}/schedule-revocation' do
-      req = CheckoutSdk::Issuing::ScheduleRevocationRequest.new
-      expect(api_client_mock).to receive(:invoke_post)
-        .with('issuing/cards/crd_1/schedule-revocation', 'secret_key', req).and_return('r')
-      expect(client.schedule_card_revocation('crd_1', req)).to eq('r')
-    end
-  end
-
-  describe '#cancel_scheduled_card_revocation' do
-    it 'DELETEs issuing/cards/{id}/schedule-revocation' do
-      expect(api_client_mock).to receive(:invoke_delete)
-        .with('issuing/cards/crd_1/schedule-revocation', 'secret_key').and_return('r')
-      expect(client.cancel_scheduled_card_revocation('crd_1')).to eq('r')
-    end
-  end
-
   describe '#simulate_refund' do
     it 'POSTs issuing/simulate/authorizations/{id}/refunds' do
       req = CheckoutSdk::Issuing::SimulateRefundRequest.new
@@ -162,6 +145,28 @@ RSpec.describe CheckoutSdk::Issuing do
       expect(api_client_mock).to receive(:invoke_post)
         .with('issuing/disputes/dsp_1/escalate', 'secret_key', req).and_return('r')
       expect(client.escalate_issuing_dispute('dsp_1', req)).to eq('r')
+    end
+
+    it 'POSTs issuing/disputes/{id}/amend' do
+      req = CheckoutSdk::Issuing::AmendDisputeRequest.new
+      req.reason = '4807'
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/disputes/dsp_1/amend', 'secret_key', req).and_return('r')
+      expect(client.amend_issuing_dispute('dsp_1', req)).to eq('r')
+    end
+
+    it 'POSTs issuing/disputes/{id}/amend with nil body' do
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/disputes/dsp_1/amend', 'secret_key', nil).and_return('r')
+      expect(client.amend_issuing_dispute('dsp_1')).to eq('r')
+    end
+
+    it 'POSTs issuing/disputes/{id}/submit (deprecated)' do
+      req = CheckoutSdk::Issuing::SubmitDisputeRequest.new
+      req.reason = '4807'
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/disputes/dsp_1/submit', 'secret_key', req).and_return('r')
+      expect(client.submit_issuing_dispute('dsp_1', req)).to eq('r')
     end
   end
 

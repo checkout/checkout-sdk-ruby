@@ -21,12 +21,9 @@ module CheckoutSdk
     #   @return [IssuingAddress]
     # @!attribute residency_address
     #   @return [IssuingAddress]
-    # @!attribute document
-    #   @return [IdentificationDocument]
     class UpdateCardholderRequest
       attr_accessor :first_name, :middle_name, :last_name, :date_of_birth,
-                    :phone_number, :email, :billing_address, :residency_address,
-                    :document
+                    :phone_number, :email, :billing_address, :residency_address
     end
   end
 end
