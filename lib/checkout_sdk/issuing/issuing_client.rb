@@ -20,10 +20,11 @@ module CheckoutSdk
       REVERSALS = 'reversals'
       REFUNDS = 'refunds'
       RENEW = 'renew'
-      SCHEDULE_REVOCATION = 'schedule-revocation'
       DISPUTES = 'disputes'
       CANCEL = 'cancel'
       ESCALATE = 'escalate'
+      AMEND = 'amend'
+      SUBMIT = 'submit'
       TRANSACTIONS = 'transactions'
       DIGITAL_CARDS = 'digital-cards'
       ADD = 'add'
@@ -36,7 +37,7 @@ module CheckoutSdk
       private_constant :ISSUING, :CARDHOLDERS, :CARDS, :THREE_DS, :ACTIVATE, :CREDENTIALS,
                        :REVOKE, :SUSPEND, :CONTROLS, :CONTROL_GROUPS, :CONTROL_PROFILES,
                        :SIMULATE, :AUTHORIZATIONS, :PRESENTMENTS, :REVERSALS, :REFUNDS,
-                       :RENEW, :SCHEDULE_REVOCATION, :DISPUTES, :CANCEL, :ESCALATE,
+                       :RENEW, :DISPUTES, :CANCEL, :ESCALATE, :AMEND, :SUBMIT,
                        :TRANSACTIONS, :DIGITAL_CARDS, :ADD, :REMOVE
 
       # @param [ApiClient] api_client
@@ -142,26 +143,6 @@ module CheckoutSdk
           build_path(ISSUING, CARDS, card_id, RENEW),
           sdk_authorization,
           renew_request
-        )
-      end
-
-      # Schedule a card revocation. POST /issuing/cards/{cardId}/schedule-revocation.
-      # @param [String] card_id
-      # @param [Hash, ScheduleRevocationRequest] schedule_revocation_request
-      def schedule_card_revocation(card_id, schedule_revocation_request)
-        api_client.invoke_post(
-          build_path(ISSUING, CARDS, card_id, SCHEDULE_REVOCATION),
-          sdk_authorization,
-          schedule_revocation_request
-        )
-      end
-
-      # Cancel a scheduled card revocation. DELETE /issuing/cards/{cardId}/schedule-revocation.
-      # @param [String] card_id
-      def cancel_scheduled_card_revocation(card_id)
-        api_client.invoke_delete(
-          build_path(ISSUING, CARDS, card_id, SCHEDULE_REVOCATION),
-          sdk_authorization
         )
       end
 
@@ -314,6 +295,32 @@ module CheckoutSdk
           build_path(ISSUING, DISPUTES, dispute_id, ESCALATE),
           sdk_authorization,
           escalate_dispute_request
+        )
+      end
+
+      # Submit an Issuing dispute. POST /issuing/disputes/{disputeId}/submit.
+      # @param [String] dispute_id
+      # @param [Hash, SubmitDisputeRequest] submit_dispute_request
+      # @deprecated Use {#create_issuing_dispute} to create and submit a dispute in one step, or
+      #   {#amend_issuing_dispute} when the dispute status is `action_required`.
+      def submit_issuing_dispute(dispute_id, submit_dispute_request = nil)
+        api_client.invoke_post(
+          build_path(ISSUING, DISPUTES, dispute_id, SUBMIT),
+          sdk_authorization,
+          submit_dispute_request
+        )
+      end
+
+      # Amend an Issuing dispute. POST /issuing/disputes/{disputeId}/amend.
+      # Submit an amendment to a dispute that is currently blocked from proceeding. Handles both
+      # chargeback-stage and escalation-stage amendments using the same payload.
+      # @param [String] dispute_id
+      # @param [Hash, AmendDisputeRequest] amend_dispute_request
+      def amend_issuing_dispute(dispute_id, amend_dispute_request = nil)
+        api_client.invoke_post(
+          build_path(ISSUING, DISPUTES, dispute_id, AMEND),
+          sdk_authorization,
+          amend_dispute_request
         )
       end
 

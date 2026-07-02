@@ -192,6 +192,10 @@ require 'checkout_sdk/payments/setups/account_funding_transaction_sender'
 require 'checkout_sdk/payments/setups/account_funding_transaction_recipient'
 require 'checkout_sdk/payments/setups/payment_setup_account_funding_transaction'
 require 'checkout_sdk/payments/setups/blik_payment_method'
+require 'checkout_sdk/payments/setups/bacs_payment_method'
+require 'checkout_sdk/payments/setups/card_present_payment_method'
+require 'checkout_sdk/payments/setups/pay_by_bank_payment_method'
+require 'checkout_sdk/payments/setups/stablecoin_payment_method'
 require 'checkout_sdk/payments/setups/payment_setups_client'
 
 # Payment Flow
