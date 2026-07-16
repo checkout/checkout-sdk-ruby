@@ -25,13 +25,13 @@ module CheckoutSdk
 
       # @param [Hash, CreateSecretRequest] create_secret_request
       def create_secret(create_secret_request)
-        api_client.invoke_post(build_path(FORWARD, SECRETS),
+        api_client.invoke_post(build_path(SECRETS),
                                sdk_authorization,
                                create_secret_request)
       end
 
       def get_secrets
-        api_client.invoke_get(build_path(FORWARD, SECRETS), sdk_authorization)
+        api_client.invoke_get(build_path(SECRETS), sdk_authorization)
       end
 
       # @param [String] name
