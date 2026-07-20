@@ -3,6 +3,7 @@
 module CheckoutSdk
   module OAuthScopes
     VAULT = 'vault'
+    VAULT_APME_ENROLLMENT = 'vault:apme-enrollment'
     VAULT_INSTRUMENTS = 'vault:instruments'
     VAULT_TOKENIZATION = 'vault:tokenization'
     GATEWAY = 'gateway'
