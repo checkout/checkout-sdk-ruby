@@ -37,14 +37,14 @@ module CheckoutSdk
       # @param [String] name
       # @param [Hash, UpdateSecretRequest] update_secret_request
       def update_secret(name, update_secret_request)
-        api_client.invoke_patch(build_path(FORWARD, SECRETS, name),
+        api_client.invoke_patch(build_path(SECRETS, name),
                                 sdk_authorization,
                                 update_secret_request)
       end
 
       # @param [String] name
       def delete_secret(name)
-        api_client.invoke_delete(build_path(FORWARD, SECRETS, name),
+        api_client.invoke_delete(build_path(SECRETS, name),
                                  sdk_authorization)
       end
     end

@@ -36,18 +36,18 @@ RSpec.describe CheckoutSdk::Forward do
   end
 
   describe '#update_secret' do
-    it 'PATCHes typed DTO to forward/secrets/{name}' do
+    it 'PATCHes typed DTO to secrets/{name}' do
       req = CheckoutSdk::Forward::UpdateSecretRequest.new
       expect(api_client_mock).to receive(:invoke_patch)
-        .with('forward/secrets/my_name', 'secret_key', req).and_return('r')
+        .with('secrets/my_name', 'secret_key', req).and_return('r')
       expect(client.update_secret('my_name', req)).to eq('r')
     end
   end
 
   describe '#delete_secret' do
-    it 'DELETEs forward/secrets/{name}' do
+    it 'DELETEs secrets/{name}' do
       expect(api_client_mock).to receive(:invoke_delete)
-        .with('forward/secrets/my_name', 'secret_key').and_return('r')
+        .with('secrets/my_name', 'secret_key').and_return('r')
       expect(client.delete_secret('my_name')).to eq('r')
     end
   end
