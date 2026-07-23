@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Forward
-    # Request body for PATCH /forward/secrets/{name}.
+    # Request body for PATCH /secrets/{name}.
     #
     # @!attribute value
     #   @return [String] New plaintext secret value (max 8KB).
