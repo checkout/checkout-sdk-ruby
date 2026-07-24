@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Forward
-    # Request body for POST /forward/secrets.
+    # Request body for POST /secrets.
     #
     # @!attribute name
     #   @return [String] Secret name (1-64 alphanumeric chars).

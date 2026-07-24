@@ -25,26 +25,26 @@ module CheckoutSdk
 
       # @param [Hash, CreateSecretRequest] create_secret_request
       def create_secret(create_secret_request)
-        api_client.invoke_post(build_path(FORWARD, SECRETS),
+        api_client.invoke_post(build_path(SECRETS),
                                sdk_authorization,
                                create_secret_request)
       end
 
       def get_secrets
-        api_client.invoke_get(build_path(FORWARD, SECRETS), sdk_authorization)
+        api_client.invoke_get(build_path(SECRETS), sdk_authorization)
       end
 
       # @param [String] name
       # @param [Hash, UpdateSecretRequest] update_secret_request
       def update_secret(name, update_secret_request)
-        api_client.invoke_patch(build_path(FORWARD, SECRETS, name),
+        api_client.invoke_patch(build_path(SECRETS, name),
                                 sdk_authorization,
                                 update_secret_request)
       end
 
       # @param [String] name
       def delete_secret(name)
-        api_client.invoke_delete(build_path(FORWARD, SECRETS, name),
+        api_client.invoke_delete(build_path(SECRETS, name),
                                  sdk_authorization)
       end
     end

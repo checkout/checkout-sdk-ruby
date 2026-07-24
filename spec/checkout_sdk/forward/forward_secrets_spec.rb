@@ -10,44 +10,44 @@ RSpec.describe CheckoutSdk::Forward do
   end
 
   describe '#create_secret' do
-    it 'POSTs typed DTO to forward/secrets' do
+    it 'POSTs typed DTO to secrets' do
       req = CheckoutSdk::Forward::CreateSecretRequest.new
       req.name = 'sk_test'
       req.value = 'secret'
       expect(api_client_mock).to receive(:invoke_post)
-        .with('forward/secrets', 'secret_key', req).and_return('r')
+        .with('secrets', 'secret_key', req).and_return('r')
       expect(client.create_secret(req)).to eq('r')
     end
 
     it 'also accepts a raw Hash' do
       h = { 'name' => 's', 'value' => 'v' }
       expect(api_client_mock).to receive(:invoke_post)
-        .with('forward/secrets', 'secret_key', h).and_return('r')
+        .with('secrets', 'secret_key', h).and_return('r')
       expect(client.create_secret(h)).to eq('r')
     end
   end
 
   describe '#get_secrets' do
-    it 'GETs forward/secrets' do
+    it 'GETs secrets' do
       expect(api_client_mock).to receive(:invoke_get)
-        .with('forward/secrets', 'secret_key').and_return('r')
+        .with('secrets', 'secret_key').and_return('r')
       expect(client.get_secrets).to eq('r')
     end
   end
 
   describe '#update_secret' do
-    it 'PATCHes typed DTO to forward/secrets/{name}' do
+    it 'PATCHes typed DTO to secrets/{name}' do
       req = CheckoutSdk::Forward::UpdateSecretRequest.new
       expect(api_client_mock).to receive(:invoke_patch)
-        .with('forward/secrets/my_name', 'secret_key', req).and_return('r')
+        .with('secrets/my_name', 'secret_key', req).and_return('r')
       expect(client.update_secret('my_name', req)).to eq('r')
     end
   end
 
   describe '#delete_secret' do
-    it 'DELETEs forward/secrets/{name}' do
+    it 'DELETEs secrets/{name}' do
       expect(api_client_mock).to receive(:invoke_delete)
-        .with('forward/secrets/my_name', 'secret_key').and_return('r')
+        .with('secrets/my_name', 'secret_key').and_return('r')
       expect(client.delete_secret('my_name')).to eq('r')
     end
   end
