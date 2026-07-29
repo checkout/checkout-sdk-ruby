@@ -67,6 +67,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Identities::AmlScreening::AmlScreeningClient]
   # @!attribute id_document_verification
   #   @return [CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient]
+  # @!attribute address_document_verification
+  #   @return [CheckoutSdk::Identities::AddressDocumentVerification::AddressDocumentVerificationClient]
   # @!attribute identity_verification
   #   @return [CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient]
   # @!attribute face_authentication
@@ -109,6 +111,7 @@ module CheckoutSdk
                 :applicants,
                 :aml_screening,
                 :id_document_verification,
+                :address_document_verification,
                 :identity_verification,
                 :face_authentication,
                 :apple_pay,
@@ -152,6 +155,9 @@ module CheckoutSdk
       @aml_screening = CheckoutSdk::Identities::AmlScreening::AmlScreeningClient.new(api_client, configuration)
       @id_document_verification =
         CheckoutSdk::Identities::IdDocumentVerification::IdDocumentVerificationClient.new(api_client, configuration)
+      @address_document_verification =
+        CheckoutSdk::Identities::AddressDocumentVerification::AddressDocumentVerificationClient.new(api_client,
+                                                                                                    configuration)
       @identity_verification =
         CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient.new(api_client, configuration)
       @face_authentication =

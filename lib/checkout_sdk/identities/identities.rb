@@ -14,6 +14,11 @@ require 'checkout_sdk/identities/aml_screening/aml_screening_client'
 require 'checkout_sdk/identities/id_document_verification/id_document_verification_request'
 require 'checkout_sdk/identities/id_document_verification/id_document_verification_client'
 
+# Address Document Verification
+require 'checkout_sdk/identities/address_document_verification/address_document_verification_request'
+require 'checkout_sdk/identities/address_document_verification/address_document_verification_attempt_request'
+require 'checkout_sdk/identities/address_document_verification/address_document_verification_client'
+
 # Identity Verification
 require 'checkout_sdk/identities/identity_verification/idv_declared_data'
 require 'checkout_sdk/identities/identity_verification/idv_client_information'
