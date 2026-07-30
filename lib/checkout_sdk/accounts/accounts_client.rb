@@ -14,6 +14,7 @@ module CheckoutSdk
       REQUIREMENTS = 'requirements'
       RESERVE_RULES = 'reserve-rules'
       MEMBERS = 'members'
+      DEFAULT_SCHEMA_VERSION = '3.0'
       private_constant :ACCOUNTS, :ENTITIES, :INSTRUMENT, :PAYOUT_SCHEDULE, :FILES, :PAYMENT_INSTRUMENTS,
                        :REQUIREMENTS, :RESERVE_RULES, :MEMBERS
 
@@ -26,19 +27,25 @@ module CheckoutSdk
       end
 
       # @param [Hash, OnboardEntity] entity_request
-      def create_entity(entity_request)
-        api_client.invoke_post(build_path(ACCOUNTS, ENTITIES), sdk_authorization, entity_request)
+      # @param [String] schema_version Accounts API schema version negotiated via the Accept header.
+      def create_entity(entity_request, schema_version = DEFAULT_SCHEMA_VERSION)
+        api_client.invoke_post(build_path(ACCOUNTS, ENTITIES), sdk_authorization, entity_request, nil,
+                               build_schema_version_headers(schema_version))
       end
 
       # @param [String] entity_id
-      def get_entity(entity_id)
-        api_client.invoke_get(build_path(ACCOUNTS, ENTITIES, entity_id), sdk_authorization)
+      # @param [String] schema_version Accounts API schema version negotiated via the Accept header.
+      def get_entity(entity_id, schema_version = DEFAULT_SCHEMA_VERSION)
+        api_client.invoke_get(build_path(ACCOUNTS, ENTITIES, entity_id), sdk_authorization, nil,
+                              build_schema_version_headers(schema_version))
       end
 
       # @param [String] entity_id
       # @param [Hash, OnboardEntity] entity_request
-      def update_entity(entity_id, entity_request)
-        api_client.invoke_put(build_path(ACCOUNTS, ENTITIES, entity_id), sdk_authorization, entity_request)
+      # @param [String] schema_version Accounts API schema version negotiated via the Accept header.
+      def update_entity(entity_id, entity_request, schema_version = DEFAULT_SCHEMA_VERSION)
+        api_client.invoke_put(build_path(ACCOUNTS, ENTITIES, entity_id), sdk_authorization, entity_request,
+                              build_schema_version_headers(schema_version))
       end
 
       # @deprecated Please use {#add_payment_instrument} instead
@@ -100,10 +107,13 @@ module CheckoutSdk
 
       # Retrieve the list of pending requirements that a sub-entity must resolve.
       # @param [String] entity_id
-      def get_entity_requirements(entity_id)
+      # @param [String] schema_version Accounts API schema version negotiated via the Accept header.
+      def get_entity_requirements(entity_id, schema_version = DEFAULT_SCHEMA_VERSION)
         api_client.invoke_get(
           build_path(ACCOUNTS, ENTITIES, entity_id, REQUIREMENTS),
-          sdk_authorization
+          sdk_authorization,
+          nil,
+          build_schema_version_headers(schema_version)
         )
       end
 
@@ -225,6 +235,17 @@ module CheckoutSdk
           build_path(ENTITIES, entity_id, FILES, file_id),
           sdk_authorization
         )
+      end
+
+      private
+
+      # Builds the versioned Accept header for Accounts onboarding operations.
+      # @param [String] schema_version
+      # @return [CheckoutSdk::Common::Headers]
+      def build_schema_version_headers(schema_version)
+        headers = CheckoutSdk::Common::Headers.new
+        headers.accept = "application/json;schema_version=#{schema_version}"
+        headers
       end
     end
   end

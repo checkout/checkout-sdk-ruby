@@ -7,7 +7,7 @@ module CheckoutSdk
     # @!attribute company_verification
     #   @return [CompanyVerification]
     # @!attribute articles_of_association
-    #   @return [ArticlesOfAssociationType]
+    #   @return [ArticlesOfAssociation]
     # @!attribute bank_verification
     #   @return [BankVerification]
     # @!attribute shareholder_structure
@@ -26,6 +26,8 @@ module CheckoutSdk
     #   @return [TaxVerification]
     # @!attribute financial_verification
     #   @return [FinancialVerification]
+    # @!attribute financial_statements
+    #   @return [FinancialStatements]
     class OnboardSubEntityDocuments
       attr_accessor :identity_verification,
                     :company_verification,
@@ -38,7 +40,8 @@ module CheckoutSdk
                     :additional_document2,
                     :additional_document3,
                     :tax_verification,
-                    :financial_verification
+                    :financial_verification,
+                    :financial_statements
     end
   end
 end

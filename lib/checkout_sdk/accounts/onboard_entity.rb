@@ -23,6 +23,9 @@ module CheckoutSdk
     # @!attribute seller_category
     #   @return [String] Identifier of a seller category configured on the platform
     #     during onboarding. Used for US ISV onboarding variants.
+    # @!attribute agreed_terms
+    #   @return [AgreedTerms] Details of the person who agreed to the terms and
+    #     conditions (Accounts API v3.0 SaaS onboarding).
     # @!attribute submitter
     #   @return [Submitter] Captures evidence of the end-user's consent to onboarding.
     #     Used for US ISV onboarding variants.
@@ -37,6 +40,7 @@ module CheckoutSdk
                     :documents,
                     :additional_info,
                     :seller_category,
+                    :agreed_terms,
                     :submitter
     end
   end

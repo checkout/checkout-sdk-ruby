@@ -4,6 +4,12 @@ module CheckoutSdk
   module Accounts
     # @!attribute id
     #   @return [String]
+    # @!attribute individual
+    #   @return [RepresentativeIndividual] Personal details (Accounts API v3.0).
+    # @!attribute company_position
+    #   @return [String] {CompanyPosition}
+    # @!attribute ownership_percentage
+    #   @return [Integer]
     # @!attribute first_name
     #   @return [String]
     # @!attribute last_name
@@ -24,15 +30,19 @@ module CheckoutSdk
     #   @return [OnboardSubEntityDocuments]
     class Representative
       attr_accessor :id,
+                    :individual,
+                    :company_position,
+                    :ownership_percentage,
+                    :roles,
+                    :documents,
+                    # v2.0 only — deprecated; use `individual` for v3.0
                     :first_name,
                     :last_name,
                     :address,
                     :identification,
                     :phone,
                     :date_of_birth,
-                    :place_of_birth,
-                    :roles,
-                    :documents
+                    :place_of_birth
     end
   end
 end

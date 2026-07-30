@@ -2,13 +2,16 @@
 
 module CheckoutSdk
   module Accounts
+    # @!attribute day
+    #   @return [Integer]
     # @!attribute month
     #   @return [Integer]
     # @!attribute year
     #   @return [Integer]
     class DateOfIncorporation
-      attr_reader :month,
-                  :year
+      attr_accessor :day,
+                    :month,
+                    :year
     end
   end
 end

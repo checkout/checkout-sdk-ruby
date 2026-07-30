@@ -9,8 +9,11 @@ module CheckoutSdk
     #
     # @!attribute if_match
     #   @return [String] ETag value to forward as the `If-Match` HTTP header.
+    # @!attribute accept
+    #   @return [String] value to forward as the `Accept` HTTP header, e.g.
+    #     `application/json;schema_version=3.0` for Accounts API schema negotiation.
     class Headers
-      attr_accessor :if_match
+      attr_accessor :if_match, :accept
     end
   end
 end
