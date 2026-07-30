@@ -14,12 +14,12 @@ module CheckoutSdk
       @log = configuration.logger
     end
 
-    def invoke_get(path, authorization, params = nil)
-      invoke(:get, path, authorization, params: params)
+    def invoke_get(path, authorization, params = nil, headers = nil)
+      invoke(:get, path, authorization, params: params, extra_headers: headers)
     end
 
-    def invoke_post(path, authorization, request = nil, idempotency_key = nil)
-      invoke(:post, path, authorization, request, idempotency_key, params: nil)
+    def invoke_post(path, authorization, request = nil, idempotency_key = nil, headers = nil)
+      invoke(:post, path, authorization, request, idempotency_key, params: nil, extra_headers: headers)
     end
 
     def invoke_put(path, authorization, request, headers = nil)
@@ -71,9 +71,13 @@ module CheckoutSdk
     # canonical HTTP header.
     def apply_extra_headers(http_headers, extra_headers)
       return if extra_headers.nil?
-      return unless extra_headers.respond_to?(:if_match) && extra_headers.if_match
 
-      http_headers[:'If-Match'] = extra_headers.if_match
+      if extra_headers.respond_to?(:if_match) && extra_headers.if_match
+        http_headers[:'If-Match'] = extra_headers.if_match
+      end
+      return unless extra_headers.respond_to?(:accept) && extra_headers.accept
+
+      http_headers[:Accept] = extra_headers.accept
     end
 
     def append_params(path, input_params)

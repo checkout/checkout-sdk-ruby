@@ -10,6 +10,10 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute trading_name
     #   @return [String]
+    # @!attribute additional_trading_names
+    #   @return [Array(String)]
+    # @!attribute is_registered_company
+    #   @return [Boolean]
     # @!attribute date_of_incorporation
     #   @return [DateOfIncorporation]
     # @!attribute regulatory_licence_number
@@ -29,6 +33,8 @@ module CheckoutSdk
                     :business_type,
                     :legal_name,
                     :trading_name,
+                    :additional_trading_names,
+                    :is_registered_company,
                     :date_of_incorporation,
                     :regulatory_licence_number,
                     :principal_address,
