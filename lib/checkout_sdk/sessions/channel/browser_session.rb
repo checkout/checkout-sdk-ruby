@@ -26,6 +26,11 @@ module CheckoutSdk
     #   @return [String]
     # @!attribute ip_address
     #   @return [String]
+    # @!attribute iframe_payment_allowed
+    #   @return [TrueClass, FalseClass] Whether the Payment API is enabled for all parent frames.
+    #     Required for Google SPA support in hosted sessions.
+    # @!attribute user_agent_client_hint
+    #   @return [String] The raw Sec-CH-UA header value. This can improve Google SPA support.
     class BrowserSession < ChannelData
       attr_accessor :three_ds_method_completion,
                     :accept_header,
@@ -37,7 +42,9 @@ module CheckoutSdk
                     :screen_width,
                     :timezone,
                     :user_agent,
-                    :ip_address
+                    :ip_address,
+                    :iframe_payment_allowed,
+                    :user_agent_client_hint
 
       def initialize(three_ds_method_completion: CheckoutSdk::Sessions::ThreeDsMethodCompletion::U)
         super(ChannelDataType::BROWSER)

@@ -132,6 +132,45 @@ RSpec.describe 'Sessions value modules' do
     end
   end
 
+  context 'session model field sets' do
+    def readers(klass)
+      klass.public_instance_methods(false).map(&:to_s).reject { |name| name.end_with?('=') }
+    end
+
+    # The spec Browser schema has 14 properties. iframe_payment_allowed and user_agent_client_hint
+    # were previously missing, so Google SPA support could not be signalled.
+    it 'BrowserSession covers every spec field' do
+      declared = readers(CheckoutSdk::Sessions::BrowserSession) +
+                 readers(CheckoutSdk::Sessions::ChannelData)
+
+      expect(declared).to include('iframe_payment_allowed', 'user_agent_client_hint')
+      expect(declared).to match_array(
+        %w[channel three_ds_method_completion accept_header java_enabled javascript_enabled language
+           color_depth screen_height screen_width timezone user_agent ip_address
+           iframe_payment_allowed user_agent_client_hint]
+      )
+    end
+
+    # The sessions CardSource schema has no store_for_future_use; that field belongs to the payments
+    # sources, which create an instrument.
+    it 'CardSource does not expose store_for_future_use' do
+      declared = readers(CheckoutSdk::Sessions::CardSource) +
+                 readers(CheckoutSdk::Sessions::SessionSource)
+
+      expect(declared).not_to include('store_for_future_use')
+      expect(declared).to match_array(
+        %w[type scheme billing_address home_phone mobile_phone work_phone email
+           number expiry_month expiry_year name stored]
+      )
+    end
+
+    # All 20 properties of the spec CardholderAccountInfo schema must be accessible, not merely
+    # documented.
+    it 'CardholderAccountInfo exposes all twenty spec properties' do
+      expect(readers(CheckoutSdk::Sessions::CardholderAccountInfo).size).to eq(20)
+    end
+  end
+
   context 'structural guard' do
     # Catches camelCase or wrong casing leaking into a wire value, which is how nonPayment survived.
     it 'every sessions value is snake_case or a single uppercase code' do
