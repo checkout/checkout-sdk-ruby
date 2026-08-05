@@ -3,7 +3,7 @@
 require 'checkout_sdk/sessions/authentication_type'
 require 'checkout_sdk/sessions/category'
 require 'checkout_sdk/sessions/transaction_type'
-require 'checkout_sdk/common/challenge_indicator'
+require 'checkout_sdk/sessions/session_challenge_indicator'
 
 module CheckoutSdk
   module Sessions
@@ -24,15 +24,13 @@ module CheckoutSdk
     # @!attribute account_info
     #   @return [CardHolderAccountInfo]
     # @!attribute challenge_indicator
-    #   @return [String] {CheckoutSdk::Common::ChallengeIndicator}
+    #   @return [String] {SessionChallengeIndicator}
     # @!attribute billing_descriptor
     #   @return [SessionsBillingDescriptor]
     # @!attribute reference
     #   @return [String]
     # @!attribute merchant_risk_info
     #   @return [MerchantRiskInfo]
-    # @!attribute prior_transaction_reference
-    #   @return [String]
     # @!attribute transaction_type
     #   @return [String] {TransactionType}
     # @!attribute shipping_address
@@ -51,6 +49,12 @@ module CheckoutSdk
     #   @return [Optimization]
     # @!attribute initial_transaction
     #   @return [InitialTransaction]
+    # @!attribute device_information
+    #   @return [DeviceInformation]
+    # @!attribute google_spa
+    #   @return [GoogleSpa] Google SPA properties (non-hosted only).
+    # @!attribute preferred_experiences
+    #   @return [Array<String>] The chosen experience(s) for this session. {Experience}
     class SessionRequest
       attr_accessor :source,
                     :amount,
@@ -64,7 +68,6 @@ module CheckoutSdk
                     :billing_descriptor,
                     :reference,
                     :merchant_risk_info,
-                    :prior_transaction_reference,
                     :transaction_type,
                     :shipping_address,
                     :shipping_address_matches_billing,
@@ -74,12 +77,14 @@ module CheckoutSdk
                     :installment,
                     :optimization,
                     :initial_transaction,
-                    :device_information
+                    :device_information,
+                    :google_spa,
+                    :preferred_experiences
 
       def initialize(source: CardSource.new,
                      authentication_type: CheckoutSdk::Sessions::AuthenticationType::REGULAR,
                      authentication_category: CheckoutSdk::Sessions::Category::PAYMENT,
-                     challenge_indicator: CheckoutSdk::Common::ChallengeIndicator::NO_PREFERENCE,
+                     challenge_indicator: CheckoutSdk::Sessions::SessionChallengeIndicator::NO_PREFERENCE,
                      transaction_type: CheckoutSdk::Sessions::TransactionType::GOODS_SERVICE)
         @source = source
         @authentication_type = authentication_type

@@ -7,7 +7,7 @@ module CheckoutSdk
       CHECK_ACCEPTANCE = 'check_acceptance'
       GOODS_SERVICE = 'goods_service'
       PREPAID_ACTIVATION_AND_LOAD = 'prepaid_activation_and_load'
-      QUASHI_CARD_TRANSACTION = 'quashi_card_transaction'
+      QUASI_CARD_TRANSACTION = 'quasi_card_transaction'
     end
   end
 end
