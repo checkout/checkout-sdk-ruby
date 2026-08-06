@@ -9,6 +9,8 @@ module CheckoutSdk
       AMEX = 'amex'
       DINERS = 'diners'
       CARTES_BANCAIRES = 'cartes_bancaires'
+      DISCOVER = 'discover'
+      UPI = 'upi'
     end
   end
 end

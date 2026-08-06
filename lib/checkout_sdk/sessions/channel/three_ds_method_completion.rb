@@ -3,9 +3,9 @@
 module CheckoutSdk
   module Sessions
     module ThreeDsMethodCompletion
-      Y = 'y'
-      N = 'n'
-      U = 'u'
+      Y = 'Y'
+      N = 'N'
+      U = 'U'
     end
   end
 end

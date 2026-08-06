@@ -4,7 +4,7 @@ module CheckoutSdk
   module Sessions
     module Category
       PAYMENT = 'payment'
-      NON_PAYMENT = 'nonPayment'
+      NON_PAYMENT = 'non_payment'
     end
   end
 end
