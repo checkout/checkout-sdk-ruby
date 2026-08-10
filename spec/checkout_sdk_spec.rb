@@ -15,6 +15,7 @@ RSpec.describe CheckoutSdk do
                                  .with_secret_key(ENV['CHECKOUT_DEFAULT_SECRET_KEY'])
                                  .with_public_key(ENV['CHECKOUT_DEFAULT_PUBLIC_KEY'])
                                  .with_environment(CheckoutSdk::Environment.production)
+                                 .with_environment_subdomain('12345domain')
                                  .build
         expect(default_sdk.class).to eq(CheckoutSdk::CheckoutApi)
       end
@@ -35,6 +36,7 @@ RSpec.describe CheckoutSdk do
                                  .static_keys
                                  .with_secret_key(ENV['CHECKOUT_DEFAULT_SECRET_KEY'])
                                  .with_environment(CheckoutSdk::Environment.production)
+                                 .with_environment_subdomain('12345domain')
                                  .build
         expect(default_sdk.class).to eq(CheckoutSdk::CheckoutApi)
       end
@@ -48,6 +50,63 @@ RSpec.describe CheckoutSdk do
                                  .build
         expect(default_sdk.class).to eq(CheckoutSdk::CheckoutApi)
       end
+
+      it 'builds default sdk with the legacy domain opt-out' do
+        default_sdk = CheckoutSdk.builder
+                                 .static_keys
+                                 .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
+                                 .with_environment(CheckoutSdk::Environment.production)
+                                 .with_legacy_domain
+                                 .build
+        expect(default_sdk.class).to eq(CheckoutSdk::CheckoutApi)
+      end
+    end
+
+    context 'when the domain configuration is missing or contradictory' do
+      it 'raises without a subdomain and without the legacy domain opt-out' do
+        expect do
+          CheckoutSdk.builder
+                     .static_keys
+                     .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
+                     .with_environment(CheckoutSdk::Environment.production)
+                     .build
+        end.to raise_error(CheckoutSdk::CheckoutArgumentException,
+                           /environment subdomain is required/)
+      end
+
+      it 'raises when both the subdomain and the legacy domain are set' do
+        expect do
+          CheckoutSdk.builder
+                     .static_keys
+                     .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
+                     .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain('12345domain')
+                     .with_legacy_domain
+                     .build
+        end.to raise_error(CheckoutSdk::CheckoutArgumentException, /cannot both be set/)
+      end
+
+      it 'raises with an invalid subdomain' do
+        expect do
+          CheckoutSdk.builder
+                     .static_keys
+                     .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
+                     .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain('not a subdomain')
+                     .build
+        end.to raise_error(CheckoutSdk::CheckoutArgumentException,
+                           /invalid environment subdomain/)
+      end
+
+      it 'does not require a subdomain on the Previous platform' do
+        previous_sdk = CheckoutSdk.builder
+                                  .previous
+                                  .static_keys
+                                  .with_secret_key(ENV.fetch('CHECKOUT_PREVIOUS_SECRET_KEY', nil))
+                                  .with_environment(CheckoutSdk::Environment.sandbox)
+                                  .build
+        expect(previous_sdk.class).to eq(CheckoutSdk::Previous::CheckoutApi)
+      end
     end
 
     context 'when building default sdk with incorrect parameters' do
@@ -57,6 +116,7 @@ RSpec.describe CheckoutSdk do
                      .static_keys
                      .with_secret_key('my wrong key')
                      .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end
@@ -68,6 +128,7 @@ RSpec.describe CheckoutSdk do
                      .with_secret_key(ENV['CHECKOUT_DEFAULT_SECRET_KEY'])
                      .with_public_key('my wrong key')
                      .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end
@@ -85,6 +146,7 @@ RSpec.describe CheckoutSdk do
                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                              CheckoutSdk::OAuthScopes::GATEWAY])
                                .with_environment(CheckoutSdk::Environment.sandbox)
+                               .with_environment_subdomain('12345domain')
                                .build
 
         expect(oauth_sdk.class).to eq(CheckoutSdk::CheckoutApi)
@@ -118,6 +180,7 @@ RSpec.describe CheckoutSdk do
                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                              CheckoutSdk::OAuthScopes::GATEWAY])
                                .with_environment(CheckoutSdk::Environment.sandbox)
+                               .with_environment_subdomain('12345domain')
                                .with_http_client(http_client)
                                .build
 
@@ -136,6 +199,7 @@ RSpec.describe CheckoutSdk do
                      .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                    CheckoutSdk::OAuthScopes::GATEWAY])
                      .with_environment(CheckoutSdk::Environment.sandbox)
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException,
                            'Invalid OAuth "client_id" or "client_secret"')
@@ -151,6 +215,7 @@ RSpec.describe CheckoutSdk do
                      .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                    CheckoutSdk::OAuthScopes::GATEWAY])
                      .with_environment(CheckoutSdk::Environment.sandbox)
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException,
                            'Invalid OAuth "client_id" or "client_secret"')
@@ -165,6 +230,7 @@ RSpec.describe CheckoutSdk do
                      .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                    CheckoutSdk::OAuthScopes::GATEWAY])
                      .with_authorization_uri('https://invalid.checkout.com/')
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end
@@ -215,6 +281,7 @@ RSpec.describe CheckoutSdk do
                      .static_keys
                      .with_secret_key('my wrong key')
                      .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end
@@ -227,6 +294,7 @@ RSpec.describe CheckoutSdk do
                      .with_secret_key(ENV['CHECKOUT_PREVIOUS_SECRET_KEY'])
                      .with_public_key('my wrong key')
                      .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain('12345domain')
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end

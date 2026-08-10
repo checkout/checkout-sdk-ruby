@@ -363,34 +363,40 @@ def upload_file_accounts(sdk)
 end
 
 def payout_schedules_checkout_api
-  CheckoutSdk.builder
-             .oauth
-             .with_client_credentials(
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil))
-             .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
-             .with_environment(CheckoutSdk::Environment.sandbox)
-             .build
+  Helpers::DomainConfiguration.configure(
+    CheckoutSdk.builder
+               .oauth
+               .with_client_credentials(
+                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
+                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil)
+               )
+               .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
+               .with_environment(CheckoutSdk::Environment.sandbox)
+  ).build
 end
 
 def accounts_checkout_api
-  CheckoutSdk.builder
-             .oauth
-             .with_client_credentials(
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil))
-             .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::FILES])
-             .with_environment(CheckoutSdk::Environment.sandbox)
-             .build
+  Helpers::DomainConfiguration.configure(
+    CheckoutSdk.builder
+               .oauth
+               .with_client_credentials(
+                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
+                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil)
+               )
+               .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::FILES])
+               .with_environment(CheckoutSdk::Environment.sandbox)
+  ).build
 end
 
 def files_checkout_api
-  CheckoutSdk.builder
-             .oauth
-             .with_client_credentials(
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil))
-             .with_scopes([CheckoutSdk::OAuthScopes::FILES])
-             .with_environment(CheckoutSdk::Environment.sandbox)
-             .build
+  Helpers::DomainConfiguration.configure(
+    CheckoutSdk.builder
+               .oauth
+               .with_client_credentials(
+                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
+                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil)
+               )
+               .with_scopes([CheckoutSdk::OAuthScopes::FILES])
+               .with_environment(CheckoutSdk::Environment.sandbox)
+  ).build
 end

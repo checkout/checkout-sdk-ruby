@@ -6,12 +6,13 @@ module Helpers
 
     # @return [CheckoutSdk::CheckoutApi]
     def default_sdk
-      CheckoutSdk.builder
-                 .static_keys
-                 .with_secret_key(ENV['CHECKOUT_DEFAULT_SECRET_KEY'])
-                 .with_public_key(ENV['CHECKOUT_DEFAULT_PUBLIC_KEY'])
-                 .with_environment(CheckoutSdk::Environment.sandbox)
-                 .build
+      Helpers::DomainConfiguration.configure(
+        CheckoutSdk.builder
+                   .static_keys
+                   .with_secret_key(ENV['CHECKOUT_DEFAULT_SECRET_KEY'])
+                   .with_public_key(ENV['CHECKOUT_DEFAULT_PUBLIC_KEY'])
+                   .with_environment(CheckoutSdk::Environment.sandbox)
+      ).build
     end
 
     def previous_sdk
@@ -26,14 +27,15 @@ module Helpers
 
     def oauth_sdk
       if @oauth_sdk.nil?
-        @oauth_sdk = CheckoutSdk.builder
-                                .oauth
-                                .with_client_credentials(
-                                  ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_ID'],
-                                  ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET'])
-                                .with_scopes(get_oauth_scopes)
-                                .with_environment(CheckoutSdk::Environment.sandbox)
-                                .build
+        @oauth_sdk = Helpers::DomainConfiguration.configure(
+          CheckoutSdk.builder
+                     .oauth
+                     .with_client_credentials(
+                       ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_ID'],
+                       ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET'])
+                     .with_scopes(get_oauth_scopes)
+                     .with_environment(CheckoutSdk::Environment.sandbox)
+        ).build
       end
       @oauth_sdk
     end

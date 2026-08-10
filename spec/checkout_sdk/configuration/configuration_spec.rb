@@ -72,38 +72,12 @@ RSpec.describe CheckoutSdk::StaticKeysSdkCredentials do
     end
   end
 
-  [
-    ['', 'https://api.sandbox.checkout.com/'],
-    [' ', 'https://api.sandbox.checkout.com/'],
-    ['  ', 'https://api.sandbox.checkout.com/'],
-    [' - ', 'https://api.sandbox.checkout.com/'],
-    ['a b', 'https://api.sandbox.checkout.com/'],
-    ['ab bc1', 'https://api.sandbox.checkout.com/'],
-    ['foo-', 'https://api.sandbox.checkout.com/'],
-    ['-foo', 'https://api.sandbox.checkout.com/'],
-    ['FOO', 'https://api.sandbox.checkout.com/'],
-    ['Foo-Bar', 'https://api.sandbox.checkout.com/'],
-    ['test-123', 'https://api.sandbox.checkout.com/'],
-    ['foo-bar', 'https://api.sandbox.checkout.com/'],
-    ['pl-', 'https://api.sandbox.checkout.com/']
-  ].each do |subdomain, expected_url|
-    it "should create configuration with bad subdomain #{subdomain}" do
-      environment_subdomain = CheckoutSdk::EnvironmentSubdomain.new(CheckoutSdk::Environment.sandbox, subdomain)
-
-      configuration = CheckoutSdk::CheckoutConfiguration.new(
-        @credentials,
-        CheckoutSdk::Environment.sandbox,
-        @http_client,
-        @multipart_http_client,
-        @logger,
-        environment_subdomain
-      )
-
-      expect(configuration.credentials).to eq(@credentials)
-      expect(configuration.environment.base_uri).to eq(CheckoutSdk::Environment.sandbox.base_uri)
-      expect(configuration.http_client).to eq(@http_client)
-      expect(configuration.environment_subdomain.base_uri).to eq(expected_url)
-      expect(configuration.environment_subdomain.authorization_uri).to eq('https://access.sandbox.checkout.com/connect/token')
+  ['', ' ', '  ', ' - ', 'a b', 'ab bc1', 'foo-', '-foo', 'FOO', 'Foo-Bar', 'test-123', 'foo-bar',
+   'pl-'].each do |subdomain|
+    it "should fail with bad subdomain #{subdomain}" do
+      expect do
+        CheckoutSdk::EnvironmentSubdomain.new(CheckoutSdk::Environment.sandbox, subdomain)
+      end.to raise_error(CheckoutSdk::CheckoutArgumentException, /invalid environment subdomain/)
     end
   end
 

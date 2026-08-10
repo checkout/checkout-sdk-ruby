@@ -23,36 +23,35 @@ module CheckoutSdk
 
     private
 
-    # Applies subdomain transformation to any given URI.
-    # If the subdomain is valid (alphanumeric pattern), prepends it to the host.
-    # Otherwise, returns the original URI unchanged.
+    # Applies subdomain transformation to any given URI, prepending the subdomain to the host.
     #
     # @param original_url [String] The original URL to transform.
     # @param subdomain [String] The subdomain to prepend to the host.
-    # @return [String] The transformed URL with subdomain, or original URL if subdomain is invalid.
+    # @return [String] The transformed URL with subdomain.
+    # @raise [CheckoutArgumentException] If the subdomain is not a valid merchant-specific
+    #   subdomain.
     def create_url_with_subdomain(original_url, subdomain)
-      new_environment = original_url
-
-      if subdomain =~ /^(?:pl-)?[a-z0-9]+$/
-        url_parts = URI.parse(original_url)
-        new_host = "#{subdomain}.#{url_parts.host}"
-
-        port = url_parts.scheme == 'https' && url_parts.port == 443 ? nil : url_parts.port
-
-        new_url_parts = URI::Generic.build(
-          scheme: url_parts.scheme,
-          userinfo: url_parts.userinfo,
-          host: new_host,
-          port: port,
-          path: url_parts.path,
-          query: url_parts.query,
-          fragment: url_parts.fragment
-        )
-
-        new_environment = new_url_parts.to_s
+      unless subdomain =~ /^(?:pl-)?[a-z0-9]+$/
+        raise CheckoutArgumentException,
+              'invalid environment subdomain - provide your merchant-specific subdomain, the ' \
+              'first 8 characters of your client ID (see ' \
+              'https://api-reference.checkout.com/#section/Base-URLs)'
       end
 
-      new_environment
+      url_parts = URI.parse(original_url)
+      new_host = "#{subdomain}.#{url_parts.host}"
+
+      port = url_parts.scheme == 'https' && url_parts.port == 443 ? nil : url_parts.port
+
+      URI::Generic.build(
+        scheme: url_parts.scheme,
+        userinfo: url_parts.userinfo,
+        host: new_host,
+        port: port,
+        path: url_parts.path,
+        query: url_parts.query,
+        fragment: url_parts.fragment
+      ).to_s
     end
   end
 end

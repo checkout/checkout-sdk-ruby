@@ -3,17 +3,19 @@
 module IssuingHelper
   def get_issuing_api
     if @issuing_api.nil?
-      @issuing_api = CheckoutSdk.builder
-                                .oauth
-                                .with_client_credentials(ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID', nil),
-                                                         ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET', nil))
-                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CLIENT,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CARD_MGMT,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
-                                .with_environment(CheckoutSdk::Environment.sandbox)
-                                .build
+      builder = CheckoutSdk.builder
+                           .oauth
+                           .with_client_credentials(
+                             ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID', nil),
+                             ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET', nil)
+                           )
+                           .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CLIENT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CARD_MGMT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
+                           .with_environment(CheckoutSdk::Environment.sandbox)
+      @issuing_api = Helpers::DomainConfiguration.configure(builder).build
     end
     @issuing_api
   end
