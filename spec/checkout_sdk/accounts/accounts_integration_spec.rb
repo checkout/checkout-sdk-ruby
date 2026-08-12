@@ -363,40 +363,45 @@ def upload_file_accounts(sdk)
 end
 
 def payout_schedules_checkout_api
-  Helpers::DomainConfiguration.configure(
-    CheckoutSdk.builder
-               .oauth
-               .with_client_credentials(
-                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
-                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil)
-               )
-               .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
-               .with_environment(CheckoutSdk::Environment.sandbox)
-  ).build
+  CheckoutSdk.builder
+             .oauth
+             .with_client_credentials(
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil)
+             )
+             .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
+             .with_environment(CheckoutSdk::Environment.sandbox)
+             # The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
+             # so the token request would come back invalid_client. Opting out explicitly until
+             # they are.
+             .with_legacy_domain
+             .build
 end
 
 def accounts_checkout_api
-  Helpers::DomainConfiguration.configure(
-    CheckoutSdk.builder
-               .oauth
-               .with_client_credentials(
-                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
-                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil)
-               )
-               .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::FILES])
-               .with_environment(CheckoutSdk::Environment.sandbox)
-  ).build
+  CheckoutSdk.builder
+             .oauth
+             .with_client_credentials(
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil)
+             )
+             .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::FILES])
+             .with_environment(CheckoutSdk::Environment.sandbox)
+             # See payout_schedules_checkout_api above for why the legacy domain is used here.
+             .with_legacy_domain
+             .build
 end
 
 def files_checkout_api
-  Helpers::DomainConfiguration.configure(
-    CheckoutSdk.builder
-               .oauth
-               .with_client_credentials(
-                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
-                 ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil)
-               )
-               .with_scopes([CheckoutSdk::OAuthScopes::FILES])
-               .with_environment(CheckoutSdk::Environment.sandbox)
-  ).build
+  CheckoutSdk.builder
+             .oauth
+             .with_client_credentials(
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ACCOUNTS_CLIENT_SECRET', nil)
+             )
+             .with_scopes([CheckoutSdk::OAuthScopes::FILES])
+             .with_environment(CheckoutSdk::Environment.sandbox)
+             # See payout_schedules_checkout_api above for why the legacy domain is used here.
+             .with_legacy_domain
+             .build
 end

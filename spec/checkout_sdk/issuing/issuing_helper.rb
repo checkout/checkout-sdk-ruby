@@ -15,7 +15,11 @@ module IssuingHelper
                                          CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
                                          CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
                            .with_environment(CheckoutSdk::Environment.sandbox)
-      @issuing_api = Helpers::DomainConfiguration.configure(builder).build
+                           # The sandbox OAuth clients are not provisioned for the
+                           # merchant-specific subdomain, so the token request would come back
+                           # invalid_client. Opting out explicitly until they are.
+                           .with_legacy_domain
+      @issuing_api = builder.build
     end
     @issuing_api
   end

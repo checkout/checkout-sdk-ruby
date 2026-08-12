@@ -3,7 +3,6 @@
 require 'rspec'
 require 'securerandom'
 require 'checkout_sdk'
-require './spec/support/domain_configuration'
 require './spec/support/data_factory'
 require './spec/support/sandbox_test_fixture'
 require './spec/checkout_sdk/issuing/issuing_helper'
