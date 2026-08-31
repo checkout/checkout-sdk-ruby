@@ -98,6 +98,30 @@ RSpec.describe CheckoutSdk do
                            /invalid environment subdomain/)
       end
 
+      it 'raises with a subdomain containing a trailing newline' do
+        expect do
+          CheckoutSdk.builder
+                     .static_keys
+                     .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
+                     .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain("vkuhvk4v\n")
+                     .build
+        end.to raise_error(CheckoutSdk::CheckoutArgumentException,
+                           /invalid environment subdomain/)
+      end
+
+      it 'raises with a subdomain containing an embedded newline' do
+        expect do
+          CheckoutSdk.builder
+                     .static_keys
+                     .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
+                     .with_environment(CheckoutSdk::Environment.production)
+                     .with_environment_subdomain("evil junk\nvkuhvk4v")
+                     .build
+        end.to raise_error(CheckoutSdk::CheckoutArgumentException,
+                           /invalid environment subdomain/)
+      end
+
       it 'does not require a subdomain on the Previous platform' do
         previous_sdk = CheckoutSdk.builder
                                   .previous

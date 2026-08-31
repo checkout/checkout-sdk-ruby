@@ -11,10 +11,9 @@ module Helpers
                  .with_secret_key(ENV.fetch('CHECKOUT_DEFAULT_SECRET_KEY', nil))
                  .with_public_key(ENV.fetch('CHECKOUT_DEFAULT_PUBLIC_KEY', nil))
                  .with_environment(CheckoutSdk::Environment.sandbox)
-                 # The sandbox OAuth clients are not provisioned for the merchant-specific
-                 # subdomain, so the token request would come back invalid_client. Opting out
-                 # explicitly until they are.
-                 .with_legacy_domain
+                 # Static keys never call the token endpoint, so they can use the
+                 # merchant-specific subdomain directly.
+                 .with_environment_subdomain(ENV.fetch('CHECKOUT_MERCHANT_SUBDOMAIN', nil))
                  .build
     end
 
@@ -37,9 +36,10 @@ module Helpers
                                   ENV.fetch('CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET', nil))
                                 .with_scopes(get_oauth_scopes)
                                 .with_environment(CheckoutSdk::Environment.sandbox)
-                                # The sandbox OAuth clients are not provisioned for the
+                                # The sandbox OAuth clients are not yet provisioned for the
                                 # merchant-specific subdomain, so the token request would come
-                                # back invalid_client. Opting out explicitly until they are.
+                                # back invalid_client. Opting out until sandbox OAuth
+                                # provisioning supports subdomains.
                                 .with_legacy_domain
                                 .build
       end

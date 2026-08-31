@@ -42,14 +42,12 @@ module CheckoutSdk
     def build
       super
 
+      env_subdomain = environment_subdomain
+
       # Determine authorization URI following Go logic
       auth_uri = authorization_uri
       if auth_uri.nil? || auth_uri.empty?
-        auth_uri = if environment_subdomain
-                     environment_subdomain.authorization_uri
-                   else
-                     environment.authorization_uri
-                   end
+        auth_uri = env_subdomain ? env_subdomain.authorization_uri : environment.authorization_uri
       end
 
       configuration = CheckoutConfiguration.new(
@@ -66,7 +64,7 @@ module CheckoutSdk
         logger
       )
 
-      configuration.environment_subdomain = environment_subdomain if environment_subdomain
+      configuration.environment_subdomain = env_subdomain if env_subdomain
 
       CheckoutApi.new(configuration)
     end

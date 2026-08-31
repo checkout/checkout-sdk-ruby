@@ -12,6 +12,10 @@ module CheckoutSdk
     #   @return [String, nil]
     attr_accessor :environment, :http_client, :multipart_http_client, :logger, :subdomain
 
+    def initialize
+      @use_legacy_domain = false
+    end
+
     # @param [Environment] environment
     def with_environment(environment)
       @environment = environment
@@ -71,6 +75,7 @@ module CheckoutSdk
     end
 
     def build
+      validate_environment_settings
       with_environment(Environment.sandbox) if environment.nil?
       if http_client.nil?
         @http_client = CheckoutUtils.build_default_client
@@ -87,7 +92,6 @@ module CheckoutSdk
         end
       end
       @logger = SimpleLogger.new.logger if @logger.nil?
-      validate_environment_settings
     end
 
     private
@@ -101,8 +105,8 @@ module CheckoutSdk
       return unless subdomain.nil? && !@use_legacy_domain && requires_environment_subdomain?
 
       raise CheckoutArgumentException,
-            'environment subdomain is required - provide your merchant-specific subdomain (the ' \
-            'first 8 characters of your client ID, see ' \
+            'environment subdomain is required - provide your merchant-specific subdomain ' \
+            '(typically your client ID excluding the cli_ prefix, see ' \
             'https://api-reference.checkout.com/#section/Base-URLs), or call with_legacy_domain ' \
             'to opt out only if merchant specific sub domains are causing issues'
     end

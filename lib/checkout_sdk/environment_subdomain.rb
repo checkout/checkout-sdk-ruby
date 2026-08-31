@@ -31,10 +31,10 @@ module CheckoutSdk
     # @raise [CheckoutArgumentException] If the subdomain is not a valid merchant-specific
     #   subdomain.
     def create_url_with_subdomain(original_url, subdomain)
-      unless subdomain =~ /^(?:pl-)?[a-z0-9]+$/
+      unless subdomain =~ /\A(?:pl-)?[a-z0-9]+\z/
         raise CheckoutArgumentException,
-              'invalid environment subdomain - provide your merchant-specific subdomain, the ' \
-              'first 8 characters of your client ID (see ' \
+              'invalid environment subdomain - provide your merchant-specific subdomain, ' \
+              'typically your client ID excluding the cli_ prefix (see ' \
               'https://api-reference.checkout.com/#section/Base-URLs)'
       end
 

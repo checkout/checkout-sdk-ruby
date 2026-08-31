@@ -25,7 +25,8 @@ module CheckoutSdk
           logger
         )
 
-        configuration.environment_subdomain = environment_subdomain if environment_subdomain
+        env_subdomain = environment_subdomain
+        configuration.environment_subdomain = env_subdomain if env_subdomain
 
         CheckoutApi.new(configuration)
       end
