@@ -366,8 +366,8 @@ def payout_schedules_checkout_api
   CheckoutSdk.builder
              .oauth
              .with_client_credentials(
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_CLIENT_ID', nil),
-               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET', nil)
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
+               ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil)
              )
              .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
              .with_environment(CheckoutSdk::Environment.sandbox)
