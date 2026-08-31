@@ -94,7 +94,6 @@ The SDK supports client credentials OAuth, when initialized as follows:
 ```ruby
 api = CheckoutSdk.builder
                  .oauth
-                 .with_authorization_uri('https://access.sandbox.checkout.com/connect/token') # custom authorization URI, optional
                  .with_client_credentials("client_id", "client_secret")
                  .with_scopes([CheckoutSdk::OAuthScopes::VAULT, CheckoutSdk::OAuthScopes::GATEWAY]) # array of scopes
                  .with_environment(CheckoutSdk::Environment.sandbox)

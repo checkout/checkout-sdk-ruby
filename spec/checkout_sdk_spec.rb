@@ -170,22 +170,23 @@ RSpec.describe CheckoutSdk do
                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                              CheckoutSdk::OAuthScopes::GATEWAY])
                                .with_environment(CheckoutSdk::Environment.sandbox)
-                               .with_environment_subdomain('12345domain')
+                               .with_legacy_domain
                                .build
 
         expect(oauth_sdk.class).to eq(CheckoutSdk::CheckoutApi)
       end
 
-      it 'should build oauth sdk with default http client correctly with subdomain' do
+      it 'builds with the explicit authorization uri when combined with the legacy domain opt-out' do
+        explicit_uri = CheckoutSdk::Environment.sandbox.authorization_uri
         oauth_sdk = CheckoutSdk.builder
                                .oauth
                                .with_client_credentials(ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_ID'],
                                                         ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET'])
-                               .with_authorization_uri(CheckoutSdk::Environment.sandbox.authorization_uri)
+                               .with_authorization_uri(explicit_uri)
                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                              CheckoutSdk::OAuthScopes::GATEWAY])
                                .with_environment(CheckoutSdk::Environment.sandbox)
-                               .with_environment_subdomain('12345domain')
+                               .with_legacy_domain
                                .build
 
         expect(oauth_sdk.class).to eq(CheckoutSdk::CheckoutApi)
@@ -204,7 +205,7 @@ RSpec.describe CheckoutSdk do
                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                              CheckoutSdk::OAuthScopes::GATEWAY])
                                .with_environment(CheckoutSdk::Environment.sandbox)
-                               .with_environment_subdomain('12345domain')
+                               .with_legacy_domain
                                .with_http_client(http_client)
                                .build
 
@@ -219,7 +220,6 @@ RSpec.describe CheckoutSdk do
                      .oauth
                      .with_client_credentials(nil,
                                               ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET'])
-                     .with_authorization_uri(CheckoutSdk::Environment.sandbox.authorization_uri)
                      .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                    CheckoutSdk::OAuthScopes::GATEWAY])
                      .with_environment(CheckoutSdk::Environment.sandbox)
@@ -235,7 +235,6 @@ RSpec.describe CheckoutSdk do
                      .oauth
                      .with_client_credentials(ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_ID'],
                                               nil)
-                     .with_authorization_uri(CheckoutSdk::Environment.sandbox.authorization_uri)
                      .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                    CheckoutSdk::OAuthScopes::GATEWAY])
                      .with_environment(CheckoutSdk::Environment.sandbox)
@@ -254,9 +253,27 @@ RSpec.describe CheckoutSdk do
                      .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
                                    CheckoutSdk::OAuthScopes::GATEWAY])
                      .with_authorization_uri('https://invalid.checkout.com/')
-                     .with_environment_subdomain('12345domain')
+                     .with_legacy_domain
                      .build
         end.to raise_error(CheckoutSdk::CheckoutArgumentException)
+      end
+
+      it 'raises an error when both authorization_uri and environment_subdomain are set' do
+        expect do
+          CheckoutSdk.builder
+                     .oauth
+                     .with_client_credentials(ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_ID'],
+                                              ENV['CHECKOUT_DEFAULT_OAUTH_CLIENT_SECRET'])
+                     .with_authorization_uri(CheckoutSdk::Environment.sandbox.authorization_uri)
+                     .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
+                                   CheckoutSdk::OAuthScopes::GATEWAY])
+                     .with_environment(CheckoutSdk::Environment.sandbox)
+                     .with_environment_subdomain('12345domain')
+                     .build
+        end.to raise_error(CheckoutSdk::CheckoutArgumentException,
+                           'authorization_uri and environment_subdomain cannot both be set - the ' \
+                           'token endpoint is derived from your subdomain; combine authorization_uri ' \
+                           'with with_legacy_domain if you need a custom token host')
       end
     end
   end
