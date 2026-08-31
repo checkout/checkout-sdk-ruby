@@ -3,17 +3,23 @@
 module IssuingHelper
   def get_issuing_api
     if @issuing_api.nil?
-      @issuing_api = CheckoutSdk.builder
-                                .oauth
-                                .with_client_credentials(ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID', nil),
-                                                         ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET', nil))
-                                .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CLIENT,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CARD_MGMT,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
-                                              CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
-                                .with_environment(CheckoutSdk::Environment.sandbox)
-                                .build
+      builder = CheckoutSdk.builder
+                           .oauth
+                           .with_client_credentials(
+                             ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID', nil),
+                             ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET', nil)
+                           )
+                           .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CLIENT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CARD_MGMT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
+                           .with_environment(CheckoutSdk::Environment.sandbox)
+                           # The sandbox OAuth clients are not provisioned for the
+                           # merchant-specific subdomain, so the token request would come back
+                           # invalid_client. Opting out explicitly until they are.
+                           .with_legacy_domain
+      @issuing_api = builder.build
     end
     @issuing_api
   end

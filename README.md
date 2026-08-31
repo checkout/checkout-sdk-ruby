@@ -69,6 +69,10 @@ account [here](https://www.checkout.com/get-test-account).
 
 **PLEASE NEVER SHARE OR PUBLISH YOUR CHECKOUT CREDENTIALS.**
 
+### Subdomain value
+
+Requests must be made through your merchant-specific subdomain (MSSD): the first 8 characters of your client ID (excluding `cli_`). For example, if your client ID is `cli_vkuhvk4vjn2edkps7dfsq6emqm`, your subdomain is `vkuhvk4v`. When `with_environment_subdomain` is set the SDK sends requests to `https://vkuhvk4v.api.checkout.com`. See [Base URLs](https://api-reference.checkout.com/#section/Base-URLs) and [API endpoints](https://www.checkout.com/docs/developer-resources/api/api-endpoints) for further details, and for where to find your unique client ID. Private Link merchants use their `pl-` prefixed subdomain (for example `pl-vkuhvk4v`), which the SDK also accepts.
+
 ### Default
 
 Default keys client instantiation can be done as follows:
@@ -79,6 +83,7 @@ api = CheckoutSdk.builder
                  .with_secret_key('secret_key')
                  .with_public_key('public_key') # optional, only required for operations related with tokens
                  .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_environment_subdomain('subdomain') # required, the first 8 characters of your client ID
                  .build
 ```
 
@@ -89,10 +94,10 @@ The SDK supports client credentials OAuth, when initialized as follows:
 ```ruby
 api = CheckoutSdk.builder
                  .oauth
-                 .with_authorization_uri('https://access.sandbox.checkout.com/connect/token') # custom authorization URI, optional
                  .with_client_credentials("client_id", "client_secret")
                  .with_scopes([CheckoutSdk::OAuthScopes::VAULT, CheckoutSdk::OAuthScopes::GATEWAY]) # array of scopes
                  .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_environment_subdomain('subdomain') # required, the first 8 characters of your client ID
                  .build
 ```
 
@@ -107,6 +112,7 @@ api = CheckoutSdk.builder
                  .with_secret_key('secret_key')
                  .with_public_key('public_key') # optional, only required for operations related with tokens
                  .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_environment_subdomain('subdomain') # optional for the Previous platform
                  .build
 ```
 
@@ -266,6 +272,23 @@ If you absolutely need to skip the pre-commit hooks:
 ```bash
 OVERCOMMIT_DISABLE=1 git commit -m "your message"
 ```
+
+## Legacy domain (emergency use only)
+
+> :warning: **Only use if merchant specific sub domains are causing issues.** Connecting through your merchant-specific subdomain (see [Subdomain value](#subdomain-value)) is the supported way of using the Checkout.com API, and non-subdomain usage will be deprecated.
+
+If, in exceptional circumstances, you cannot use your merchant-specific subdomain, you can explicitly opt out by calling `with_legacy_domain` instead of `with_environment_subdomain`:
+
+```ruby
+api = CheckoutSdk.builder
+                 .static_keys
+                 .with_secret_key('secret_key')
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_legacy_domain # deprecated, emergency fallback only
+                 .build
+```
+
+This routes requests to `api.checkout.com` (or `api.sandbox.checkout.com`) and `access.checkout.com` (or `access.sandbox.checkout.com`). The method prints a deprecation warning. Exactly one of `with_environment_subdomain` or `with_legacy_domain` must be set: the SDK raises a `CheckoutSdk::CheckoutArgumentException` if both, or neither, are. The Previous (ABC) platform predates merchant-specific subdomains and is exempt from this requirement.
 
 ## Code of Conduct
 

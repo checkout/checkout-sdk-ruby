@@ -42,15 +42,8 @@ module CheckoutSdk
     def build
       super
 
-      # Determine authorization URI following Go logic
-      auth_uri = authorization_uri
-      if auth_uri.nil? || auth_uri.empty?
-        auth_uri = if environment_subdomain
-                     environment_subdomain.authorization_uri
-                   else
-                     environment.authorization_uri
-                   end
-      end
+      env_subdomain = environment_subdomain
+      auth_uri = resolve_authorization_uri(env_subdomain)
 
       configuration = CheckoutConfiguration.new(
         OAuthSdkCredentials.new(client_id,
@@ -66,9 +59,29 @@ module CheckoutSdk
         logger
       )
 
-      configuration.environment_subdomain = environment_subdomain if environment_subdomain
+      configuration.environment_subdomain = env_subdomain if env_subdomain
 
       CheckoutApi.new(configuration)
+    end
+
+    private
+
+    # @param [EnvironmentSubdomain, nil] env_subdomain
+    # @return [String]
+    def resolve_authorization_uri(env_subdomain)
+      auth_uri = authorization_uri
+      explicit_uri_set = !(auth_uri.nil? || auth_uri.empty?)
+
+      if explicit_uri_set && env_subdomain
+        raise CheckoutArgumentException,
+              'authorization_uri and environment_subdomain cannot both be set - the token ' \
+              'endpoint is derived from your subdomain; combine authorization_uri with ' \
+              'with_legacy_domain if you need a custom token host'
+      end
+
+      return auth_uri if explicit_uri_set
+
+      env_subdomain ? env_subdomain.authorization_uri : environment.authorization_uri
     end
   end
 end
