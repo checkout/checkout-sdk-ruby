@@ -9,3 +9,8 @@ require 'checkout_sdk/apm/previous/klarna/order_capture_request'
 require 'checkout_sdk/apm/previous/klarna/klarna_client'
 require 'checkout_sdk/apm/previous/sepa/sepa_client'
 require 'checkout_sdk/apm/ideal/ideal_client'
+
+# Bacs
+require 'checkout_sdk/apm/bacs/bacs_notification_type'
+require 'checkout_sdk/apm/bacs/bacs_notification_request'
+require 'checkout_sdk/apm/bacs/bacs_client'

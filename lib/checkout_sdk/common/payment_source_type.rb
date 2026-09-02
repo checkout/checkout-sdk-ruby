@@ -54,6 +54,7 @@ module CheckoutSdk
       ILLICADO = 'illicado'
       SEPA = 'sepa'
       ACH = 'ach'
+      BACS = 'bacs'
       BIZUM = 'bizum'
       OCTOPUS = 'octopus'
       PLAID = 'plaid'
