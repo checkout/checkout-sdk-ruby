@@ -2,6 +2,15 @@
 
 module CheckoutSdk
   module Payments
+    # Alipay Plus source.
+    #
+    # The specification gives each of these wire types its own schema and its own
+    # entry on the `PaymentRequestSource` discriminator, so each also has a dedicated
+    # class: {AlipayPlusSource} for `alipay_plus` itself, plus {AlipayCnSource},
+    # {AlipayHkSource}, {DanaSource}, {GcashSource}, {KakaopaySource},
+    # {TruemoneySource} and {TngSource}. Prefer the dedicated class. The factory
+    # methods below are retained for backward compatibility and produce identical
+    # JSON.
     class AlipayPlusSource < PaymentSource
       # @return [AlipayPlusSource] of type {CheckoutSdk::Common::PaymentSourceType::ALIPAY_PLUS}
       def self.alipay_plus_source

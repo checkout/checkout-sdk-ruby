@@ -32,17 +32,27 @@ RSpec.describe CheckoutSdk::Instruments do
 
     context 'when requesting a sepa instrument' do
       it 'returns a sepa instrument response' do
-        instruments_data = CheckoutSdk::Instruments::InstrumentData.new
-        instruments_data.account_number = "FR7630006000011234567890189"
+        instruments_data = CheckoutSdk::Instruments::CreateSepaInstrumentData.new
+        instruments_data.account_number = 'FR7630006000011234567890189'
         instruments_data.country = CheckoutSdk::Common::Country::FR
         instruments_data.currency = CheckoutSdk::Common::Currency::EUR
-        instruments_data.payment_type = CheckoutSdk::Payments::PaymentType::RECURRING
+        # SEPA declares payment_type lowercase. This previously used
+        # Payments::PaymentType::RECURRING, which is 'Recurring' - the Bacs and
+        # payment-level casing, not the SEPA one.
+        instruments_data.payment_type = CheckoutSdk::Instruments::SepaPaymentType::RECURRING
 
-        account_holder = CheckoutSdk::Common::AccountHolder.new
+        billing_address = CheckoutSdk::Instruments::CreateSepaBillingAddress.new
+        billing_address.address_line1 = 'Cloverfield St.'
+        billing_address.address_line2 = '23A'
+        billing_address.city = 'London'
+        billing_address.zip = 'SW1A 1AA'
+        billing_address.country = CheckoutSdk::Common::Country::GB
+
+        # The SEPA store account holder declares no phone, unlike Common::AccountHolder.
+        account_holder = CheckoutSdk::Instruments::CreateSepaAccountHolder.new
         account_holder.first_name = 'John'
         account_holder.last_name = 'Smith'
-        account_holder.billing_address = address
-        account_holder.phone = phone
+        account_holder.billing_address = billing_address
 
         request = CheckoutSdk::Instruments::InstrumentSepa.new
         request.instrument_data = instruments_data

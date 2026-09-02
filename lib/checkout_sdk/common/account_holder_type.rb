@@ -9,6 +9,12 @@ module CheckoutSdk
     module AccountHolderType
       INDIVIDUAL = 'individual'
       CORPORATE = 'corporate'
+
+      # Declared by the account-holder positions (AccountHolder, AccountHolderAch,
+      # PaymentSetupAccountHolder, RefundDestinationAccountHolder and the card-payout
+      # destination and sender) but **not** by any sender schema -
+      # PaymentRequestSender, PayoutSender, PaymentDetailsResponseSender and
+      # PaymentInterfacesSender all omit it. Do not send it as a sender type.
       GOVERNMENT = 'government'
 
       # Declared only by the payment and payout *sender* schemas

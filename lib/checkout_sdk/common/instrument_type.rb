@@ -8,6 +8,9 @@ module CheckoutSdk
       TOKEN = 'token'
       CARD = 'card'
       SEPA = 'sepa'
+
+      # Current API (NAS) only. The previous API (ABC) instrument schemas declare
+      # neither of these, so do not use them with a previous-platform client.
       ACH = 'ach'
       BACS = 'bacs'
 

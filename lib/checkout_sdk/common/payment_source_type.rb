@@ -2,6 +2,19 @@
 
 module CheckoutSdk
   module Common
+    # The type of a payment source or destination.
+    #
+    # This module is shared by the current API (NAS) and the previous API (ABC),
+    # which is still actively maintained. These 22 values are declared by neither
+    # `PaymentRequestSourceType` nor `PaymentDetailsResponseSourceType` in the
+    # current specification and are **previous API (ABC) only**:
+    #
+    #   afterpay, alipay, applepay, baloto, bank_account, benefit, benefitpay,
+    #   boleto, cvconnect, dlocal, giropay, googlepay, illicado, oxxo, pagofacil,
+    #   poli, postfinance, provider_token, rapipago, sofort, tabby, trustly
+    #
+    # Use them only with a previous-platform client. Every other value below is
+    # current-API.
     module PaymentSourceType
       CARD = 'card'
       ID = 'id'
@@ -59,6 +72,11 @@ module CheckoutSdk
       OCTOPUS = 'octopus'
       PLAID = 'plaid'
       SEQURA = 'sequra'
+      MOBILEPAY = 'mobilepay'
+      PAYNOW = 'paynow'
+      SWISH = 'swish'
+      TWINT = 'twint'
+      VIPPS = 'vipps'
       TABBY = 'tabby'
       APPLEPAY = 'applepay'
       GOOGLEPAY = 'googlepay'
