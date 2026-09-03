@@ -19,11 +19,10 @@ module CheckoutSdk
     #   @return [String] The bank code of the Direct Debit account.
     #     [Required] min 8 characters, max 9 characters.
     # @!attribute account_holder
-    #   @return [CheckoutSdk::Common::AccountHolder] The account holder's details.
-    #     [Required] Maps swagger `AccountHolderAch`, which declares only
-    #     first_name, last_name, company_name, type, date_of_birth, billing_address
-    #     and identification - a subset of this shared type. `type` there is
-    #     individual, corporate or government.
+    #   @return [AchSourceAccountHolder] The account holder's details. [Required]
+    #     Maps swagger `AccountHolderAch`. A {CheckoutSdk::Common::AccountHolder} or a
+    #     Hash is still accepted, but only the seven properties that schema declares
+    #     are valid at this position.
     class AchSource < PaymentSource
       attr_accessor :account_type,
                     :country,

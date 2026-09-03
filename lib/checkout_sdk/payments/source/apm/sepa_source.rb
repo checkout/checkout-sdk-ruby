@@ -13,13 +13,12 @@ module CheckoutSdk
     #   @return [String] {CheckoutSdk::Common::Currency} The account holder's account
     #     currency. [Required]
     # @!attribute account_holder
-    #   @return [CheckoutSdk::Common::AccountHolder] The account holder's personal
-    #     information. [Required] Its billing_address is required, and that address
-    #     requires all five of address_line1, address_line2, city, zip and country.
-    #     Send account_holder.type lowercase (individual / corporate): the
-    #     specification declares it capitalized at this one position, but every other
-    #     account-holder-type position declares it lowercase and every other
-    #     Checkout.com SDK sends lowercase. Pending confirmation from the API owners.
+    #   @return [SepaSourceAccountHolder] The account holder's personal information.
+    #     [Required] Its billing_address is required, and that address requires all
+    #     five of its properties. A {CheckoutSdk::Common::AccountHolder} or a Hash is
+    #     still accepted, but only the five properties
+    #     `PaymentRequestSEPAV4Source.account_holder` declares are valid here. See
+    #     {SepaSourceAccountHolder#type} for the casing to send.
     # @!attribute mandate_id
     #   @return [String] The ID of the mandate. [Optional]
     # @!attribute mandate_type
