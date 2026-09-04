@@ -73,6 +73,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Identities::IdentityVerification::IdentityVerificationClient]
   # @!attribute face_authentication
   #   @return [CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient]
+  # @!attribute bacs
+  #   @return [CheckoutSdk::Apm::BacsClient]
   # @!attribute apple_pay
   #   @return [CheckoutSdk::Payments::ApplePayClient]
   # @!attribute google_pay
@@ -91,6 +93,7 @@ module CheckoutSdk
                 :sessions,
                 :tokens,
                 :ideal,
+                :bacs,
                 :accounts,
                 :workflows,
                 :risk,
@@ -131,6 +134,7 @@ module CheckoutSdk
       @sessions = CheckoutSdk::Sessions::SessionsClient.new api_client, configuration
       @tokens = CheckoutSdk::Tokens::TokensClient.new api_client, configuration
       @ideal = CheckoutSdk::Apm::IdealClient.new api_client, configuration
+      @bacs = CheckoutSdk::Apm::BacsClient.new api_client, configuration
       @workflows = CheckoutSdk::Workflows::WorkflowsClient.new api_client, configuration
       @accounts = CheckoutSdk::Accounts::AccountsClient.new(api_client, files_client(configuration), configuration)
       @risk = CheckoutSdk::Risk::RiskClient.new api_client, configuration
