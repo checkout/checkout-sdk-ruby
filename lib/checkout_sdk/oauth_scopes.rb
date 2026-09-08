@@ -36,6 +36,7 @@ module CheckoutSdk
     TRANSFERS_VIEW = 'transfers:view'
     BALANCES = 'balances'
     BALANCES_VIEW = 'balances:view'
+    BALANCES_TOP_UP_INSTRUCTIONS = 'balances:top-up-instructions'
     MIDDLEWARE = 'middleware'
     MIDDLEWARE_MERCHANTS_SECRET = 'middleware:merchants-secret'
     MIDDLEWARE_MERCHANTS_PUBLIC = 'middleware:merchants-public'
