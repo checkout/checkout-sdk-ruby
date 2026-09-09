@@ -42,6 +42,15 @@ module PaymentSetupsHelper
         device: {
           locale: 'en_GB'
         }
+      },
+      billing_descriptor: {
+        name: 'Checkout.com',
+        city: 'London',
+        reference: 'Payment for order 123456'
+      },
+      presentment_details: {
+        amount: 110,
+        currency: 'EUR'
       }
     }
   end
