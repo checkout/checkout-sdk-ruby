@@ -42,6 +42,26 @@ RSpec.describe CheckoutSdk::Balances do
       end
       client.retrieve_top_up_instructions(entity_id, currency_account_id)
     end
+
+    # Both values are interpolated straight into the path, so a blank one would build a malformed
+    # URL. The guard must reject it before any request is made.
+    [
+      ['nil entity_id', nil, 'ca_g5y7d6jo4e2urgforcbf2ey5jm', 'entity_id cannot be blank'],
+      ['empty entity_id', '', 'ca_g5y7d6jo4e2urgforcbf2ey5jm', 'entity_id cannot be blank'],
+      ['blank entity_id', '   ', 'ca_g5y7d6jo4e2urgforcbf2ey5jm', 'entity_id cannot be blank'],
+      ['nil currency_account_id', 'ent_w4jelhppmfiufdnatam37wrfc4', nil,
+       'currency_account_id cannot be blank'],
+      ['empty currency_account_id', 'ent_w4jelhppmfiufdnatam37wrfc4', '',
+       'currency_account_id cannot be blank'],
+      ['blank currency_account_id', 'ent_w4jelhppmfiufdnatam37wrfc4', '   ',
+       'currency_account_id cannot be blank']
+    ].each do |label, given_entity_id, given_currency_account_id, message|
+      it "rejects #{label} without calling the API" do
+        expect(api_client_mock).not_to receive(:invoke_get)
+        expect { client.retrieve_top_up_instructions(given_entity_id, given_currency_account_id) }
+          .to raise_error(CheckoutSdk::CheckoutArgumentException, message)
+      end
+    end
   end
 
   describe 'BalancesQuery serialization' do

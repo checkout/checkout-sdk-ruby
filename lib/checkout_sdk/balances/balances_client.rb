@@ -39,7 +39,13 @@ module CheckoutSdk
       # @param [String] currency_account_id the ID of the sub-account to retrieve top-up
       #   instructions for
       # @return [Hash] the top-up instructions response
+      # @raise [CheckoutArgumentException] if either path parameter is nil, empty or blank. Both
+      #   segments are interpolated straight into the request path, so a blank value would build a
+      #   malformed URL and be rejected by the API rather than by the SDK.
       def retrieve_top_up_instructions(entity_id, currency_account_id)
+        raise CheckoutArgumentException, 'entity_id cannot be blank' if entity_id.to_s.strip.empty?
+        raise CheckoutArgumentException, 'currency_account_id cannot be blank' if currency_account_id.to_s.strip.empty?
+
         api_client.invoke_get(
           build_path(ENTITIES, entity_id, CURRENCY_ACCOUNTS, currency_account_id, TOP_UP_INSTRUCTIONS),
           sdk_authorization
