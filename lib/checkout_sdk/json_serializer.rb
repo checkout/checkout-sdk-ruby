@@ -6,7 +6,9 @@ module CheckoutSdk
                              account_holder_type: 'account-holder-type',
                              payment_network: 'payment-network',
                              from_: 'from',
-                             if_match: 'if-match' }.freeze
+                             if_match: 'if-match',
+                             with_currency_account_id: 'withCurrencyAccountId',
+                             balances_at: 'balancesAt' }.freeze
 
     def self.to_custom_hash(object)
       hash = {}

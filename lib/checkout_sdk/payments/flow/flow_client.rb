@@ -32,8 +32,14 @@ module CheckoutSdk
       # Use this endpoint to submit payment details and process the payment for an existing session.
       # [Beta]
       #
+      # The request accepts `amount_allocations`: the sub-entities the payment is being
+      # processed on behalf of, min 1 max 50 items. Each entry maps to
+      # {CheckoutSdk::Common::AmountAllocations} (id, amount, reference, commission), where `id`
+      # and `amount` are required.
+      #
       # @param [String] id - The unique identifier of the Payment Session
       # @param [Hash] submit_payment_session_request
+      # @return [Hash] the payment submission response
       def submit_payment_session(id, submit_payment_session_request)
         api_client.invoke_post(
           build_path(PAYMENT_SESSIONS_PATH, id, SUBMIT_PATH),
