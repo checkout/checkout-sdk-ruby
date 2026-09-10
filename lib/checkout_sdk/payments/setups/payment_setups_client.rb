@@ -22,6 +22,9 @@ module CheckoutSdk
       # [Beta]
       #
       # @param [Hash] payment_setups_request
+      #   May include :billing_descriptor {PaymentSetupBillingDescriptor},
+      #   :presentment_details {PaymentSetupPresentmentDetails} and
+      #   :terminal {PaymentSetupTerminal}.
       def create_payment_setup(payment_setups_request)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH),
@@ -38,6 +41,9 @@ module CheckoutSdk
       #
       # @param [String] id - The unique identifier of the Payment Setup to update
       # @param [Hash] payment_setups_request
+      #   May include :billing_descriptor {PaymentSetupBillingDescriptor},
+      #   :presentment_details {PaymentSetupPresentmentDetails} and
+      #   :terminal {PaymentSetupTerminal}.
       def update_payment_setup(id, payment_setups_request)
         api_client.invoke_put(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -58,15 +64,15 @@ module CheckoutSdk
       end
 
       # Confirms a Payment Setup to begin processing the payment request with your chosen
-      # payment method option.
+      # payment method.
       # [Beta]
       #
       # @param [String] id - The unique identifier of the Payment Setup
-      # @param [String] payment_method_option_id - The unique identifier of the payment option
-      # to process the payment with
-      def confirm_payment_setup(id, payment_method_option_id)
+      # @param [String] payment_method_name - The name of the payment method to process the
+      # payment with (for example, "tabby", "klarna", "card")
+      def confirm_payment_setup(id, payment_method_name)
         api_client.invoke_post(
-          build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_option_id),
+          build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_name),
           sdk_authorization
         )
       end

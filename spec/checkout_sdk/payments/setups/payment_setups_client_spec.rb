@@ -50,10 +50,41 @@ RSpec.describe CheckoutSdk::Payments do
   end
 
   describe '#confirm_payment_setup' do
-    it 'POSTs payments/setups/{id}/confirm/{payment_method_option_id}' do
+    it 'POSTs payments/setups/{id}/confirm/{payment_method_name}' do
       expect(api_client_mock).to receive(:invoke_post)
-        .with('payments/setups/ps_1/confirm/pmo_1', 'secret_key').and_return('response')
-      expect(client.confirm_payment_setup('ps_1', 'pmo_1')).to eq('response')
+        .with('payments/setups/ps_1/confirm/klarna', 'secret_key').and_return('response')
+      expect(client.confirm_payment_setup('ps_1', 'klarna')).to eq('response')
+    end
+
+    it 'builds the correct path for a card payment method name' do
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('payments/setups/ps_1/confirm/card', 'secret_key').and_return('response')
+      expect(client.confirm_payment_setup('ps_1', 'card')).to eq('response')
+    end
+  end
+
+  describe '#create_payment_setup with billing_descriptor, presentment_details and terminal' do
+    it 'passes billing_descriptor, presentment_details and terminal through untouched' do
+      request = {
+        amount: 1000,
+        currency: 'GBP',
+        billing_descriptor: {
+          name: 'Checkout.com',
+          city: 'London',
+          reference: 'Payment for order 123456'
+        },
+        presentment_details: {
+          amount: 110,
+          currency: 'EUR'
+        },
+        terminal: {
+          id: '12345678',
+          local_date_time: '2026-05-26T13:05:14+01:00'
+        }
+      }
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('payments/setups', 'secret_key', request).and_return('response')
+      expect(client.create_payment_setup(request)).to eq('response')
     end
   end
 end
