@@ -84,6 +84,19 @@ RSpec.describe CheckoutSdk::OAuthScopes do
       expect(duplicates).to be_empty
     end
 
+    # marketplace is deliberately absent: it appears nowhere in the specification, neither in the
+    # clientCredentials scope map nor in any operation's security requirement, so the SDK does not
+    # offer it.
+    #
+    # It is worth asserting because the sandbox authorization server does still grant it, while
+    # answering a request for accounts from the payouts client with {"error":"invalid_scope"}. The
+    # two integration fixtures that need it request the literal string, and the temptation on the
+    # next red build will be to "fix" that by adding a constant back here. Reprovision the sandbox
+    # clients for accounts instead.
+    it 'does not expose the retired marketplace scope' do
+      expect(scopes.values).not_to include 'marketplace'
+    end
+
     # Constants are kept alphabetical so the next spec sync produces a readable diff instead of
     # scattering additions through the file, and so the ordering matches the other Checkout SDKs.
     # Underscores are ignored when comparing, which is what puts PAYMENT_CONTEXT, PAYMENT_SESSIONS
