@@ -371,7 +371,9 @@ def payout_schedules_checkout_api
                ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
                ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil)
              )
-             .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
+             # The marketplace scope was retired; both payout-schedules operations document
+             # accounts as their OAuth requirement.
+             .with_scopes([CheckoutSdk::OAuthScopes::ACCOUNTS])
              .with_environment(CheckoutSdk::Environment.sandbox)
              # The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,
              # so the token request would come back invalid_client. Opting out explicitly until

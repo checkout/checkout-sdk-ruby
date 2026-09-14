@@ -97,8 +97,11 @@ module Helpers
        CheckoutSdk::OAuthScopes::SESSIONS_APP, CheckoutSdk::OAuthScopes::SESSIONS_BROWSER,
        CheckoutSdk::OAuthScopes::FLOW, CheckoutSdk::OAuthScopes::FILES,
        CheckoutSdk::OAuthScopes::FX, CheckoutSdk::OAuthScopes::BALANCES_VIEW,
-       CheckoutSdk::OAuthScopes::MARKETPLACE, CheckoutSdk::OAuthScopes::TRANSFERS,
-       CheckoutSdk::OAuthScopes::CARD_METADATA, CheckoutSdk::OAuthScopes::FINANCIAL_ACTIONS]
+       # The marketplace scope was retired; accounts is the documented requirement for the
+       # sub-entity operations these suites exercise. CARD_METADATA was renamed to
+       # VAULT_CARD_METADATA to match the other SDKs; the wire value is unchanged.
+       CheckoutSdk::OAuthScopes::ACCOUNTS, CheckoutSdk::OAuthScopes::TRANSFERS,
+       CheckoutSdk::OAuthScopes::VAULT_CARD_METADATA, CheckoutSdk::OAuthScopes::FINANCIAL_ACTIONS]
     end
   end
 end
