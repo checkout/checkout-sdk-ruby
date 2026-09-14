@@ -84,17 +84,20 @@ RSpec.describe CheckoutSdk::OAuthScopes do
       expect(duplicates).to be_empty
     end
 
-    # marketplace is deliberately absent: it appears nowhere in the specification, neither in the
-    # clientCredentials scope map nor in any operation's security requirement, so the SDK does not
-    # offer it.
+    # These five scopes appear nowhere in the specification -- neither in the clientCredentials
+    # scope map nor in any operation's security requirement -- so a sweep driven by the spec alone
+    # would delete them. They are kept deliberately: the authorization server still grants them and
+    # callers still request them. marketplace is the proof: the sandbox payouts client is
+    # provisioned for it and answers a request for accounts with {"error":"invalid_scope"}, which is
+    # what broke every example in accounts_integration_spec.rb when it was dropped.
     #
-    # It is worth asserting because the sandbox authorization server does still grant it, while
-    # answering a request for accounts from the payouts client with {"error":"invalid_scope"}. The
-    # two integration fixtures that need it request the literal string, and the temptation on the
-    # next red build will be to "fix" that by adding a constant back here. Reprovision the sandbox
-    # clients for accounts instead.
-    it 'does not expose the retired marketplace scope' do
-      expect(scopes.values).not_to include 'marketplace'
+    # This example exists to stop the next specification-driven tidy-up from removing them again.
+    it 'retains the legacy scopes the specification omits' do
+      expect(described_class::ISSUING_CARD_MGMT).to eq 'issuing:card-mgmt'
+      expect(described_class::ISSUING_CLIENT).to eq 'issuing:client'
+      expect(described_class::MARKETPLACE).to eq 'marketplace'
+      expect(described_class::MIDDLEWARE_GATEWAY).to eq 'middleware:gateway'
+      expect(described_class::MIDDLEWARE_PAYMENT_CONTEXT).to eq 'middleware:payment-context'
     end
 
     # Constants are kept alphabetical so the next spec sync produces a readable diff instead of
