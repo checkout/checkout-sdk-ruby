@@ -18,6 +18,7 @@ RSpec.describe CheckoutSdk::OAuthScopes do
   # constant at all, including whole families the SDK itself implements endpoints for.
   describe 'scopes added in the spec sync' do
     it 'exposes the documented wire values' do
+      expect(described_class::AGENTIC_INVENTORY).to eq 'agentic:inventory'
       expect(described_class::CARD_MANAGEMENT).to eq 'card-management'
       expect(described_class::FLOW_REFLOW).to eq 'flow:reflow'
       expect(described_class::GATEWAY_PAYMENT_CANCELLATIONS).to eq 'gateway:payment-cancellations'

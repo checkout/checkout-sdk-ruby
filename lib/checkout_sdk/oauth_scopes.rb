@@ -22,6 +22,7 @@ module CheckoutSdk
   # verbatim regardless, because that is the value the authorization server is documented to accept.
   module OAuthScopes
     ACCOUNTS = 'accounts'
+    AGENTIC_INVENTORY = 'agentic:inventory'
     BALANCES = 'balances'
     BALANCES_TOP_UP_INSTRUCTIONS = 'balances:top-up-instructions'
     BALANCES_VIEW = 'balances:view'
