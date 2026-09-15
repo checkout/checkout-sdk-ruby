@@ -371,6 +371,11 @@ def payout_schedules_checkout_api
                ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_ID', nil),
                ENV.fetch('CHECKOUT_DEFAULT_OAUTH_PAYOUT_SCHEDULE_CLIENT_SECRET', nil)
              )
+             # This client is provisioned for marketplace and not for accounts -- see the skip at
+             # the top of .update_payout_schedule, and note that the token endpoint answers a
+             # request for accounts here with {"error":"invalid_scope"}. Because this runs in a
+             # before(:all) hook, that failure takes down every example in this file, not just the
+             # payout ones. Switch to ACCOUNTS once the client is reprovisioned.
              .with_scopes([CheckoutSdk::OAuthScopes::MARKETPLACE])
              .with_environment(CheckoutSdk::Environment.sandbox)
              # The sandbox OAuth clients are not provisioned for the merchant-specific subdomain,

@@ -9,9 +9,13 @@ module IssuingHelper
                              ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_ID', nil),
                              ENV.fetch('CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET', nil)
                            )
+                           # issuing:card-mgmt and issuing:client were retired: neither is
+                           # declared in the spec's scope map nor requested by any operation.
+                           # The card-management pair replaces the former; the latter has no
+                           # documented equivalent.
                            .with_scopes([CheckoutSdk::OAuthScopes::VAULT,
-                                         CheckoutSdk::OAuthScopes::ISSUING_CLIENT,
-                                         CheckoutSdk::OAuthScopes::ISSUING_CARD_MGMT,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CARD_MANAGEMENT_READ,
+                                         CheckoutSdk::OAuthScopes::ISSUING_CARD_MANAGEMENT_WRITE,
                                          CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_READ,
                                          CheckoutSdk::OAuthScopes::ISSUING_CONTROLS_WRITE])
                            .with_environment(CheckoutSdk::Environment.sandbox)
