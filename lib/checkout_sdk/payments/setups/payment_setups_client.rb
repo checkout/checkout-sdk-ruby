@@ -23,8 +23,10 @@ module CheckoutSdk
       #
       # @param [Hash] payment_setups_request
       #   May include :billing_descriptor {PaymentSetupBillingDescriptor},
-      #   :presentment_details {PaymentSetupPresentmentDetails} and
-      #   :terminal {PaymentSetupTerminal}.
+      #   :presentment_details {PaymentSetupPresentmentDetails},
+      #   :terminal {PaymentSetupTerminal} and
+      #   :industry {PaymentSetupIndustry} (containing :accommodation
+      #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
       def create_payment_setup(payment_setups_request)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH),
@@ -42,8 +44,10 @@ module CheckoutSdk
       # @param [String] id - The unique identifier of the Payment Setup to update
       # @param [Hash] payment_setups_request
       #   May include :billing_descriptor {PaymentSetupBillingDescriptor},
-      #   :presentment_details {PaymentSetupPresentmentDetails} and
-      #   :terminal {PaymentSetupTerminal}.
+      #   :presentment_details {PaymentSetupPresentmentDetails},
+      #   :terminal {PaymentSetupTerminal} and
+      #   :industry {PaymentSetupIndustry} (containing :accommodation
+      #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
       def update_payment_setup(id, payment_setups_request)
         api_client.invoke_put(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
