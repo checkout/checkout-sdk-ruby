@@ -33,7 +33,7 @@ RSpec.describe CheckoutSdk::Payments do
   end
 
   describe '.get_payment_details' do
-    context 'make 3ds card payment n3d' do
+    context 'make 3ds card payment n3d', skip: 'sandbox unstable, one property intermittently nil' do
       it 'returns payment details' do
         payment_response = make_3ds_card_payment(attempt_n3d: true)
 
