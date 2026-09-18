@@ -75,6 +75,7 @@ require 'checkout_sdk/standalone_account_updater/standalone_account_updater'
 require 'checkout_sdk/network_tokens/network_tokens'
 require 'checkout_sdk/payment_methods/payment_methods'
 require 'checkout_sdk/identities/identities'
+require 'checkout_sdk/inventory/inventory'
 
 # Checkout modules (previous)
 require 'checkout_sdk/sources/sources'
