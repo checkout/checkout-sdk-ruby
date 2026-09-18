@@ -79,6 +79,8 @@ module CheckoutSdk
   #   @return [CheckoutSdk::Payments::ApplePayClient]
   # @!attribute google_pay
   #   @return [CheckoutSdk::Payments::GooglePayClient]
+  # @!attribute inventory
+  #   @return [CheckoutSdk::Inventory::InventoryClient]
   class CheckoutApi
     attr_reader :customers,
                 :disputes,
@@ -118,7 +120,8 @@ module CheckoutSdk
                 :identity_verification,
                 :face_authentication,
                 :apple_pay,
-                :google_pay
+                :google_pay,
+                :inventory
 
     # @param [CheckoutConfiguration] configuration
     def initialize(configuration)
@@ -168,6 +171,7 @@ module CheckoutSdk
         CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationClient.new(api_client, configuration)
       @apple_pay = CheckoutSdk::Payments::ApplePayClient.new(api_client, configuration)
       @google_pay = CheckoutSdk::Payments::GooglePayClient.new(api_client, configuration)
+      @inventory = CheckoutSdk::Inventory::InventoryClient.new(api_client, configuration)
     end
 
     private
