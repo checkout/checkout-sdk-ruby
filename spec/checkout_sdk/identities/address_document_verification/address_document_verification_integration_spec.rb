@@ -58,5 +58,32 @@ RSpec.describe CheckoutSdk::Identities::AddressDocumentVerification do
         expect(response).not_to be_nil
       end
     end
+
+    describe '#get_address_document_verification_attempts with pagination' do
+      it 'honours skip and limit' do
+        query = CheckoutSdk::Identities::IdvAttemptsQueryFilter.new
+        query.limit = 1
+        response = client.get_address_document_verification_attempts(ENV.fetch('CHECKOUT_ADV_ID', nil), query)
+        expect(response).not_to be_nil
+        expect(response.limit).to eq(1)
+      end
+    end
+
+    describe '#get_address_document_verification_attempt_assets' do
+      it 'retrieves the uploaded document image' do
+        query = CheckoutSdk::Identities::IdvAttemptAssetsQueryFilter.new
+        query.limit = 10
+        response = client.get_address_document_verification_attempt_assets(
+          ENV.fetch('CHECKOUT_ADV_ID', nil),
+          ENV.fetch('CHECKOUT_ADV_ATTEMPT_ID', nil),
+          query
+        )
+        expect(response).not_to be_nil
+        response.data.each do |asset|
+          expect(asset.type).to eq('document')
+          expect(asset._links.asset_url.href).not_to be_nil
+        end
+      end
+    end
   end
 end

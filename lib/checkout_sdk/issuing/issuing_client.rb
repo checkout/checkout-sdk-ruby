@@ -85,13 +85,21 @@ module CheckoutSdk
         api_client.invoke_get(build_path(ISSUING, CARDS, card_id), sdk_authorization)
       end
 
+      # Update the details of an issued card. Only the fields for which you provide values are
+      # updated.
+      #
       # @param [String] card_id
       # @param [Hash, UpdateCardRequest] update_card_request
-      def update_card(card_id, update_card_request)
+      # @param [CardUpdateHeaders, nil] headers the optional return-encrypted-cvv and
+      #   Encryption-Key HTTP headers. Setting return_encrypted_cvv without encryption_key returns
+      #   a 422 with error code encryption_key_required.
+      # @return [OpenStruct] the update response, carrying encrypted_cvv when requested
+      def update_card(card_id, update_card_request, headers = nil)
         api_client.invoke_patch(
           build_path(ISSUING, CARDS, card_id),
           sdk_authorization,
-          update_card_request
+          update_card_request,
+          headers
         )
       end
 

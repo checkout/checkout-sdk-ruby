@@ -47,11 +47,19 @@ module CheckoutSdk
           )
         end
 
+        # Get the details of all attempts for a specific face authentication.
+        #
+        # Results are paginated. Beta.
+        #
         # @param [String] face_authentication_id
-        def get_face_authentication_attempts(face_authentication_id)
+        # @param [Hash, CheckoutSdk::Identities::IdvAttemptsQueryFilter, nil] query pagination
+        #   query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
+        # @return [OpenStruct] the paginated attempt list
+        def get_face_authentication_attempts(face_authentication_id, query = nil)
           api_client.invoke_get(
             build_path(FACE_AUTHENTICATIONS, face_authentication_id, ATTEMPTS),
-            sdk_authorization
+            sdk_authorization,
+            query
           )
         end
 
@@ -67,8 +75,8 @@ module CheckoutSdk
         # Retrieve the assets (face images and videos) captured during a face authentication attempt.
         # @param [String] face_authentication_id
         # @param [String] attempt_id
-        # @param [Hash, nil] query pagination query parameters; supports :skip (Integer, default: 0)
-        #   and :limit (Integer, default: 10)
+        # @param [Hash, CheckoutSdk::Identities::IdvAttemptAssetsQueryFilter, nil] query pagination
+        #   query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
         def get_face_authentication_attempt_assets(face_authentication_id, attempt_id, query = nil)
           api_client.invoke_get(
             build_path(FACE_AUTHENTICATIONS, face_authentication_id, ATTEMPTS, attempt_id, ASSETS),

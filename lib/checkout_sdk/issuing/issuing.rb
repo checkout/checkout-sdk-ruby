@@ -9,6 +9,7 @@ require 'checkout_sdk/issuing/oob_authentication_request'
 require 'checkout_sdk/issuing/issuing_phone_number'
 require 'checkout_sdk/issuing/issuing_address'
 require 'checkout_sdk/issuing/update_cardholder_request'
+require 'checkout_sdk/issuing/card_update_headers'
 require 'checkout_sdk/issuing/update_card_request'
 
 # Simulations

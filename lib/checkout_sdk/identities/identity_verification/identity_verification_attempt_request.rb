@@ -6,11 +6,21 @@ module CheckoutSdk
       # Request body for POST /identity-verifications/{id}/attempts.
       #
       # @!attribute redirect_url
-      #   @return [String] URL to redirect the applicant after the attempt.
+      #   The URL to redirect the applicant to after the attempt.
+      #   [Required]
+      #   Format: uri
+      #   @return [String]
+      # @!attribute phone_number
+      #   The applicant's mobile phone number, if sharing the attempt URL via SMS.
+      #   [Optional]
+      #   @return [CheckoutSdk::Identities::IdvPhoneNumber]
       # @!attribute client_information
-      #   @return [IdvClientInformation]
+      #   The applicant's details. The identity verification attempt accepts the wider
+      #   IdvClientInformation shape, unlike the face authentication attempt.
+      #   [Optional]
+      #   @return [IdvIdentityClientInformation]
       class IdentityVerificationAttemptRequest
-        attr_accessor :redirect_url, :client_information
+        attr_accessor :redirect_url, :phone_number, :client_information
       end
     end
   end

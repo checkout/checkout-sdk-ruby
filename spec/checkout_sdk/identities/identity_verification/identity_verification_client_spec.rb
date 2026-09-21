@@ -60,7 +60,7 @@ RSpec.describe CheckoutSdk::Identities::IdentityVerification do
   describe '#get_identity_verification_attempts' do
     it 'GETs identity-verifications/{id}/attempts' do
       expect(api_client_mock).to receive(:invoke_get)
-        .with('identity-verifications/idv_x/attempts', 'secret_key').and_return('response')
+        .with('identity-verifications/idv_x/attempts', 'secret_key', nil).and_return('response')
       expect(client.get_identity_verification_attempts('idv_x')).to eq('response')
     end
   end

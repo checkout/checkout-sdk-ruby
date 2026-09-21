@@ -26,8 +26,8 @@ module CheckoutSdk
       invoke(:put, path, authorization, request, nil, params: nil, extra_headers: headers)
     end
 
-    def invoke_patch(path, authorization, request = nil)
-      invoke(:patch, path, authorization, request, nil, params: nil)
+    def invoke_patch(path, authorization, request = nil, headers = nil)
+      invoke(:patch, path, authorization, request, nil, params: nil, extra_headers: headers)
     end
 
     def invoke_delete(path, authorization)
@@ -66,18 +66,45 @@ module CheckoutSdk
         Authorization: authorization.authorization_header }
     end
 
-    # Map a typed headers container (e.g. {CheckoutSdk::Common::Headers}) onto the underlying
-    # HTTP header hash. Each attribute that's set is emitted as the corresponding
-    # canonical HTTP header.
+    # Attribute name to HTTP header name, for every typed headers container the SDK supports.
+    #
+    # The header names are case sensitive in the spec: return-encrypted-cvv is lower case where a
+    # naive conversion would produce Return-Encrypted-Cvv.
+    #
+    # The values are Strings, not Symbols, and that is load bearing. Faraday::Utils::Headers
+    # preserves a String key verbatim but rewrites a Symbol key as
+    # `key.to_s.split('_').map(&:capitalize).join('-')`, so :'return-encrypted-cvv' would reach
+    # the wire as Return-encrypted-cvv and :'Encryption-Key' as Encryption-key. Strings are the
+    # only way to send the spelling the spec asks for. As a side effect this also stops If-Match
+    # being sent as If-match, which it was before.
+    EXTRA_HEADER_NAMES = {
+      if_match: 'If-Match',
+      accept: 'Accept',
+      return_encrypted_cvv: 'return-encrypted-cvv',
+      encryption_key: 'Encryption-Key'
+    }.freeze
+    private_constant :EXTRA_HEADER_NAMES
+
+    # Map a typed headers container (e.g. {CheckoutSdk::Common::Headers},
+    # {CheckoutSdk::Issuing::CardUpdateHeaders}) onto the underlying HTTP header hash. Each
+    # attribute that is set is emitted as the corresponding HTTP header.
+    #
+    # Previously a hand-written if/return chain. That shape had a latent trap: it ended with
+    # `return unless extra_headers.respond_to?(:accept) && extra_headers.accept`, so any header
+    # handled after that point was dead code for every container without an `accept` attribute.
+    # Iterating an explicit map removes the trap and keeps the existing If-Match and Accept
+    # behaviour byte for byte.
     def apply_extra_headers(http_headers, extra_headers)
       return if extra_headers.nil?
 
-      if extra_headers.respond_to?(:if_match) && extra_headers.if_match
-        http_headers[:'If-Match'] = extra_headers.if_match
-      end
-      return unless extra_headers.respond_to?(:accept) && extra_headers.accept
+      EXTRA_HEADER_NAMES.each do |attribute, header_name|
+        next unless extra_headers.respond_to?(attribute)
 
-      http_headers[:Accept] = extra_headers.accept
+        value = extra_headers.public_send(attribute)
+        next if value.nil? || value.to_s.empty?
+
+        http_headers[header_name] = value
+      end
     end
 
     def append_params(path, input_params)

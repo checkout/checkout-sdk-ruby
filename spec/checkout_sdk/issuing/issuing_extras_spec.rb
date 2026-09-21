@@ -22,7 +22,7 @@ RSpec.describe CheckoutSdk::Issuing do
     it 'PATCHes issuing/cards/{id}' do
       req = CheckoutSdk::Issuing::UpdateCardRequest.new
       expect(api_client_mock).to receive(:invoke_patch)
-        .with('issuing/cards/crd_1', 'secret_key', req).and_return('r')
+        .with('issuing/cards/crd_1', 'secret_key', req, nil).and_return('r')
       expect(client.update_card('crd_1', req)).to eq('r')
     end
   end
