@@ -3,22 +3,22 @@
 # Part E of the 2026-09-02 swagger delta, plus the D1 split between the shared and the identity
 # verification specific shapes.
 RSpec.describe 'Identities serialization' do
-  IDV = CheckoutSdk::Identities::IdentityVerification
-  IDENTITIES = CheckoutSdk::Identities
-
+  # Classes are referenced by their full names rather than through local constants: assigning
+  # IDV = ... inside a describe block defines the constant on Object, leaking a generic name into
+  # the global namespace.
   def serialize(object)
     CheckoutSdk::JsonSerializer.to_custom_hash(object)
   end
 
   def phone_number
-    phone = IDENTITIES::IdvPhoneNumber.new
+    phone = CheckoutSdk::Identities::IdvPhoneNumber.new
     phone.country_code = '+33'
     phone.number = '5555550102'
     phone
   end
 
   def address
-    addr = IDENTITIES::IdvAddress.new
+    addr = CheckoutSdk::Identities::IdvAddress.new
     addr.address_line1 = '123 Main Street'
     addr.city = 'London'
     addr.zip = 'SW1A 1AA'
@@ -27,7 +27,7 @@ RSpec.describe 'Identities serialization' do
   end
 
   def identity_declared_data
-    declared = IDV::IdvIdentityDeclaredData.new
+    declared = CheckoutSdk::Identities::IdentityVerification::IdvIdentityDeclaredData.new
     declared.name = 'Hannah Bret'
     declared.birth_date = '1994-10-15'
     declared.email = 'hannah.bret@example.com'
@@ -66,7 +66,7 @@ RSpec.describe 'Identities serialization' do
 
   describe 'the declared data split (D1)' do
     it 'keeps the shared shape at two attributes' do
-      declared = IDV::IdvDeclaredData.new
+      declared = CheckoutSdk::Identities::IdentityVerification::IdvDeclaredData.new
       declared.name = 'Hannah Bret'
       declared.birth_date = '1994-10-15'
 
@@ -76,7 +76,7 @@ RSpec.describe 'Identities serialization' do
     # The shared class is used by the address document and ID document verification requests. The
     # three identity verification only fields must not be reachable on it.
     it 'does not expose the identity verification only fields on the shared class' do
-      declared = IDV::IdvDeclaredData.new
+      declared = CheckoutSdk::Identities::IdentityVerification::IdvDeclaredData.new
 
       expect(declared).not_to respond_to(:phone_number=)
       expect(declared).not_to respond_to(:email=)
@@ -84,7 +84,7 @@ RSpec.describe 'Identities serialization' do
     end
 
     it 'inherits the shared attributes on the identity verification shape' do
-      expect(IDV::IdvIdentityDeclaredData.superclass).to eq(IDV::IdvDeclaredData)
+      expect(CheckoutSdk::Identities::IdentityVerification::IdvIdentityDeclaredData.superclass).to eq(CheckoutSdk::Identities::IdentityVerification::IdvDeclaredData)
       expect(serialize(identity_declared_data)).to eq(
         'name' => 'Hannah Bret',
         'birth_date' => '1994-10-15',
@@ -100,7 +100,7 @@ RSpec.describe 'Identities serialization' do
     end
 
     it 'omits unset optional attributes' do
-      declared = IDV::IdvIdentityDeclaredData.new
+      declared = CheckoutSdk::Identities::IdentityVerification::IdvIdentityDeclaredData.new
       declared.name = 'Hannah Bret'
 
       expect(serialize(declared)).to eq('name' => 'Hannah Bret')
@@ -109,7 +109,7 @@ RSpec.describe 'Identities serialization' do
 
   describe 'the client information split (D1)' do
     it 'keeps the face authentication shape at two attributes' do
-      info = IDV::IdvClientInformation.new
+      info = CheckoutSdk::Identities::IdentityVerification::IdvClientInformation.new
       info.pre_selected_residence_country = 'FR'
       info.pre_selected_language = 'en-US'
 
@@ -122,20 +122,20 @@ RSpec.describe 'Identities serialization' do
     # The face authentication attempt schema declares neither document field, so sending them
     # there would be a request the API rejects. The narrow class is what prevents it.
     it 'does not expose the document fields on the face authentication shape' do
-      info = IDV::IdvClientInformation.new
+      info = CheckoutSdk::Identities::IdentityVerification::IdvClientInformation.new
 
       expect(info).not_to respond_to(:pre_selected_document_issuing_country=)
       expect(info).not_to respond_to(:pre_selected_document_type=)
     end
 
     it 'adds the two identity verification only fields on the wider shape' do
-      info = IDV::IdvIdentityClientInformation.new
+      info = CheckoutSdk::Identities::IdentityVerification::IdvIdentityClientInformation.new
       info.pre_selected_residence_country = 'FR'
       info.pre_selected_language = 'en-US'
       info.pre_selected_document_issuing_country = 'GB'
       info.pre_selected_document_type = 'Travel Document'
 
-      expect(IDV::IdvIdentityClientInformation.superclass).to eq(IDV::IdvClientInformation)
+      expect(CheckoutSdk::Identities::IdentityVerification::IdvIdentityClientInformation.superclass).to eq(CheckoutSdk::Identities::IdentityVerification::IdvClientInformation)
       expect(serialize(info)).to eq(
         'pre_selected_residence_country' => 'FR',
         'pre_selected_language' => 'en-US',
@@ -145,9 +145,9 @@ RSpec.describe 'Identities serialization' do
     end
   end
 
-  describe IDV::IdentityVerificationAttemptRequest do
+  describe CheckoutSdk::Identities::IdentityVerification::IdentityVerificationAttemptRequest do
     it 'serializes phone_number and the wider client information' do
-      info = IDV::IdvIdentityClientInformation.new
+      info = CheckoutSdk::Identities::IdentityVerification::IdvIdentityClientInformation.new
       info.pre_selected_document_type = 'Passport'
 
       req = described_class.new
@@ -164,7 +164,7 @@ RSpec.describe 'Identities serialization' do
 
   describe CheckoutSdk::Identities::FaceAuthentication::FaceAuthenticationAttemptRequest do
     it 'serializes phone_number and keeps the narrow client information' do
-      info = IDV::IdvClientInformation.new
+      info = CheckoutSdk::Identities::IdentityVerification::IdvClientInformation.new
       info.pre_selected_residence_country = 'FR'
 
       req = described_class.new
@@ -179,7 +179,7 @@ RSpec.describe 'Identities serialization' do
     end
   end
 
-  describe IDV::IdentityVerificationRequest do
+  describe CheckoutSdk::Identities::IdentityVerification::IdentityVerificationRequest do
     it 'carries the five field identity declared data' do
       req = described_class.new
       req.applicant_id = 'aplt_tkoi5db4hryu5cei5vwoabr7we'
@@ -201,7 +201,7 @@ RSpec.describe 'Identities serialization' do
       req.applicant_id = 'aplt_tkoi5db4hryu5cei5vwoabr7we'
       req.user_journey_id = 'usj_tkoi5db4hryu5cei5vwoabr7we'
 
-      declared = IDV::IdvDeclaredData.new
+      declared = CheckoutSdk::Identities::IdentityVerification::IdvDeclaredData.new
       declared.name = 'Hannah Bret'
       declared.birth_date = '1994-10-15'
       req.declared_data = declared
@@ -246,7 +246,7 @@ RSpec.describe 'Identities serialization' do
 
   describe CheckoutSdk::Identities::AddressDocumentVerification::AddressDocumentVerificationRequest do
     it 'takes the narrow declared data shape' do
-      declared = IDV::IdvDeclaredData.new
+      declared = CheckoutSdk::Identities::IdentityVerification::IdvDeclaredData.new
       declared.name = 'Hannah Bret'
       declared.birth_date = '1994-10-15'
 
