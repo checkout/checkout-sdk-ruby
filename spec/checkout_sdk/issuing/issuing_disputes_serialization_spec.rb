@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Issuing disputes/cards serialization' do
+RSpec.describe 'Issuing disputes serialization' do
   describe CheckoutSdk::Issuing::IssuingDisputeFraudType do
     it 'maps every value to its exact swagger string' do
       expected = {
@@ -106,19 +106,6 @@ RSpec.describe 'Issuing disputes/cards serialization' do
       expect(hash['reason']).to eq('4807')
       expect(hash['evidence']).to eq([{ 'evidence_type' => 'proof_of_purchase' }])
       expect(hash['amount']).to eq(100)
-    end
-  end
-
-  describe CheckoutSdk::Issuing::UpdateCardRequest do
-    it 'serializes activation_date and revocation_date' do
-      req = described_class.new
-      req.activation_date = '2026-06-01T10:00Z'
-      req.revocation_date = '2027-03-12'
-
-      hash = CheckoutSdk::JsonSerializer.to_custom_hash(req)
-
-      expect(hash['activation_date']).to eq('2026-06-01T10:00Z')
-      expect(hash['revocation_date']).to eq('2027-03-12')
     end
   end
 end

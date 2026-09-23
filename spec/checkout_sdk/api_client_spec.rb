@@ -180,7 +180,78 @@ RSpec.describe CheckoutSdk::ApiClient do
 
       api_client.invoke_put('accounts/entities/ent_1/reserve-rules/rsv_1', auth, {}, extra)
 
-      expect(captured[:'If-Match']).to eq('W/"etag-123"')
+      # The key is now a String, not a Symbol. Faraday rewrites Symbol keys via
+      # split('_').map(&:capitalize).join('-'), which turned :'If-Match' into If-match on the
+      # wire; a String reaches the wire verbatim.
+      expect(captured['If-Match']).to eq('W/"etag-123"')
+      expect(captured).not_to have_key(:'If-Match')
+    end
+
+    it 'emits both card update headers on PATCH with their exact swagger spelling' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+      extra = CheckoutSdk::Issuing::CardUpdateHeaders.new
+      extra.return_encrypted_cvv = 'true'
+      extra.encryption_key = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A'
+
+      api_client.invoke_patch('issuing/cards/crd_1', auth, {}, extra)
+
+      # return-encrypted-cvv is lower case in the spec and Encryption-Key is title case. String
+      # keys are what preserves both; Symbol keys would have become Return-encrypted-cvv and
+      # Encryption-key by the time Faraday wrote the request.
+      expect(captured['return-encrypted-cvv']).to eq('true')
+      expect(captured['Encryption-Key']).to eq('MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A')
+      expect(captured).not_to have_key('Return-Encrypted-Cvv')
+    end
+
+    it 'emits no card update headers on PATCH when none are supplied' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+
+      api_client.invoke_patch('issuing/cards/crd_1', auth, {})
+
+      expect(captured).not_to have_key('return-encrypted-cvv')
+      expect(captured).not_to have_key('Encryption-Key')
+    end
+
+    it 'emits the encryption key on its own' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+      extra = CheckoutSdk::Issuing::CardUpdateHeaders.new
+      extra.encryption_key = 'MIIBIjAN'
+
+      api_client.invoke_patch('issuing/cards/crd_1', auth, {}, extra)
+
+      expect(captured['Encryption-Key']).to eq('MIIBIjAN')
+      expect(captured).not_to have_key('return-encrypted-cvv')
+    end
+
+    # The previous apply_extra_headers ended with
+    # `return unless extra_headers.respond_to?(:accept) && extra_headers.accept`, so a container
+    # without an accept attribute short circuited and any header handled after that point was
+    # dead code. CardUpdateHeaders has no accept, which is exactly the shape that used to trip it.
+    it 'does not short circuit for a headers container that has no accept attribute' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
+        captured = headers
+        response
+      end
+      extra = CheckoutSdk::Issuing::CardUpdateHeaders.new
+      extra.return_encrypted_cvv = 'true'
+
+      expect(extra).not_to respond_to(:accept)
+      api_client.invoke_patch('issuing/cards/crd_1', auth, {}, extra)
+
+      expect(captured['return-encrypted-cvv']).to eq('true')
     end
 
     it 'omits the If-Match header when no headers container is passed' do

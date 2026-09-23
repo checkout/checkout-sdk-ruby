@@ -9,7 +9,8 @@ module CheckoutSdk
         ANONYMIZE = 'anonymize'
         ATTEMPTS = 'attempts'
         PDF_REPORT = 'pdf-report'
-        private_constant :ADDRESS_DOCUMENT_VERIFICATIONS, :ANONYMIZE, :ATTEMPTS, :PDF_REPORT
+        ASSETS = 'assets'
+        private_constant :ADDRESS_DOCUMENT_VERIFICATIONS, :ANONYMIZE, :ATTEMPTS, :PDF_REPORT, :ASSETS
 
         # @param [ApiClient] api_client
         # @param [CheckoutConfiguration] configuration
@@ -49,11 +50,19 @@ module CheckoutSdk
           )
         end
 
+        # Get the details of all attempts for a specific address document verification.
+        #
+        # Results are paginated. Beta.
+        #
         # @param [String] address_document_verification_id
-        def get_address_document_verification_attempts(address_document_verification_id)
+        # @param [Hash, CheckoutSdk::Identities::IdvAttemptsQueryFilter, nil] query pagination
+        #   query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
+        # @return [OpenStruct] the paginated attempt list
+        def get_address_document_verification_attempts(address_document_verification_id, query = nil)
           api_client.invoke_get(
             build_path(ADDRESS_DOCUMENT_VERIFICATIONS, address_document_verification_id, ATTEMPTS),
-            sdk_authorization
+            sdk_authorization,
+            query
           )
         end
 
@@ -71,6 +80,26 @@ module CheckoutSdk
           api_client.invoke_get(
             build_path(ADDRESS_DOCUMENT_VERIFICATIONS, address_document_verification_id, PDF_REPORT),
             sdk_authorization
+          )
+        end
+
+        # Get the assets (the document image) uploaded for a address document verification attempt.
+        #
+        # Results are paginated. Beta.
+        #
+        # @param [String] address_document_verification_id
+        # @param [String] attempt_id
+        # @param [Hash, CheckoutSdk::Identities::IdvAttemptAssetsQueryFilter, nil] query pagination
+        #   query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
+        # @return [OpenStruct] the paginated asset list
+        def get_address_document_verification_attempt_assets(address_document_verification_id,
+                                                             attempt_id,
+                                                             query = nil)
+          api_client.invoke_get(
+            build_path(ADDRESS_DOCUMENT_VERIFICATIONS, address_document_verification_id,
+                       ATTEMPTS, attempt_id, ASSETS),
+            sdk_authorization,
+            query
           )
         end
       end

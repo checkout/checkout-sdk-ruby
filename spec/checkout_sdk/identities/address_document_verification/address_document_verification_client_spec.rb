@@ -58,7 +58,7 @@ RSpec.describe CheckoutSdk::Identities::AddressDocumentVerification do
   describe '#get_address_document_verification_attempts' do
     it 'GETs address-document-verifications/{id}/attempts' do
       expect(api_client_mock).to receive(:invoke_get)
-        .with('address-document-verifications/adv_x/attempts', 'secret_key').and_return('response')
+        .with('address-document-verifications/adv_x/attempts', 'secret_key', nil).and_return('response')
       expect(client.get_address_document_verification_attempts('adv_x')).to eq('response')
     end
   end

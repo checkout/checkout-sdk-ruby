@@ -44,7 +44,7 @@ RSpec.describe CheckoutSdk::Identities::IdDocumentVerification do
   describe '#get_id_document_verification_attempts' do
     it 'GETs id-document-verifications/{id}/attempts' do
       expect(api_client_mock).to receive(:invoke_get)
-        .with('id-document-verifications/idv_x/attempts', 'secret_key').and_return('response')
+        .with('id-document-verifications/idv_x/attempts', 'secret_key', nil).and_return('response')
       expect(client.get_id_document_verification_attempts('idv_x')).to eq('response')
     end
   end

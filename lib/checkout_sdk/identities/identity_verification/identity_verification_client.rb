@@ -55,11 +55,19 @@ module CheckoutSdk
           )
         end
 
+        # Get the details of all attempts for a specific identity verification.
+        #
+        # Results are paginated. Beta.
+        #
         # @param [String] identity_verification_id
-        def get_identity_verification_attempts(identity_verification_id)
+        # @param [Hash, CheckoutSdk::Identities::IdvAttemptsQueryFilter, nil] query pagination
+        #   query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
+        # @return [OpenStruct] the paginated attempt list
+        def get_identity_verification_attempts(identity_verification_id, query = nil)
           api_client.invoke_get(
             build_path(IDENTITY_VERIFICATIONS, identity_verification_id, ATTEMPTS),
-            sdk_authorization
+            sdk_authorization,
+            query
           )
         end
 
@@ -84,8 +92,8 @@ module CheckoutSdk
         # identity verification attempt.
         # @param [String] identity_verification_id
         # @param [String] attempt_id
-        # @param [Hash, nil] query pagination query parameters; supports :skip (Integer, default: 0)
-        #   and :limit (Integer, default: 10)
+        # @param [Hash, CheckoutSdk::Identities::IdvAttemptAssetsQueryFilter, nil] query pagination
+        #   query parameters; supports :skip (Integer, default: 0) and :limit (Integer, default: 10)
         def get_identity_verification_attempt_assets(identity_verification_id, attempt_id, query = nil)
           api_client.invoke_get(
             build_path(IDENTITY_VERIFICATIONS, identity_verification_id, ATTEMPTS, attempt_id, ASSETS),

@@ -44,7 +44,7 @@ RSpec.describe CheckoutSdk::Identities::FaceAuthentication do
   describe '#get_face_authentication_attempts' do
     it 'GETs face-authentications/{id}/attempts' do
       expect(api_client_mock).to receive(:invoke_get)
-        .with('face-authentications/fa_x/attempts', 'secret_key').and_return('response')
+        .with('face-authentications/fa_x/attempts', 'secret_key', nil).and_return('response')
       expect(client.get_face_authentication_attempts('fa_x')).to eq('response')
     end
   end

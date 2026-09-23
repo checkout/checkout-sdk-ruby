@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# Shared identities types
+require 'checkout_sdk/identities/idv_phone_number'
+require 'checkout_sdk/identities/idv_address'
+require 'checkout_sdk/identities/idv_attempts_query_filter'
+require 'checkout_sdk/identities/idv_attempt_assets_query_filter'
+
 # Applicants
 require 'checkout_sdk/identities/applicants/create_applicant_request'
 require 'checkout_sdk/identities/applicants/update_applicant_request'
@@ -21,7 +27,9 @@ require 'checkout_sdk/identities/address_document_verification/address_document_
 
 # Identity Verification
 require 'checkout_sdk/identities/identity_verification/idv_declared_data'
+require 'checkout_sdk/identities/identity_verification/idv_identity_declared_data'
 require 'checkout_sdk/identities/identity_verification/idv_client_information'
+require 'checkout_sdk/identities/identity_verification/idv_identity_client_information'
 require 'checkout_sdk/identities/identity_verification/identity_verification_attempt_request'
 require 'checkout_sdk/identities/identity_verification/identity_verification_request'
 require 'checkout_sdk/identities/identity_verification/identity_verification_client'
