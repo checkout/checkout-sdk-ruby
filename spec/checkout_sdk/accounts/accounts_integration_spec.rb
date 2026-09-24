@@ -72,7 +72,8 @@ RSpec.describe CheckoutSdk::Accounts do
   describe 'when sub entity operations (Accounts API schema_version 3.0)' do
     # v3.0 onboards a sub-entity as a company whose single representative carries a nested individual
     # + roles. Uses the accounts-scoped OAuth client (provisioned for v3.0) and the SDK default (3.0).
-    # Profile currencies use the platform scope (USD) while processing_details reflects the region (GBP).
+    # Every currency on the request has to sit inside the platform's currency scope, which is USD
+    # only. See build_onboard_entity_v3 for why processing_details cannot be regional.
     it 'creates and retrieves a v3.0 company sub-entity' do
       request = build_entity_v3(SecureRandom.uuid)
 
@@ -262,7 +263,12 @@ def build_entity_v3(reference = nil)
   contact_details.phone = phone
   contact_details.email_addresses = email_addresses
 
-  # Profile currencies are validated against the platform scope (USD); processing currency is regional (GBP).
+  # Every currency here has to sit inside the platform's currency scope, which is USD only. The
+  # processing currency was previously GBP, on the theory that the profile reflects the platform
+  # while processing details reflect the sub-entity region. The API rejects that with
+  # processing_details_currency_invalid_for_currency_scope, and widening the profile to GBP is also
+  # rejected because the scope itself does not permit GBP. The GB settlement_country and addresses
+  # are unaffected and still accepted.
   profile = CheckoutSdk::Accounts::Profile.new
   profile.urls = ['https://www.superheroexample.com']
   profile.mccs = ['0742']
@@ -322,7 +328,7 @@ def build_entity_v3(reference = nil)
   processing_details.average_transaction_value = 5_000
   processing_details.average_order_fulfillment_time = 3
   processing_details.highest_transaction_value = 25_000
-  processing_details.currency = CheckoutSdk::Common::Currency::GBP
+  processing_details.currency = CheckoutSdk::Common::Currency::USD
   processing_details.settlement_country = 'GB'
   processing_details.target_countries = ['GB']
   processing_details.payments = payments
