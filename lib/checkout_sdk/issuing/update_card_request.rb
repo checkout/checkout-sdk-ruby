@@ -39,14 +39,21 @@ module CheckoutSdk
     #   Example: 2026-06-01T10:00Z
     #   @return [String]
     # @!attribute revocation_date
-    #   Date scheduling the card's automatic revocation.
-    #   [Optional]
-    #   Format: yyyy-MM-dd (time is midnight UTC)
-    #   Example: 2027-03-12
-    #   @return [String]
+    #   @return [String] Date for the card to be automatically revoked, in the form `yyyy-mm-dd`.
+    #     Must be after the current date. Maps swagger `IssuingRevocationDate`.
+    #   @deprecated Use {#scheduled_revocation_date} instead.
+    # @!attribute scheduled_revocation_date
+    #   @return [String] Date for the card to be automatically revoked, in the form `yyyy-mm-dd`.
+    #     Overrides the deprecated {#revocation_date} when both are given. Maps swagger
+    #     `IssuingScheduledRevocationDate`.
+    # @!attribute status
+    #   @return [String] Set to `active` to reactivate an `inactive` or `suspended` card.
+    #     Mutually exclusive with `scheduled_activation_date`: submitting both returns a
+    #     `scheduled_activation_date_conflicts_with_activation` error. The only supported
+    #     value is `active`.
     class UpdateCardRequest
       attr_accessor :reference, :metadata, :expiry_month, :expiry_year,
-                    :scheduled_activation_date, :revocation_date
+                    :scheduled_activation_date, :revocation_date, :scheduled_revocation_date, :status
     end
   end
 end
