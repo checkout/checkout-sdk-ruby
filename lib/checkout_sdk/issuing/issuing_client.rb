@@ -93,7 +93,10 @@ module CheckoutSdk
       # @param [CardUpdateHeaders, nil] headers the optional return-encrypted-cvv and
       #   Encryption-Key HTTP headers. Setting return_encrypted_cvv without encryption_key returns
       #   a 422 with error code encryption_key_required.
-      # @return [OpenStruct] the update response, carrying encrypted_cvv when requested
+      # @return [OpenStruct] the update response, carrying encrypted_cvv when requested. For a
+      #   virtual card the response may also carry is_single_use (boolean, default false),
+      #   specifying whether the card is set to expire after a single use. Physical cards never
+      #   send it.
       def update_card(card_id, update_card_request, headers = nil)
         api_client.invoke_patch(
           build_path(ISSUING, CARDS, card_id),
