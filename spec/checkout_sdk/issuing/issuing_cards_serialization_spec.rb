@@ -84,4 +84,17 @@ RSpec.describe 'Issuing cards serialization' do
       expect(headers.return_encrypted_cvv).to eq('true')
     end
   end
+
+  describe 'update_card response' do
+    # The 2026-09-23 spec update split update-card-response into a virtual/physical
+    # discriminator; the virtual variant adds is_single_use. This SDK has no typed response
+    # class for update_card (raw OpenStruct, the same mechanism CheckoutSdk::ApiClient uses),
+    # so this just confirms the field round-trips through that deserialization.
+    it 'round-trips is_single_use for a virtual card response' do
+      body = '{"type":"virtual","last_modified_date":"2026-06-01T10:00:00Z","is_single_use":true}'
+      response = JSON.parse(body, object_class: OpenStruct)
+
+      expect(response.is_single_use).to eq(true)
+    end
+  end
 end
