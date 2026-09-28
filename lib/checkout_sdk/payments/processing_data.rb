@@ -34,7 +34,7 @@ module CheckoutSdk
     # @!attribute partner_transaction_id
     #   @return [String] [Optional] Unique transaction identification provided by partner.
     # @!attribute partner_error_codes
-    #   @return [Array<String>] [Optional] The list of error codes that led the payment to fail or
+    #   @return [Array(String)] [Optional] The list of error codes that led the payment to fail or
     #     be declined, as given by the payment provider.
     # @!attribute partner_error_message
     #   @return [String] [Optional] Error description provided by partner.
@@ -51,7 +51,7 @@ module CheckoutSdk
     #     additional information about the transaction. For declined transactions it also
     #     indicates whether the payment can be retried and how long to wait.
     # @!attribute custom_payment_method_ids
-    #   @return [Array<String>] [Optional] An array defining which of the configured payment
+    #   @return [Array(String)] [Optional] An array defining which of the configured payment
     #     options within a payment category (for example, pay_later or pay_over_time) should be
     #     displayed for this purchase.
     # @!attribute aft
@@ -84,10 +84,10 @@ module CheckoutSdk
     #     differ from the card's scheme used for the payment if the card is co-badged and the
     #     payment was authorized on a different network. Read-only.
     # @!attribute accommodation_data
-    #   @return [Array<AccommodationData>] [Optional] Contains information about the accommodation
+    #   @return [Array(AccommodationData)] [Optional] Contains information about the accommodation
     #     booked by the customer.
     # @!attribute airline_data
-    #   @return [Array<AirlineData>] [Optional] Contains information about the airline ticket and
+    #   @return [Array(AirlineData)] [Optional] Contains information about the airline ticket and
     #     flights booked by the customer.
     # @!attribute scheme_transaction_link_id
     #   @return [String] [Optional] The scheme transaction link identifier. Returned for

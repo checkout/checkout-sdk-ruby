@@ -51,6 +51,33 @@ RSpec.describe CheckoutSdk::Payments::ProcessingData do
     expect(data.airline_data.first[:ticket][:number]).to eq('045-21351455613')
   end
 
+  # The assertion above only ever touched `ticket`, which is how the passenger cardinality defect
+  # survived: nothing in the suite read `passenger` or a flight leg. These two cover the rest of
+  # the sub-tree, both cardinalities of `passenger`, and the two renamed flight-leg keys.
+  it 'exposes the full airline_data sub-tree with passenger as an array' do
+    data = described_class.new
+    data.airline_data = [{ ticket: { number: '045-21351455613', travel_package_indicator: 'B' },
+                           passenger: [{ first_name: 'John', last_name: 'White',
+                                         address: { country: 'US' } }],
+                           flight_leg_details: [{ flight_number: '101', class_of_travelling: 'J',
+                                                  stop_over_code: 'x' }] }]
+
+    airline = data.airline_data.first
+    expect(airline[:ticket][:travel_package_indicator]).to eq('B')
+    expect(airline[:passenger].size).to eq(1)
+    expect(airline[:passenger].first[:address][:country]).to eq('US')
+    expect(airline[:flight_leg_details].first[:flight_number]).to eq('101')
+    expect(airline[:flight_leg_details].first[:class_of_travelling]).to eq('J')
+    expect(airline[:flight_leg_details].first[:stop_over_code]).to eq('x')
+  end
+
+  it 'exposes airline_data with passenger as a single object' do
+    data = described_class.new
+    data.airline_data = [{ passenger: { first_name: 'John', last_name: 'White' } }]
+
+    expect(data.airline_data.first[:passenger][:first_name]).to eq('John')
+  end
+
   it 'leaves every attribute nil when nothing is set' do
     data = described_class.new
 
