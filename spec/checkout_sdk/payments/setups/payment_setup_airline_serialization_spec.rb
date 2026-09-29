@@ -50,13 +50,15 @@ RSpec.describe 'PaymentSetupAirline flight_leg_details' do
     airline = CheckoutSdk::Payments::PaymentSetupAirline.new
 
     flight_leg = CheckoutSdk::Payments::FlightLegDetails.new
-    flight_leg.flight_number = 100
+    # A string, not an integer: PaymentSetupFlightLegDetails.flight_number is type string with
+    # the example "BA1483", which no integer can hold.
+    flight_leg.flight_number = 'BA1483'
     flight_leg.carrier_code = 'BA'
     airline.flight_leg_details = [flight_leg]
 
     hash = CheckoutSdk::JsonSerializer.to_custom_hash(airline)
 
-    expect(hash['flight_leg_details']).to eq([{ 'flight_number' => 100, 'carrier_code' => 'BA' }])
+    expect(hash['flight_leg_details']).to eq([{ 'flight_number' => 'BA1483', 'carrier_code' => 'BA' }])
   end
 end
 
