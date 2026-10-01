@@ -2,6 +2,7 @@
 
 module CheckoutSdk
   module Accounts
+    # The position of a representative within the company (required for the control_person role).
     module CompanyPosition
       CEO = 'ceo'
       CFO = 'cfo'

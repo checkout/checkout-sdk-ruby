@@ -100,7 +100,10 @@ module CheckoutSdk
         api_client.invoke_get(build_path(ACCOUNTS, ENTITIES, entity_id, PAYOUT_SCHEDULE), sdk_authorization)
       end
 
-      # @param [Hash, FileRequest] file_request
+      # Uploads a file to the Files API (POST /files on the Files host), as a multipart request. The
+      # returned ID is what document front and back attributes take.
+      # @param [Hash, FileRequest] file_request The file to upload and its {FilePurpose}.
+      # @return [Hash] The ID of the uploaded file.
       def upload_file(file_request)
         files_client.submit_file(FILES, sdk_authorization, file_request)
       end
@@ -216,9 +219,12 @@ module CheckoutSdk
         )
       end
 
-      # Upload a file scoped to a sub-entity. Hits POST /entities/{entityId}/files.
-      # @param [String] entity_id
-      # @param [Hash, EntityFilesRequest] file_request
+      # Upload a file scoped to a sub-entity. Hits POST /entities/{entityId}/files on the Files host,
+      # sending the request as a multipart upload.
+      # @param [String] entity_id The ID of the sub-entity.
+      # @param [Hash, EntityFilesRequest] file_request The file and its {FilePurpose}.
+      # @return [Hash] The file ID, the maximum size allowed, the MIME types allowed for the purpose, and the
+      #   upload link.
       def upload_entity_file(entity_id, file_request)
         files_client.submit_file(
           build_path(ENTITIES, entity_id, FILES),
@@ -227,9 +233,10 @@ module CheckoutSdk
         )
       end
 
-      # Retrieve a file scoped to a sub-entity. Hits GET /entities/{entityId}/files/{fileId}.
-      # @param [String] entity_id
-      # @param [String] file_id
+      # Retrieve a file scoped to a sub-entity. Hits GET /entities/{entityId}/files/{fileId} on the Files host.
+      # @param [String] entity_id The ID of the sub-entity.
+      # @param [String] file_id The ID of the file.
+      # @return [Hash] The file's status, size, MIME type, upload date and purpose.
       def get_entity_file(entity_id, file_id)
         files_client.invoke_get(
           build_path(ENTITIES, entity_id, FILES, file_id),

@@ -86,6 +86,38 @@ RSpec.describe CheckoutSdk::Accounts do
       expect(fetched).not_to be nil
       expect(fetched.id).to eq(created.id)
     end
+
+    # The representative's documents on schema 3.0. The sandbox platform resolves to a company variant
+    # (GB/US scope, USD only), where identity_verification and certified_authorised_signatory are the
+    # representative documents the API accepts; the EEA Sole Trader keys are covered by
+    # accounts_v3_serialization_spec, since this platform rejects them.
+    it 'creates a v3.0 sub-entity with representative documents and reads them back' do
+      identity_file = upload_file_accounts(@accounts_sdk, CheckoutSdk::Accounts::FilePurpose::IDENTITY_VERIFICATION)
+      signatory_file = upload_file_accounts(@accounts_sdk,
+                                            CheckoutSdk::Accounts::FilePurpose::CERTIFIED_AUTHORISED_SIGNATORY)
+
+      identity = CheckoutSdk::Accounts::Document.new
+      identity.type = CheckoutSdk::Accounts::DocumentType::PASSPORT
+      identity.front = identity_file.id
+      signatory = CheckoutSdk::Accounts::CertifiedAuthorisedSignatory.new
+      signatory.type = CheckoutSdk::Accounts::CertifiedAuthorisedSignatoryType::POWER_OF_ATTORNEY
+      signatory.front = signatory_file.id
+      documents = CheckoutSdk::Accounts::RepresentativeDocuments.new
+      documents.identity_verification = identity
+      documents.certified_authorised_signatory = signatory
+      request = build_entity_v3(SecureRandom.uuid)
+      request.company.representatives[0].documents = documents
+
+      created = @accounts_sdk.accounts.create_entity(request)
+      expect(created.id).not_to be nil
+
+      # The documents are linked on the representative, not dropped: the API echoes them back.
+      linked = @accounts_sdk.accounts.get_entity(created.id).company.representatives[0].documents
+      expect(linked.identity_verification.type).to eq('passport')
+      expect(linked.identity_verification.front).to eq(identity_file.id)
+      expect(linked.certified_authorised_signatory.type).to eq('power_of_attorney')
+      expect(linked.certified_authorised_signatory.front).to eq(signatory_file.id)
+    end
   end
 
   describe 'when entity payment instrument operations' do
@@ -362,10 +394,10 @@ def build_payment_instrument(file)
   request
 end
 
-def upload_file_accounts(sdk)
+def upload_file_accounts(sdk, purpose = CheckoutSdk::Accounts::FilePurpose::BANK_VERIFICATION)
   request = CheckoutSdk::Accounts::FileRequest.new
   request.file = './spec/resources/checkout.jpeg'
-  request.purpose = 'bank_verification'
+  request.purpose = purpose
 
   sdk.accounts.upload_file(request)
 end
