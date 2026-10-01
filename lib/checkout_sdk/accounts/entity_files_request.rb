@@ -2,10 +2,11 @@
 
 module CheckoutSdk
   module Accounts
-    # Request body for POST /entities/{entityId}/files.
-    #
+    # Request for POST /entities/{entityId}/files.
     # @!attribute purpose
-    #   @return [String] Purpose of the file (e.g. "bank_verification").
+    #   The purpose of the file upload: the onboarding document the file is for.
+    #   [Required]
+    #   @return [String] {FilePurpose}
     class EntityFilesRequest
       attr_accessor :purpose
     end

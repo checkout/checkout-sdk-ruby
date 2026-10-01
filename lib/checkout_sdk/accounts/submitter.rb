@@ -2,10 +2,11 @@
 
 module CheckoutSdk
   module Accounts
-    # Captures evidence of the end-user's consent to onboarding.
-    #
+    # Not defined by any Accounts API onboarding schema.
+    # @deprecated Not part of any Accounts API onboarding schema; the API does not read it.
     # @!attribute ip_address
-    #   @return [String] IP address of the end-user submitting the onboarding request.
+    #   @deprecated Not defined by any Accounts API onboarding schema.
+    #   @return [String]
     class Submitter
       attr_accessor :ip_address
     end
