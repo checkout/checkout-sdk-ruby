@@ -7,7 +7,7 @@ module CheckoutSdk
     # @!attribute type
     #   The type of document being used as address verification.
     #   [Required]
-    #   @return [String] {ProofOfResidentialAddressType]
+    #   @return [String] {ProofOfResidentialAddressType}
     # @!attribute front
     #   The ID of the front side of the document as represented within Checkout.com systems.
     #   [Required]

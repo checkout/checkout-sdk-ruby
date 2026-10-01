@@ -2,6 +2,8 @@
 
 module CheckoutSdk
   module Accounts
+    # The legal type of the company. Must be INDIVIDUAL_OR_SOLE_PROPRIETORSHIP for the sole trader variants;
+    # which other values a variant accepts depends on the variant.
     module BusinessType
       INDIVIDUAL_OR_SOLE_PROPRIETORSHIP = 'individual_or_sole_proprietorship'
       GENERAL_PARTNERSHIP = 'general_partnership'

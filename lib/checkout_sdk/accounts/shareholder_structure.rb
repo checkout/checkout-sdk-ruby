@@ -7,7 +7,7 @@ module CheckoutSdk
     # @!attribute type
     #   The type of document.
     #   [Required]
-    #   @return [ShareholderStructureType]
+    #   @return [String] {ShareholderStructureType}
     # @!attribute front
     #   The ID of the front side of the document as represented within Checkout.com systems.
     #   [Required]

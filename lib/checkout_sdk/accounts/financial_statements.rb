@@ -7,7 +7,7 @@ module CheckoutSdk
     # @!attribute type
     #   The type of document.
     #   [Required]
-    #   @return [FinancialStatementsType]
+    #   @return [String] {FinancialStatementsType}
     # @!attribute front
     #   The ID of the front side of the document as represented within Checkout.com systems.
     #   [Required]
