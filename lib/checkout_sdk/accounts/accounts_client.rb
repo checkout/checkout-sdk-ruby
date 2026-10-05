@@ -78,13 +78,17 @@ module CheckoutSdk
                               sdk_authorization)
       end
 
+      # Updates a payment instrument (PATCH /accounts/entities/{entityId}/payment-instruments/{id}).
+      # The API reads the ETag only from the If-Match HTTP header and answers 428 without it, so the
+      # request's headers.if_match is sent as that header.
       # @param [String] entity_id
       # @param [String] instrument_id
       # @param [Hash, UpdatePaymentInstrumentRequest] update_payment_instrument
       def update_payment_instrument(entity_id, instrument_id, update_payment_instrument)
         api_client.invoke_patch(build_path(ACCOUNTS, ENTITIES, entity_id, PAYMENT_INSTRUMENTS, instrument_id),
                                 sdk_authorization,
-                                update_payment_instrument)
+                                update_payment_instrument,
+                                payment_instrument_headers(update_payment_instrument))
       end
 
       # @param [String] entity_id
@@ -219,14 +223,15 @@ module CheckoutSdk
         )
       end
 
-      # Upload a file scoped to a sub-entity. Hits POST /entities/{entityId}/files on the Files host,
-      # sending the request as a multipart upload.
+      # Create a file upload scoped to a sub-entity. Hits POST /entities/{entityId}/files on the Files host
+      # with a JSON body carrying only the purpose. The file content is not part of this request: send the
+      # raw bytes with an HTTP PUT to the returned _links.upload.href.
       # @param [String] entity_id The ID of the sub-entity.
-      # @param [Hash, EntityFilesRequest] file_request The file and its {FilePurpose}.
+      # @param [Hash, EntityFilesRequest] file_request The {FilePurpose} of the file to upload.
       # @return [Hash] The file ID, the maximum size allowed, the MIME types allowed for the purpose, and the
       #   upload link.
       def upload_entity_file(entity_id, file_request)
-        files_client.submit_file(
+        files_client.invoke_post(
           build_path(ENTITIES, entity_id, FILES),
           sdk_authorization,
           file_request
@@ -245,6 +250,20 @@ module CheckoutSdk
       end
 
       private
+
+      # The If-Match header of a payment instrument update, from an UpdatePaymentInstrumentRequest or
+      # a Hash. Returns nil when no ETag was given.
+      def payment_instrument_headers(request)
+        headers = request.is_a?(Hash) ? (request[:headers] || request['headers']) : request&.headers
+        return headers unless headers.is_a?(Hash)
+
+        etag = headers[:if_match] || headers['if_match'] || headers['if-match']
+        return nil if etag.nil?
+
+        http_headers = CheckoutSdk::Common::Headers.new
+        http_headers.if_match = etag
+        http_headers
+      end
 
       # Builds the versioned Accept header for Accounts onboarding operations.
       # @param [String] schema_version

@@ -31,8 +31,10 @@ module CheckoutSdk
     #   [Required] for every variant except EEA and US Company Lite (2.0), where it is [Optional].
     #   @return [Array(String)] {EntityRoles}
     # @!attribute documents
-    #   Verification documents for the individual representative. The API validates this object strictly on
-    #   v3.0 and rejects any key other than the four {RepresentativeDocuments} declares.
+    #   Verification documents for the individual representative. On the EEA, GB and US Company Full (3.0)
+    #   and Sole Trader Full (3.0) variants the API validates this object strictly and rejects any key the
+    #   variant does not define; the US ISV Seller (3.0) and v2.0 variants do not declare it strict. See
+    #   {RepresentativeDocuments} for the keys each variant accepts.
     #   [Required] for the EEA, GB and US Sole Trader Full (3.0) variants and EEA Company Full (2.0);
     #   [Optional] otherwise.
     #   @return [RepresentativeDocuments]

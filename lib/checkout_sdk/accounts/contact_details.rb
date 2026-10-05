@@ -23,7 +23,8 @@ module CheckoutSdk
     #   @return [EntityEmailAddresses]
     # @!attribute invitee
     #   The details of the user responsible for onboarding the sub-entity.
-    #   [Optional] (not part of the US ISV Seller variants)
+    #   [Required] in the hosted onboarding invite request; [Optional] in the Full and Lite onboarding
+    #   variants; not part of the US ISV Seller variants.
     #   @return [Invitee]
     class ContactDetails
       attr_accessor :phone,

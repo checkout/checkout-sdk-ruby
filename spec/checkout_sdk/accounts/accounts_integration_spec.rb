@@ -1,3 +1,5 @@
+require 'net/http'
+
 RSpec.describe CheckoutSdk::Accounts do
 
   before(:all) do
@@ -118,6 +120,60 @@ RSpec.describe CheckoutSdk::Accounts do
       expect(linked.certified_authorised_signatory.type).to eq('power_of_attorney')
       expect(linked.certified_authorised_signatory.front).to eq(signatory_file.id)
     end
+
+    # POST /entities/{entityId}/files takes only the purpose as JSON and answers with an upload link;
+    # the file bytes go to that link in a separate PUT. A v3.0 entity, since the sandbox rejects v2.0 here.
+    it 'creates a sub-entity file upload, sends the bytes to the upload link and retrieves the file' do
+      entity = @accounts_sdk.accounts.create_entity(build_entity_v3(SecureRandom.uuid))
+      request = CheckoutSdk::Accounts::EntityFilesRequest.new
+      request.purpose = CheckoutSdk::Accounts::FilePurpose::IDENTITY_VERIFICATION
+
+      upload = @accounts_sdk.accounts.upload_entity_file(entity.id, request)
+      expect(upload.id).to match(/^file_[a-z2-7]{26}$/)
+      expect(upload._links.upload.href).not_to be_nil
+
+      upload_uri = URI(upload._links.upload.href)
+      put_request = Net::HTTP::Put.new(upload_uri)
+      put_request['Content-Type'] = 'image/jpeg'
+      put_request.body = File.binread('./spec/resources/checkout.jpeg')
+      put_response = Net::HTTP.start(upload_uri.host, upload_uri.port, use_ssl: upload_uri.scheme == 'https') do |http|
+        http.request(put_request)
+      end
+      expect(put_response.code.to_i).to be_between(200, 299)
+
+      retrieved = @accounts_sdk.accounts.get_entity_file(entity.id, upload.id)
+      expect(retrieved.id).to eq(upload.id)
+      expect(retrieved.purpose).to eq(CheckoutSdk::Accounts::FilePurpose::IDENTITY_VERIFICATION)
+    end
+
+    # The update only succeeds when the ETag reaches the API as the If-Match HTTP header: without it the
+    # API answers 428, and with a stale ETag 412. A v3.0 entity, since the sandbox rejects v2.0 here.
+    it 'updates a payment instrument with its ETag' do
+      entity = @accounts_sdk.accounts.create_entity(build_entity_v3(SecureRandom.uuid))
+      file = upload_file_accounts @accounts_sdk
+
+      instrument_details = CheckoutSdk::Accounts::InstrumentDetailsAch.new
+      instrument_details.account_number = '123456789'
+      instrument_details.routing_number = '026009593'
+      # The sandbox rejects checking (instrument_details_account_type_invalid), although the spec lists it.
+      instrument_details.account_type = 'savings'
+      instrument = build_payment_instrument(file)
+      instrument.currency = CheckoutSdk::Common::Currency::USD
+      instrument.country = CheckoutSdk::Common::Country::US
+      instrument.instrument_details = instrument_details
+      instrument_id = @accounts_sdk.accounts.add_payment_instrument(entity.id, instrument).id
+
+      details = @accounts_sdk.accounts.retrieve_payment_instrument_details(entity.id, instrument_id)
+      request = CheckoutSdk::Accounts::UpdatePaymentInstrumentRequest.new
+      request.label = 'Renamed account'
+      request.headers = CheckoutSdk::Common::Headers.new
+      request.headers.if_match = details.http_metadata.headers['etag']
+
+      response = @accounts_sdk.accounts.update_payment_instrument(entity.id, instrument_id, request)
+      expect(response.id).to eq(instrument_id)
+      updated = @accounts_sdk.accounts.retrieve_payment_instrument_details(entity.id, instrument_id)
+      expect(updated.label).to eq('Renamed account')
+    end
   end
 
   describe 'when entity payment instrument operations' do
@@ -169,7 +225,9 @@ RSpec.describe CheckoutSdk::Accounts do
       end
     end
 
-    describe '.update_payment_instrument', skip: 'returns 428 status when updating' do
+    describe '.update_payment_instrument',
+             skip: 'builds no ETag and depends on the v2.0 entity above; ' \
+                   'covered by "updates a payment instrument with its ETag"' do
       subject(:payment_instrument) {
         @accounts_sdk.accounts.add_payment_instrument @entity.id, build_payment_instrument(@file)
       }
