@@ -9,8 +9,13 @@ RSpec.describe CheckoutSdk::Accounts do
   end
 
   describe 'when sub entity operations' do
+    # A schema 3.0 GB Sole Trader Full entity (see build_sole_trader_v3). It replaces the schema 2.0 sole
+    # trader (a top-level individual), which the sandbox answers with HTTP 500 even for a body that
+    # validates against the spec.
     before(:all) do
-      @entity = create_entity @accounts_sdk
+      @identity_file = upload_file_accounts(@accounts_sdk, CheckoutSdk::Accounts::FilePurpose::IDENTITY_VERIFICATION)
+      @bank_file = upload_file_accounts @accounts_sdk
+      @entity = create_entity @accounts_sdk, @identity_file, @bank_file
     end
     describe '.create_entity' do
       context 'when creating a entity with valid data' do
@@ -25,8 +30,9 @@ RSpec.describe CheckoutSdk::Accounts do
     context 'when sub-entity onboarding request conflicted with an existing sub-entity' do
       it 'raises an error' do
         random_uuid = SecureRandom.uuid
-        accounts_checkout_api.accounts.create_entity(build_entity(random_uuid), '2.0')
-        expect { accounts_checkout_api.accounts.create_entity(build_entity(random_uuid), '2.0') }
+        request = build_sole_trader_v3(random_uuid, @identity_file, @bank_file)
+        accounts_checkout_api.accounts.create_entity(request, '3.0')
+        expect { accounts_checkout_api.accounts.create_entity(request, '3.0') }
           .to raise_error(CheckoutSdk::CheckoutApiException) { |e|
             expect(e.http_metadata.status_code).to eq 409
             # The conflict body's `id` is not asserted: under an explicit schema_version Accept header
@@ -38,7 +44,7 @@ RSpec.describe CheckoutSdk::Accounts do
     describe '.get_entity' do
       context 'when fetching a valid entity' do
         it 'returns entity data' do
-          response = @accounts_sdk.accounts.get_entity(@entity.id, '2.0')
+          response = @accounts_sdk.accounts.get_entity(@entity.id, '3.0')
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
@@ -50,18 +56,19 @@ RSpec.describe CheckoutSdk::Accounts do
     describe '.update' do
       context 'when updating a valid entity' do
         it 'should update successfully' do
-          request = build_entity
+          # The reference is set at creation and not sent again on update.
+          request = build_sole_trader_v3(nil, @identity_file, @bank_file)
           request.contact_details.phone.number = '1818151551'
           request.contact_details.email_addresses.primary = generate_random_email
           request.profile.urls = ['https://www.anothersuperheroexample.com']
 
-          response = @accounts_sdk.accounts.update_entity(@entity.id, request, '2.0')
+          response = @accounts_sdk.accounts.update_entity(@entity.id, request, '3.0')
 
           expect(response).not_to be nil
           expect(response.id).to eq(@entity.id)
           expect(response.http_metadata.status_code).to eq 200
 
-          verify_update = @accounts_sdk.accounts.get_entity(@entity.id, '2.0')
+          verify_update = @accounts_sdk.accounts.get_entity(@entity.id, '3.0')
           expect(verify_update).not_to be nil
           expect(verify_update.contact_details.phone.number).to eq(request.contact_details.phone.number)
           expect(verify_update.contact_details.email_addresses.primary).to eq(request.contact_details.email_addresses.primary)
@@ -152,16 +159,7 @@ RSpec.describe CheckoutSdk::Accounts do
       entity = @accounts_sdk.accounts.create_entity(build_entity_v3(SecureRandom.uuid))
       file = upload_file_accounts @accounts_sdk
 
-      instrument_details = CheckoutSdk::Accounts::InstrumentDetailsAch.new
-      instrument_details.account_number = '123456789'
-      instrument_details.routing_number = '026009593'
-      # The sandbox rejects checking (instrument_details_account_type_invalid), although the spec lists it.
-      instrument_details.account_type = 'savings'
-      instrument = build_payment_instrument(file)
-      instrument.currency = CheckoutSdk::Common::Currency::USD
-      instrument.country = CheckoutSdk::Common::Country::US
-      instrument.instrument_details = instrument_details
-      instrument_id = @accounts_sdk.accounts.add_payment_instrument(entity.id, instrument).id
+      instrument_id = @accounts_sdk.accounts.add_payment_instrument(entity.id, build_payment_instrument(file)).id
 
       details = @accounts_sdk.accounts.retrieve_payment_instrument_details(entity.id, instrument_id)
       request = CheckoutSdk::Accounts::UpdatePaymentInstrumentRequest.new
@@ -177,13 +175,14 @@ RSpec.describe CheckoutSdk::Accounts do
   end
 
   describe 'when entity payment instrument operations' do
+    # A schema 3.0 company entity: payment instruments need company data (a sole trader is answered
+    # with entity_business_registration_number_required and similar).
     before(:all) do
-      @entity = create_entity @accounts_sdk
+      @entity = @accounts_sdk.accounts.create_entity(build_entity_v3(SecureRandom.uuid))
       @file = upload_file_accounts @accounts_sdk
     end
 
-    describe '.add_payment_instrument',
-             skip: 'sandbox rejects add_payment_instrument for this entity with 422 entity_business_registration_number_required, entity_legal_name_required, entity_registered_address_required - the v2.0 individual entity built here has no company data. Unrelated to the instruments work; needs an accounts-owned fix to build_entity or a company entity for this block.' do
+    describe '.add_payment_instrument' do
       context 'when adding payment instrument to existing entity' do
         it 'creates instrument for entity successfully' do
           request = build_payment_instrument @file
@@ -195,8 +194,7 @@ RSpec.describe CheckoutSdk::Accounts do
       end
     end
 
-    describe '.retrieve_payment_instrument_details',
-             skip: 'sandbox rejects add_payment_instrument for this entity with 422 entity_business_registration_number_required, entity_legal_name_required, entity_registered_address_required - the v2.0 individual entity built here has no company data. Unrelated to the instruments work; needs an accounts-owned fix to build_entity or a company entity for this block.' do
+    describe '.retrieve_payment_instrument_details' do
       context 'when fetching existing payment instrument for valid entity' do
         subject(:payment_instrument) {
           @accounts_sdk.accounts.add_payment_instrument @entity.id, build_payment_instrument(@file)
@@ -225,33 +223,28 @@ RSpec.describe CheckoutSdk::Accounts do
       end
     end
 
-    describe '.update_payment_instrument',
-             skip: 'builds no ETag and depends on the v2.0 entity above; ' \
-                   'covered by "updates a payment instrument with its ETag"' do
-      subject(:payment_instrument) {
-        @accounts_sdk.accounts.add_payment_instrument @entity.id, build_payment_instrument(@file)
-      }
+    describe '.update_payment_instrument' do
       context 'when updating existing payment instrument for valid entity' do
-        it 'returns http 200' do
+        # The API reads the ETag only from the If-Match header: without it the update gets 428.
+        it 'updates the instrument and reflects the new values' do
+          instrument_id = @accounts_sdk.accounts.add_payment_instrument(@entity.id, build_payment_instrument(@file)).id
+          details = @accounts_sdk.accounts.retrieve_payment_instrument_details @entity.id, instrument_id
+
           request = CheckoutSdk::Accounts::UpdatePaymentInstrumentRequest.new
           request.label = 'new label'
           request.default = true
+          request.headers = CheckoutSdk::Common::Headers.new
+          request.headers.if_match = details.http_metadata.headers['etag']
 
-          response = @accounts_sdk.accounts.update_payment_instrument @entity.id,
-                                                                      payment_instrument.id,
-                                                                      request
+          response = @accounts_sdk.accounts.update_payment_instrument @entity.id, instrument_id, request
           assert_response response, %w[id]
-        end
 
-        it 'reflects new values for updated fields' do
-          response = @accounts_sdk.accounts.retrieve_payment_instrument_details @entity.id,
-                                                                                payment_instrument.id
-
-          assert_response response, %w[id
-                                       label
-                                       default]
-          expect(response.label).to eq 'new label'
-          expect(response.default).to be true
+          updated = @accounts_sdk.accounts.retrieve_payment_instrument_details @entity.id, instrument_id
+          assert_response updated, %w[id
+                                      label
+                                      default]
+          expect(updated.label).to eq 'new label'
+          expect(updated.default).to be true
         end
       end
     end
@@ -295,15 +288,18 @@ end
 
 private
 
-def create_entity(sdk)
-  request = build_entity(SecureRandom.uuid)
-  # v2.0 payload (top-level individual) — pin to 2.0 (SDK now defaults to 3.0)
-  sdk.accounts.create_entity(request, '2.0')
+def create_entity(sdk, identity_file, bank_file)
+  sdk.accounts.create_entity(build_sole_trader_v3(SecureRandom.uuid, identity_file, bank_file), '3.0')
 end
 
-def build_entity(reference = nil)
+# A schema 3.0 GB Sole Trader Full request (GBSoleTraderFull3-0): a company of business type
+# individual_or_sole_proprietorship with exactly one ubo representative, the representative's identity
+# document and the top-level bank statement. The processing currency is USD, the only currency in the
+# sandbox platform's currency scope (see build_entity_v3); the addresses and settlement country stay GB.
+def build_sole_trader_v3(reference, identity_file, bank_file)
   phone = CheckoutSdk::Accounts::Phone.new
-  phone.number = '2345678910'
+  phone.country_code = 'GB'
+  phone.number = '2072343000'
 
   email_addresses = CheckoutSdk::Accounts::EntityEmailAddresses.new
   email_addresses.primary = generate_random_email
@@ -315,29 +311,68 @@ def build_entity(reference = nil)
   profile = CheckoutSdk::Accounts::Profile.new
   profile.urls = ['https://www.superheroexample.com']
   profile.mccs = ['0742']
+  profile.default_holding_currency = CheckoutSdk::Common::Currency::USD
+  profile.holding_currencies = [CheckoutSdk::Common::Currency::USD]
 
-  birth = CheckoutSdk::Accounts::DateOfBirth.new
-  birth.day = 5
-  birth.month = 5
-  birth.year = 1996
+  dob = CheckoutSdk::Accounts::DateOfBirth.new
+  dob.day = 5
+  dob.month = 6
+  dob.year = 1995
 
-  identification = CheckoutSdk::Accounts::Identification.new
-  identification.national_id_number = 'AB123456C'
+  pob = CheckoutSdk::Accounts::PlaceOfBirth.new
+  pob.country = CheckoutSdk::Common::Country::GB
 
-  individual = CheckoutSdk::Accounts::Individual.new
+  individual = CheckoutSdk::Accounts::RepresentativeIndividual.new
   individual.first_name = Helpers::DataFactory::FIRST_NAME
   individual.last_name = Helpers::DataFactory::LAST_NAME
-  individual.trading_name = "Batman's Super Hero Masks"
-  individual.registered_address = address
-  individual.national_tax_id = 'TAX123456'
-  individual.date_of_birth = birth
-  individual.identification = identification
+  individual.email_address = generate_random_email
+  individual.date_of_birth = dob
+  individual.place_of_birth = pob
+  individual.address = address
+
+  identity = CheckoutSdk::Accounts::Document.new
+  identity.type = CheckoutSdk::Accounts::DocumentType::PASSPORT
+  identity.front = identity_file.id
+  representative_documents = CheckoutSdk::Accounts::RepresentativeDocuments.new
+  representative_documents.identity_verification = identity
+
+  representative = CheckoutSdk::Accounts::Representative.new
+  representative.individual = individual
+  representative.roles = [CheckoutSdk::Accounts::EntityRoles::UBO]
+  representative.documents = representative_documents
+
+  doi = CheckoutSdk::Accounts::DateOfIncorporation.new
+  doi.month = 6
+  doi.year = 2015
+
+  company = CheckoutSdk::Accounts::Company.new
+  company.trading_name = "Batman's Super Hero Masks"
+  company.business_type = CheckoutSdk::Accounts::BusinessType::INDIVIDUAL_OR_SOLE_PROPRIETORSHIP
+  company.date_of_incorporation = doi
+  company.principal_address = address
+  company.representatives = [representative]
+
+  processing_details = CheckoutSdk::Accounts::ProcessingDetails.new
+  processing_details.settlement_country = 'GB'
+  processing_details.target_countries = ['GB']
+  processing_details.annual_processing_volume = 1_000_000
+  processing_details.average_transaction_value = 5_000
+  processing_details.highest_transaction_value = 25_000
+  processing_details.currency = CheckoutSdk::Common::Currency::USD
+
+  bank_statement = CheckoutSdk::Accounts::BankVerification.new
+  bank_statement.type = CheckoutSdk::Accounts::BankVerificationType::BANK_STATEMENT
+  bank_statement.front = bank_file.id
+  documents = CheckoutSdk::Accounts::OnboardSubEntityDocuments.new
+  documents.bank_verification = bank_statement
 
   request = CheckoutSdk::Accounts::OnboardEntity.new
-  request.reference = reference || SecureRandom.uuid
+  request.reference = reference
   request.contact_details = contact_details
   request.profile = profile
-  request.individual = individual
+  request.company = company
+  request.processing_details = processing_details
+  request.documents = documents
   request
 end
 
@@ -437,15 +472,18 @@ def build_payment_instrument(file)
   document.type = 'bank_statement'
   document.file_id = file.id
 
-  instrument_details = CheckoutSdk::Accounts::InstrumentDetailsFasterPayments.new
-  instrument_details.account_number = '12334454'
-  instrument_details.bank_code = '050389'
+  # A USD ACH account: USD is the only currency in the sandbox platform's scope. The sandbox rejects
+  # account_type checking (instrument_details_account_type_invalid), although the spec lists it.
+  instrument_details = CheckoutSdk::Accounts::InstrumentDetailsAch.new
+  instrument_details.account_number = '123456789'
+  instrument_details.routing_number = '026009593'
+  instrument_details.account_type = 'savings'
 
   request = CheckoutSdk::Accounts::PaymentInstrumentRequest.new
-  request.label = 'Barclays'
+  request.label = 'Main account'
   request.type = CheckoutSdk::Common::InstrumentType::BANK_ACCOUNT
-  request.currency = CheckoutSdk::Common::Currency::GBP
-  request.country = CheckoutSdk::Common::Country::GB
+  request.currency = CheckoutSdk::Common::Currency::USD
+  request.country = CheckoutSdk::Common::Country::US
   request.default = false
   request.document = document
   request.instrument_details = instrument_details
