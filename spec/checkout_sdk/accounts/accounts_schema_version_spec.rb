@@ -5,6 +5,7 @@ RSpec.describe CheckoutSdk::Accounts do
   let(:api_client_mock) { double('api_client') }
   let(:files_client_mock) { double('files_client') }
   let(:configuration_mock) { double('configuration') }
+  let(:entity_id) { 'ent_ovpg62ssyywodc4veodhelfrpv' }
   let(:client) do
     CheckoutSdk::Accounts::AccountsClient.new(api_client_mock, files_client_mock, configuration_mock)
   end
@@ -31,33 +32,33 @@ RSpec.describe CheckoutSdk::Accounts do
 
     it 'get_entity sends the default schema_version 3.0' do
       expect(api_client_mock).to receive(:invoke_get) do |path, auth, params, headers|
-        expect(path).to eq('accounts/entities/ent_1')
+        expect(path).to eq("accounts/entities/#{entity_id}")
         expect(params).to be_nil
         expect(headers.accept).to eq('application/json;schema_version=3.0')
         'r'
       end
-      expect(client.get_entity('ent_1')).to eq('r')
+      expect(client.get_entity(entity_id)).to eq('r')
     end
 
     it 'update_entity sends the default schema_version 3.0' do
       req = CheckoutSdk::Accounts::OnboardEntity.new
       expect(api_client_mock).to receive(:invoke_put) do |path, auth, body, headers|
-        expect(path).to eq('accounts/entities/ent_1')
+        expect(path).to eq("accounts/entities/#{entity_id}")
         expect(body).to eq(req)
         expect(headers.accept).to eq('application/json;schema_version=3.0')
         'r'
       end
-      expect(client.update_entity('ent_1', req)).to eq('r')
+      expect(client.update_entity(entity_id, req)).to eq('r')
     end
 
     it 'get_entity_requirements sends the default schema_version 3.0' do
       expect(api_client_mock).to receive(:invoke_get) do |path, _auth, params, headers|
-        expect(path).to eq('accounts/entities/ent_1/requirements')
+        expect(path).to eq("accounts/entities/#{entity_id}/requirements")
         expect(params).to be_nil
         expect(headers.accept).to eq('application/json;schema_version=3.0')
         'r'
       end
-      expect(client.get_entity_requirements('ent_1')).to eq('r')
+      expect(client.get_entity_requirements(entity_id)).to eq('r')
     end
 
     it 'honors a schema_version override' do
@@ -65,7 +66,7 @@ RSpec.describe CheckoutSdk::Accounts do
         expect(headers.accept).to eq('application/json;schema_version=2.0')
         'r'
       end
-      expect(client.get_entity('ent_1', '2.0')).to eq('r')
+      expect(client.get_entity(entity_id, '2.0')).to eq('r')
     end
   end
 end

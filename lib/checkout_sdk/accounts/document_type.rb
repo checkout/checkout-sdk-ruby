@@ -2,6 +2,7 @@
 
 module CheckoutSdk
   module Accounts
+    # The document types accepted to confirm an individual's identity ({Document#type}).
     module DocumentType
       PASSPORT = 'passport'
       NATIONAL_IDENTITY_CARD = 'national_identity_card'

@@ -2,6 +2,7 @@
 
 module CheckoutSdk
   module Accounts
+    # The document types accepted as memorandum or articles of association.
     module ArticlesOfAssociationType
       MEMORANDUM_OF_ASSOCIATION = 'memorandum_of_association'
       ARTICLES_OF_ASSOCIATION = 'articles_of_association'

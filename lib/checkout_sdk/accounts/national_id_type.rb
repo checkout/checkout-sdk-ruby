@@ -2,6 +2,7 @@
 
 module CheckoutSdk
   module Accounts
+    # The classification of a representative's national identification number (US ISV Seller variants).
     module NationalIdType
       SSN = 'ssn'
       ITIN = 'itin'
