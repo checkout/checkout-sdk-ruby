@@ -61,6 +61,12 @@ RSpec.describe CheckoutSdk::Payments do
         .with('payments/setups/ps_1/confirm/card', 'secret_key').and_return('response')
       expect(client.confirm_payment_setup('ps_1', 'card')).to eq('response')
     end
+
+    it 'builds the correct path for the cashapp payment method name' do
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('payments/setups/ps_1/confirm/cashapp', 'secret_key').and_return('response')
+      expect(client.confirm_payment_setup('ps_1', 'cashapp')).to eq('response')
+    end
   end
 
   describe '#create_payment_setup with billing_descriptor, presentment_details and terminal' do
@@ -80,6 +86,33 @@ RSpec.describe CheckoutSdk::Payments do
         terminal: {
           id: '12345678',
           local_date_time: '2026-05-26T13:05:14+01:00'
+        }
+      }
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('payments/setups', 'secret_key', request).and_return('response')
+      expect(client.create_payment_setup(request)).to eq('response')
+    end
+  end
+
+  describe '#create_payment_setup with Cash App Pay, customer and device' do
+    it 'passes payment_methods.cashapp and the customer fields through untouched' do
+      request = {
+        processing_channel_id: 'pc_aaaaaaaaaaaaaaaaaaaaaaaaaa',
+        amount: 1000,
+        currency: 'USD',
+        payment_methods: { cashapp: { initialization: 'enabled', customer_profile_sharing: true } },
+        customer: {
+          id: 'cus_123456789',
+          country: 'GB',
+          tax_number: 'GB123456789',
+          device: {
+            locale: 'en_US',
+            fingerprint: 'fp_abc123xyz',
+            ipv4: '203.0.113.0',
+            ipv6: '2001:db8:85a3::8a2e:370:7334',
+            client: CheckoutSdk::Payments::PaymentSetupDeviceClient::WEB,
+            os: CheckoutSdk::Payments::PaymentSetupDeviceOs::ANDROID
+          }
         }
       }
       expect(api_client_mock).to receive(:invoke_post)

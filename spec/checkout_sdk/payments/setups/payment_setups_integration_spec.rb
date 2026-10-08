@@ -199,4 +199,60 @@ RSpec.describe CheckoutSdk::Payments do
       end
     end
   end
+
+  describe 'Cash App Pay, customer device and customer identity fields' do
+    it 'echoes the five new customer.device fields' do
+      request = create_payment_setup_request(amount: 1000, currency: 'USD')
+      request[:customer][:device] = {
+        locale: 'en_US',
+        fingerprint: 'fp_abc123xyz',
+        ipv4: '203.0.113.0',
+        ipv6: '2001:db8:85a3::8a2e:370:7334',
+        client: CheckoutSdk::Payments::PaymentSetupDeviceClient::WEB,
+        os: CheckoutSdk::Payments::PaymentSetupDeviceOs::ANDROID
+      }
+
+      response = @api.payments_setups.create_payment_setup(request)
+
+      device = response.customer.device
+      expect(device.locale).to eq('en_US')
+      expect(device.fingerprint).to eq('fp_abc123xyz')
+      expect(device.ipv4).to eq('203.0.113.0')
+      expect(device.ipv6).to eq('2001:db8:85a3::8a2e:370:7334')
+      expect(device.client).to eq('web')
+      expect(device.os).to eq('android')
+    end
+
+    it 'echoes customer id, country and tax_number' do
+      request = create_payment_setup_request(amount: 1000, currency: 'USD')
+      request[:customer].merge!(id: 'cus_123456789', country: 'GB', tax_number: 'GB123456789')
+
+      response = @api.payments_setups.create_payment_setup(request)
+
+      expect(response.customer.id).to eq('cus_123456789')
+      expect(response.customer.country).to eq('GB')
+      expect(response.customer.tax_number).to eq('GB123456789')
+    end
+
+    it 'returns the Cash App payment method when it is enabled on the processing channel' do
+      request = create_payment_setup_request(amount: 1000, currency: 'USD')
+      request[:payment_methods] = { cashapp: { initialization: 'enabled', customer_profile_sharing: true } }
+      request[:customer][:device] = {
+        locale: 'en_US',
+        client: CheckoutSdk::Payments::PaymentSetupDeviceClient::WEB,
+        os: CheckoutSdk::Payments::PaymentSetupDeviceOs::ANDROID
+      }
+
+      response = @api.payments_setups.create_payment_setup(request)
+
+      available = Array(response.available_payment_methods)
+      skip 'Cash App Pay is not enabled on the sandbox processing channel' unless available.include?('cashapp')
+
+      fetched = @api.payments_setups.get_payment_setup(response.id)
+      cashapp_response = fetched.payment_methods.cashapp
+      expect(cashapp_response.status).not_to be nil
+      expect(cashapp_response.initialization).to eq('enabled')
+      expect(cashapp_response.customer_profile_sharing).to be(true)
+    end
+  end
 end

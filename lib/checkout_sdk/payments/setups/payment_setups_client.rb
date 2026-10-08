@@ -16,9 +16,9 @@ module CheckoutSdk
       end
 
       # Creates a Payment Setup.
-      # To maximize the amount of information the payment setup can use, we recommend that you create
-      # a payment setup as early as possible in the customer's journey. For example, the first time
-      # they land on the basket page.
+      # To maximize the information available to the payment setup, create a Payment Setup as early as
+      # possible in the customer's journey. For example, create it the first time they land on the
+      # basket page.
       # [Beta]
       #
       # @param [Hash] payment_setups_request
@@ -27,6 +27,38 @@ module CheckoutSdk
       #   :terminal {PaymentSetupTerminal} and
       #   :industry {PaymentSetupIndustry} (containing :accommodation
       #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
+      #   A Hash request is sent as is, so every nested value must be a Hash too. To use one of the
+      #   typed classes above (or {CashAppPaymentMethod}), convert it first with
+      #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
+      #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
+      #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
+      #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
+      #   "enabled") and :customer_profile_sharing (Boolean).
+      #   :customer may include:
+      #   - :id - The unique identifier of the customer.
+      #   - :country - The two-letter ISO country code of the customer for this payment
+      #     (min 2 characters, max 2 characters).
+      #   - :email - Details of the customer's email: :address (the customer's email address) and
+      #     :verified (Boolean, whether the customer's email address is verified).
+      #   - :name - The customer's full name (max 100 characters).
+      #   - :tax_number - The customer's tax identification number.
+      #   - :phone - The customer's phone number: :country_code (the international country calling
+      #     code, min 1 character, max 7 characters) and :number (the phone number, min 6 characters,
+      #     max 25 characters).
+      #   - :merchant_account - Details of the account the customer holds with the merchant: :id,
+      #     :registration_date, :last_modified, :first_transaction_date and :last_transaction_date
+      #     (dates, yyyy-MM-dd), :returning_customer (Boolean), :total_order_count (Integer) and
+      #     :last_payment_amount (Number).
+      #   - :device - Details of the customer's device: :locale (the locale of the device),
+      #     :fingerprint (a unique identifier for the customer's device), :ipv4 and :ipv6 (the
+      #     customer's device IPv4 or IPv6 address, used by some payment methods for risk and
+      #     eligibility checks), :client (the type of client the customer uses to initiate the
+      #     payment, one of {PaymentSetupDeviceClient}; Cash App Pay requires it, although the API
+      #     reference does not mark it as required) and :os (the operating system of the
+      #     customer's device, one of {PaymentSetupDeviceOs}).
+      # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
+      #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
+      #   payment_methods.cashapp.customer_profile.
       def create_payment_setup(payment_setups_request)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH),
@@ -36,9 +68,9 @@ module CheckoutSdk
       end
 
       # Updates a Payment Setup.
-      # You should update the payment setup whenever there are significant changes in the data relevant
-      # to the customer's transaction. For example, when the customer makes a change that impacts the
-      # total payment amount.
+      # Update the Payment Setup whenever there are significant changes in the data relevant to the
+      # customer's transaction. For example, when the customer makes a change that impacts the total
+      # payment amount.
       # [Beta]
       #
       # @param [String] id - The unique identifier of the Payment Setup to update
@@ -48,6 +80,38 @@ module CheckoutSdk
       #   :terminal {PaymentSetupTerminal} and
       #   :industry {PaymentSetupIndustry} (containing :accommodation
       #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
+      #   A Hash request is sent as is, so every nested value must be a Hash too. To use one of the
+      #   typed classes above (or {CashAppPaymentMethod}), convert it first with
+      #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
+      #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
+      #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
+      #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
+      #   "enabled") and :customer_profile_sharing (Boolean).
+      #   :customer may include:
+      #   - :id - The unique identifier of the customer.
+      #   - :country - The two-letter ISO country code of the customer for this payment
+      #     (min 2 characters, max 2 characters).
+      #   - :email - Details of the customer's email: :address (the customer's email address) and
+      #     :verified (Boolean, whether the customer's email address is verified).
+      #   - :name - The customer's full name (max 100 characters).
+      #   - :tax_number - The customer's tax identification number.
+      #   - :phone - The customer's phone number: :country_code (the international country calling
+      #     code, min 1 character, max 7 characters) and :number (the phone number, min 6 characters,
+      #     max 25 characters).
+      #   - :merchant_account - Details of the account the customer holds with the merchant: :id,
+      #     :registration_date, :last_modified, :first_transaction_date and :last_transaction_date
+      #     (dates, yyyy-MM-dd), :returning_customer (Boolean), :total_order_count (Integer) and
+      #     :last_payment_amount (Number).
+      #   - :device - Details of the customer's device: :locale (the locale of the device),
+      #     :fingerprint (a unique identifier for the customer's device), :ipv4 and :ipv6 (the
+      #     customer's device IPv4 or IPv6 address, used by some payment methods for risk and
+      #     eligibility checks), :client (the type of client the customer uses to initiate the
+      #     payment, one of {PaymentSetupDeviceClient}; Cash App Pay requires it, although the API
+      #     reference does not mark it as required) and :os (the operating system of the
+      #     customer's device, one of {PaymentSetupDeviceOs}).
+      # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
+      #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
+      #   payment_methods.cashapp.customer_profile.
       def update_payment_setup(id, payment_setups_request)
         api_client.invoke_put(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -56,10 +120,13 @@ module CheckoutSdk
         )
       end
 
-      # Retrieves a Payment Setup.
+      # Retrieves a Payment Setup by its unique identifier.
       # [Beta]
       #
       # @param [String] id - The unique identifier of the Payment Setup to retrieve
+      # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
+      #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
+      #   payment_methods.cashapp.customer_profile.
       def get_payment_setup(id)
         api_client.invoke_get(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -73,7 +140,10 @@ module CheckoutSdk
       #
       # @param [String] id - The unique identifier of the Payment Setup
       # @param [String] payment_method_name - The name of the payment method to process the
-      # payment with (for example, "tabby", "klarna", "card")
+      #   payment with (for example, "tabby", "klarna", "card" or "cashapp")
+      # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
+      #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
+      #   payment_methods.cashapp.customer_profile.
       def confirm_payment_setup(id, payment_method_name)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_name),
