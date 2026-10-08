@@ -248,7 +248,8 @@ RSpec.describe CheckoutSdk::Payments do
       available = Array(response.available_payment_methods)
       skip 'Cash App Pay is not enabled on the sandbox processing channel' unless available.include?('cashapp')
 
-      cashapp_response = response.payment_methods.cashapp
+      fetched = @api.payments_setups.get_payment_setup(response.id)
+      cashapp_response = fetched.payment_methods.cashapp
       expect(cashapp_response.status).not_to be nil
       expect(cashapp_response.initialization).to eq('enabled')
       expect(cashapp_response.customer_profile_sharing).to be(true)

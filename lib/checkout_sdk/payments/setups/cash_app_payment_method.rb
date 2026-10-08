@@ -5,6 +5,15 @@ module CheckoutSdk
     # The Cash App payment method's details and configuration on a Payment Setup.
     # Maps swagger `CashApp`. Sent under the `payment_methods.cashapp` key (one lowercase word,
     # not `cash_app`).
+    #
+    # The Payment Setup request is a Hash, and a Hash request is sent as is, so do not nest an
+    # instance of this class in it directly: it would not be serialized. Pass a Hash with these keys,
+    # or convert an instance first:
+    #   cash_app = CheckoutSdk::Payments::CashAppPaymentMethod.new
+    #   cash_app.initialization = 'enabled'
+    #   cash_app.customer_profile_sharing = true
+    #   request[:payment_methods] = { cashapp: CheckoutSdk::JsonSerializer.to_custom_hash(cash_app) }
+    # Responses are read with dot access, for example response.payment_methods.cashapp.action.redirect_url.
     class CashAppPaymentMethod
       # The payment method status.
       # [Optional]
@@ -22,8 +31,8 @@ module CheckoutSdk
       # The initialization state of the payment method.
       # When you create a Payment Setup, this defaults to `disabled`.
       # [Optional]
-      # Enum: "disabled" "enabled"
       # Default: "disabled"
+      # Enum: "disabled" "enabled"
       # @return [String]
       attr_accessor :initialization
 

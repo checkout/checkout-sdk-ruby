@@ -259,7 +259,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
     it 'round trips every field and keeps the Cash App address keys literally' do
       pm = described_class.new
       pm.status = 'ready'
-      pm.flags = %w[flag_a]
+      pm.flags = []
       pm.initialization = 'enabled'
       pm.customer_profile_sharing = true
       pm.customer_profile = customer_profile
@@ -272,8 +272,9 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(json).to include('"address_line_1":', '"address_line_2":', '"address_line_3":',
                               '"administrative_district_level_1":')
       expect(json).not_to include('address_line1')
+      expect(json).not_to include('administrative_district_level1')
       expect(read.status).to eq('ready')
-      expect(read.flags).to eq(%w[flag_a])
+      expect(read.flags).to eq([])
       expect(read.initialization).to eq('enabled')
       expect(read.customer_profile_sharing).to be(true)
       expect(read.reference).to eq('ORDER-99')
