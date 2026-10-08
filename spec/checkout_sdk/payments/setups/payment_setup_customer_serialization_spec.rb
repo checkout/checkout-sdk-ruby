@@ -138,6 +138,16 @@ RSpec.describe 'Payment Setups customer and device serialization' do
             'ipv6' => '2001:db8:85a3::8a2e:370:7334',
             'client' => 'web',
             'os' => 'android'
+          },
+          'merchant_account' => {
+            'id' => '1234',
+            'registration_date' => '2023-05-01',
+            'last_modified' => '2023-05-01',
+            'returning_customer' => true,
+            'first_transaction_date' => '2023-09-15',
+            'last_transaction_date' => '2025-03-28',
+            'total_order_count' => 6,
+            'last_payment_amount' => 55.99
           }
         }
       }.to_json
@@ -158,6 +168,23 @@ RSpec.describe 'Payment Setups customer and device serialization' do
       expect(read.device.ipv6).to eq('2001:db8:85a3::8a2e:370:7334')
       expect(read.device.client).to eq(CheckoutSdk::Payments::PaymentSetupDeviceClient::WEB)
       expect(read.device.os).to eq(CheckoutSdk::Payments::PaymentSetupDeviceOs::ANDROID)
+      expect(read.merchant_account.id).to eq('1234')
+      expect(read.merchant_account.registration_date).to eq('2023-05-01')
+      expect(read.merchant_account.last_modified).to eq('2023-05-01')
+      expect(read.merchant_account.returning_customer).to be(true)
+      expect(read.merchant_account.first_transaction_date).to eq('2023-09-15')
+      expect(read.merchant_account.last_transaction_date).to eq('2025-03-28')
+      expect(read.merchant_account.total_order_count).to eq(6)
+      expect(read.merchant_account.last_payment_amount).to eq(55.99)
+    end
+
+    it 'exposes the payment method status and initialization values of the spec' do
+      expect(CheckoutSdk::Payments::PaymentSetupPaymentMethodStatus.constants.map do |c|
+        CheckoutSdk::Payments::PaymentSetupPaymentMethodStatus.const_get(c)
+      end).to contain_exactly('unavailable', 'action_required', 'ready', 'initialization_required', 'invalid')
+      expect(CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization.constants.map do |c|
+        CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization.const_get(c)
+      end).to contain_exactly('disabled', 'enabled')
     end
   end
 end

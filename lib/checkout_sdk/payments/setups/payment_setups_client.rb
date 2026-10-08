@@ -27,15 +27,28 @@ module CheckoutSdk
       #   :terminal {PaymentSetupTerminal} and
       #   :industry {PaymentSetupIndustry} (containing :accommodation
       #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
+      #   A Hash request is sent as is, so every nested value must be a Hash too. To use one of the
+      #   typed classes above (or {CashAppPaymentMethod}), convert it first with
+      #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
+      #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
       #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
       #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
-      #   "enabled") and :customer_profile_sharing (Boolean). A Hash request is sent as is, so nested
-      #   values must be Hashes too.
+      #   "enabled") and :customer_profile_sharing (Boolean).
       #   :customer may include:
       #   - :id - The unique identifier of the customer.
       #   - :country - The two-letter ISO country code of the customer for this payment
       #     (min 2 characters, max 2 characters).
+      #   - :email - Details of the customer's email: :address (the customer's email address) and
+      #     :verified (Boolean, whether the customer's email address is verified).
+      #   - :name - The customer's full name (max 100 characters).
       #   - :tax_number - The customer's tax identification number.
+      #   - :phone - The customer's phone number: :country_code (the international country calling
+      #     code, min 1 character, max 7 characters) and :number (the phone number, min 6 characters,
+      #     max 25 characters).
+      #   - :merchant_account - Details of the account the customer holds with the merchant: :id,
+      #     :registration_date, :last_modified, :first_transaction_date and :last_transaction_date
+      #     (dates, yyyy-MM-dd), :returning_customer (Boolean), :total_order_count (Integer) and
+      #     :last_payment_amount (Number).
       #   - :device - Details of the customer's device: :locale (the locale of the device),
       #     :fingerprint (a unique identifier for the customer's device), :ipv4 and :ipv6 (the
       #     customer's device IPv4 or IPv6 address, used by some payment methods for risk and
@@ -67,15 +80,28 @@ module CheckoutSdk
       #   :terminal {PaymentSetupTerminal} and
       #   :industry {PaymentSetupIndustry} (containing :accommodation
       #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
+      #   A Hash request is sent as is, so every nested value must be a Hash too. To use one of the
+      #   typed classes above (or {CashAppPaymentMethod}), convert it first with
+      #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
+      #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
       #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
       #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
-      #   "enabled") and :customer_profile_sharing (Boolean). A Hash request is sent as is, so nested
-      #   values must be Hashes too.
+      #   "enabled") and :customer_profile_sharing (Boolean).
       #   :customer may include:
       #   - :id - The unique identifier of the customer.
       #   - :country - The two-letter ISO country code of the customer for this payment
       #     (min 2 characters, max 2 characters).
+      #   - :email - Details of the customer's email: :address (the customer's email address) and
+      #     :verified (Boolean, whether the customer's email address is verified).
+      #   - :name - The customer's full name (max 100 characters).
       #   - :tax_number - The customer's tax identification number.
+      #   - :phone - The customer's phone number: :country_code (the international country calling
+      #     code, min 1 character, max 7 characters) and :number (the phone number, min 6 characters,
+      #     max 25 characters).
+      #   - :merchant_account - Details of the account the customer holds with the merchant: :id,
+      #     :registration_date, :last_modified, :first_transaction_date and :last_transaction_date
+      #     (dates, yyyy-MM-dd), :returning_customer (Boolean), :total_order_count (Integer) and
+      #     :last_payment_amount (Number).
       #   - :device - Details of the customer's device: :locale (the locale of the device),
       #     :fingerprint (a unique identifier for the customer's device), :ipv4 and :ipv6 (the
       #     customer's device IPv4 or IPv6 address, used by some payment methods for risk and

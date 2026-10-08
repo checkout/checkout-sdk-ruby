@@ -97,6 +97,7 @@ RSpec.describe CheckoutSdk::Payments do
   describe '#create_payment_setup with Cash App Pay, customer and device' do
     it 'passes payment_methods.cashapp and the customer fields through untouched' do
       request = {
+        processing_channel_id: 'pc_aaaaaaaaaaaaaaaaaaaaaaaaaa',
         amount: 1000,
         currency: 'USD',
         payment_methods: { cashapp: { initialization: 'enabled', customer_profile_sharing: true } },

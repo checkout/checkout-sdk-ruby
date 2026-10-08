@@ -19,7 +19,7 @@ module CheckoutSdk
       # [Optional]
       # Read only.
       # Enum: "unavailable" "action_required" "ready" "initialization_required" "invalid"
-      # @return [String]
+      # @return [String] One of {PaymentSetupPaymentMethodStatus}.
       attr_accessor :status
 
       # The list of error codes or indicators that highlight missing or invalid information.
@@ -33,7 +33,7 @@ module CheckoutSdk
       # [Optional]
       # Default: "disabled"
       # Enum: "disabled" "enabled"
-      # @return [String]
+      # @return [String] One of {PaymentSetupPaymentMethodInitialization}.
       attr_accessor :initialization
 
       # Indicates whether the customer consents to share their Cash App customer profile with Checkout.com.
