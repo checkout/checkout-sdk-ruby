@@ -1,5 +1,5 @@
 RSpec.describe 'Hash <-> typed-DTO request compatibility' do
-  # Convention (per .cursor/rules/ruby-endpoint-review.mdc):
+  # Convention:
   # every client request body / query param accepts EITHER a typed DTO
   # OR a raw Hash. Both must serialize identically through JsonSerializer.
   # This spec locks that rule in for the modules added in this revision.
