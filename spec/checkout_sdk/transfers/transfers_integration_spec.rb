@@ -48,10 +48,10 @@ end
 def create_transfer
   transfer_source = CheckoutSdk::Transfers::TransferSource.new
   transfer_source.id = 'ent_kidtcgc3ge5unf4a5i6enhnr5m'
-  transfer_source.amount = 100
+  transfer_source.amount = 1
   transfer_source.currency = CheckoutSdk::Common::Currency::GBP
   transfer_destination = CheckoutSdk::Transfers::TransferDestination.new
-  transfer_destination.id = 'ent_w4jelhppmfiufdnatam37wrfc4'
+  transfer_destination.id = 'ent_ocw5i74vowfg2edpy66izhts2u'
   create_transfer = CheckoutSdk::Transfers::CreateTransfer.new
   create_transfer.reference = 'reference'
   create_transfer.transfer_type = CheckoutSdk::Transfers::TransferType::COMMISSION
