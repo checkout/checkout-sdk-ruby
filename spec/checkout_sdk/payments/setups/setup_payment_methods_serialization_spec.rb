@@ -70,6 +70,74 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(hash['flags']).to eq(%w[flag_a])
       expect(hash['action']).to eq({ 'type' => 'select_bank', 'banks' => [{ 'bank_id' => 'ob-natwest' }] })
     end
+
+    it 'is sent under the literal paybybank key' do
+      pm = described_class.new
+      pm.bank_id = 'ob-natwest'
+      request = { payment_methods: { paybybank: CheckoutSdk::JsonSerializer.to_custom_hash(pm) } }
+
+      json = CheckoutSdk::JsonSerializer.to_custom_hash(request).to_json
+
+      expect(json).to include('"payment_methods":{"paybybank":{')
+      expect(json).not_to include('pay_by_bank')
+      expect(json).not_to include('payByBank')
+      expect(JSON.parse(json)['payment_methods']['paybybank']).to eq({ 'bank_id' => 'ob-natwest' })
+    end
+
+    it 'reads payment_methods.paybybank.action from the swagger example response' do
+      configuration = double('CheckoutConfiguration',
+                             http_client: Faraday.new,
+                             multipart_http_client: Faraday.new,
+                             logger: Logger.new(nil))
+      api_client = CheckoutSdk::ApiClient.new(configuration, 'https://api.sandbox.checkout.com')
+      body = {
+        'id' => 'ps_2Un4WvKHNwAdrXDqTWOvGOgICcr',
+        'payment_methods' => {
+          'paybybank' => {
+            'status' => 'action_required',
+            'flags' => [],
+            'bank_id' => 'ob-natwest',
+            'action' => {
+              'type' => 'select_bank',
+              'banks' => [{ 'bank_id' => 'ob-natwest', 'display_name' => 'NatWest',
+                            'logo_url' => 'https://cdn.token.io/banks/natwest.png', 'available' => true }]
+            }
+          }
+        }
+      }.to_json
+      response = double('Response', status: 200, body: body, headers: { 'Content-Type' => 'application/json' })
+
+      pay_by_bank = api_client.send(:parse_response, response).payment_methods.paybybank
+
+      expect(pay_by_bank.status).to eq('action_required')
+      expect(pay_by_bank.flags).to eq([])
+      expect(pay_by_bank.bank_id).to eq('ob-natwest')
+      expect(pay_by_bank.action.type).to eq('select_bank')
+      bank = pay_by_bank.action.banks.first
+      expect(bank.bank_id).to eq('ob-natwest')
+      expect(bank.display_name).to eq('NatWest')
+      expect(bank.logo_url).to eq('https://cdn.token.io/banks/natwest.png')
+      expect(bank.available).to be(true)
+    end
+  end
+
+  describe CheckoutSdk::Payments::PaymentSetupRisk do
+    it 'serializes enabled under the risk key, keeping false on the wire' do
+      risk = described_class.new
+      risk.enabled = false
+      request = { risk: CheckoutSdk::JsonSerializer.to_custom_hash(risk) }
+
+      json = CheckoutSdk::JsonSerializer.to_custom_hash(request).to_json
+
+      expect(json).to eq('{"risk":{"enabled":false}}')
+    end
+
+    it 'round trips enabled true' do
+      risk = described_class.new
+      risk.enabled = true
+
+      expect(CheckoutSdk::JsonSerializer.to_custom_hash(risk)).to eq({ 'enabled' => true })
+    end
   end
 
   describe CheckoutSdk::Payments::StablecoinPaymentMethod do
