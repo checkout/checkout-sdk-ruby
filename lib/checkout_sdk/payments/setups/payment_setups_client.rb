@@ -28,12 +28,19 @@ module CheckoutSdk
       #   :industry {PaymentSetupIndustry} (containing :accommodation
       #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
       #   A Hash request is sent as is, so every nested value must be a Hash too. To use one of the
-      #   typed classes above (or {CashAppPaymentMethod}), convert it first with
+      #   typed classes above (or {CashAppPaymentMethod}, {PayByBankPaymentMethod} or
+      #   {PaymentSetupRisk}), convert it first with
       #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
       #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
       #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
       #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
       #   "enabled") and :customer_profile_sharing (Boolean).
+      #   :payment_methods may also include :paybybank (the key is the single lowercase word
+      #   `paybybank`; the API ignores `pay_by_bank` without an error), a Hash with the keys documented
+      #   on {PayByBankPaymentMethod}; you send :bank_id (the identifier of the bank the customer has
+      #   selected for the payment).
+      #   :risk {PaymentSetupRisk} - Risk assessment settings for the Payment Setup: :enabled
+      #   (Boolean, whether a risk assessment should be performed, default true).
       #   :customer may include:
       #   - :id - The unique identifier of the customer.
       #   - :country - The two-letter ISO country code of the customer for this payment
@@ -58,7 +65,8 @@ module CheckoutSdk
       #     customer's device, one of {PaymentSetupDeviceOs}).
       # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
-      #   payment_methods.cashapp.customer_profile.
+      #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
+      #   payment_methods.paybybank.action.banks.
       def create_payment_setup(payment_setups_request)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH),
@@ -81,12 +89,19 @@ module CheckoutSdk
       #   :industry {PaymentSetupIndustry} (containing :accommodation
       #   {Array(PaymentSetupAccommodation)} and :airline {Array(PaymentSetupAirline)}).
       #   A Hash request is sent as is, so every nested value must be a Hash too. To use one of the
-      #   typed classes above (or {CashAppPaymentMethod}), convert it first with
+      #   typed classes above (or {CashAppPaymentMethod}, {PayByBankPaymentMethod} or
+      #   {PaymentSetupRisk}), convert it first with
       #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
       #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
       #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
       #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
       #   "enabled") and :customer_profile_sharing (Boolean).
+      #   :payment_methods may also include :paybybank (the key is the single lowercase word
+      #   `paybybank`; the API ignores `pay_by_bank` without an error), a Hash with the keys documented
+      #   on {PayByBankPaymentMethod}; you send :bank_id (the identifier of the bank the customer has
+      #   selected for the payment).
+      #   :risk {PaymentSetupRisk} - Risk assessment settings for the Payment Setup: :enabled
+      #   (Boolean, whether a risk assessment should be performed, default true).
       #   :customer may include:
       #   - :id - The unique identifier of the customer.
       #   - :country - The two-letter ISO country code of the customer for this payment
@@ -111,7 +126,8 @@ module CheckoutSdk
       #     customer's device, one of {PaymentSetupDeviceOs}).
       # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
-      #   payment_methods.cashapp.customer_profile.
+      #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
+      #   payment_methods.paybybank.action.banks.
       def update_payment_setup(id, payment_setups_request)
         api_client.invoke_put(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -126,7 +142,8 @@ module CheckoutSdk
       # @param [String] id - The unique identifier of the Payment Setup to retrieve
       # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
-      #   payment_methods.cashapp.customer_profile.
+      #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
+      #   payment_methods.paybybank.action.banks.
       def get_payment_setup(id)
         api_client.invoke_get(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -143,7 +160,8 @@ module CheckoutSdk
       #   payment with (for example, "tabby", "klarna", "card" or "cashapp")
       # @return [Hash] The Payment Setup (swagger `PaymentSetup`, 200). For Cash App Pay, read
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
-      #   payment_methods.cashapp.customer_profile.
+      #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
+      #   payment_methods.paybybank.action.banks.
       def confirm_payment_setup(id, payment_method_name)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_name),
