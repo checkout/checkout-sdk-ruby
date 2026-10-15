@@ -4,7 +4,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
   describe CheckoutSdk::Payments::BacsPaymentMethod do
     it 'serializes its fields to their swagger keys' do
       pm = described_class.new
-      pm.status = 'available'
+      pm.status = 'ready'
       pm.flags = %w[flag_a]
       pm.instrument_id = 'src_wkq7552u245upl5h75x24554xy'
       pm.initialization = 'setup'
@@ -17,7 +17,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
 
       hash = CheckoutSdk::JsonSerializer.to_custom_hash(pm)
 
-      expect(hash['status']).to eq('available')
+      expect(hash['status']).to eq('ready')
       expect(hash['flags']).to eq(%w[flag_a])
       expect(hash['instrument_id']).to eq('src_wkq7552u245upl5h75x24554xy')
       expect(hash['initialization']).to eq('setup')
@@ -33,7 +33,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
   describe CheckoutSdk::Payments::CardPresentPaymentMethod do
     it 'serializes its fields to their swagger keys' do
       pm = described_class.new
-      pm.status = 'available'
+      pm.status = 'ready'
       pm.flags = %w[flag_a]
       pm.track2 = 'track2-data'
       pm.emv = 'emv-data'
@@ -44,7 +44,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
 
       hash = CheckoutSdk::JsonSerializer.to_custom_hash(pm)
 
-      expect(hash['status']).to eq('available')
+      expect(hash['status']).to eq('ready')
       expect(hash['flags']).to eq(%w[flag_a])
       expect(hash['track2']).to eq('track2-data')
       expect(hash['emv']).to eq('emv-data')
@@ -59,14 +59,14 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
     it 'serializes bank_id, status, flags and action' do
       pm = described_class.new
       pm.bank_id = 'ob-natwest'
-      pm.status = 'available'
+      pm.status = 'ready'
       pm.flags = %w[flag_a]
       pm.action = { 'type' => 'select_bank', 'banks' => [{ 'bank_id' => 'ob-natwest' }] }
 
       hash = CheckoutSdk::JsonSerializer.to_custom_hash(pm)
 
       expect(hash['bank_id']).to eq('ob-natwest')
-      expect(hash['status']).to eq('available')
+      expect(hash['status']).to eq('ready')
       expect(hash['flags']).to eq(%w[flag_a])
       expect(hash['action']).to eq({ 'type' => 'select_bank', 'banks' => [{ 'bank_id' => 'ob-natwest' }] })
     end
@@ -143,12 +143,12 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
   describe CheckoutSdk::Payments::StablecoinPaymentMethod do
     it 'serializes its response fields' do
       pm = described_class.new
-      pm.status = 'available'
+      pm.status = 'ready'
       pm.flags = %w[flag_a]
 
       hash = CheckoutSdk::JsonSerializer.to_custom_hash(pm)
 
-      expect(hash['status']).to eq('available')
+      expect(hash['status']).to eq('ready')
       expect(hash['flags']).to eq(%w[flag_a])
     end
   end
