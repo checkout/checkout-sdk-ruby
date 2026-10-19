@@ -7,7 +7,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       pm.status = 'ready'
       pm.flags = %w[flag_a]
       pm.instrument_id = 'src_wkq7552u245upl5h75x24554xy'
-      pm.initialization = 'setup'
+      pm.initialization = 'enabled'
       pm.account_holder = { 'type' => 'individual', 'first_name' => 'John' }
       pm.account_number = '12345678'
       pm.bank_code = '200000'
@@ -20,7 +20,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(hash['status']).to eq('ready')
       expect(hash['flags']).to eq(%w[flag_a])
       expect(hash['instrument_id']).to eq('src_wkq7552u245upl5h75x24554xy')
-      expect(hash['initialization']).to eq('setup')
+      expect(hash['initialization']).to eq('enabled')
       expect(hash['account_holder']).to eq({ 'type' => 'individual', 'first_name' => 'John' })
       expect(hash['account_number']).to eq('12345678')
       expect(hash['bank_code']).to eq('200000')
@@ -137,6 +137,19 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       risk.enabled = true
 
       expect(CheckoutSdk::JsonSerializer.to_custom_hash(risk)).to eq({ 'enabled' => true })
+    end
+  end
+
+  describe CheckoutSdk::Payments::BlikPaymentMethod do
+    it 'serializes its fields to their swagger keys' do
+      pm = described_class.new
+      pm.status = 'ready'
+      pm.flags = %w[flag_a]
+      pm.partner_code = '777123'
+
+      hash = CheckoutSdk::JsonSerializer.to_custom_hash(pm)
+
+      expect(hash).to eq({ 'status' => 'ready', 'flags' => %w[flag_a], 'partner_code' => '777123' })
     end
   end
 

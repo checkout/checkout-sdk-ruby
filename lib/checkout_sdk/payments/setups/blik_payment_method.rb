@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Payments
-    # Blik payment method configuration on a Payment Setup.
+    # Blik payment method configuration on a Payment Setup. Maps swagger `Blik`.
     #
     # @!attribute status
     #   @return [String] (response-only) Payment method status, one of
