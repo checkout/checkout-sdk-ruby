@@ -5,7 +5,8 @@ module CheckoutSdk
     # Card Present payment method configuration on a Payment Setup. Maps swagger `CardPresent`.
     #
     # @!attribute status
-    #   @return [String] (response-only) Payment method status.
+    #   @return [String] (response-only) Payment method status, one of
+    #     {PaymentSetupPaymentMethodStatus} (e.g. "ready").
     # @!attribute flags
     #   @return [Array(String)] (response-only) Diagnostic flags returned by the API.
     # @!attribute track2
