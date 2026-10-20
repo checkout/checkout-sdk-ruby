@@ -3,7 +3,6 @@
 module CheckoutSdk
   module Payments
     # Client for Payment Flow API operations
-    # [Beta]
     class FlowClient < Client
       PAYMENT_SESSIONS_PATH = 'payment-sessions'
       SUBMIT_PATH = 'submit'
@@ -17,7 +16,6 @@ module CheckoutSdk
 
       # Creates a Payment Session.
       # Use this endpoint to set up a payment session before collecting payment details from your customer.
-      # [Beta]
       #
       # @param [Hash] request_payment_session_request
       def request_payment_session(request_payment_session_request)
@@ -30,7 +28,6 @@ module CheckoutSdk
 
       # Submits a Payment Session.
       # Use this endpoint to submit payment details and process the payment for an existing session.
-      # [Beta]
       #
       # The request accepts `amount_allocations`: the sub-entities the payment is being
       # processed on behalf of, min 1 max 50 items. Each entry maps to
@@ -50,7 +47,6 @@ module CheckoutSdk
 
       # Creates and submits a Payment Session in a single request.
       # Use this endpoint to create a payment session and immediately process the payment.
-      # [Beta]
       #
       # @param [Hash] request_payment_session_with_payment_request
       def request_payment_session_with_payment(request_payment_session_with_payment_request)
