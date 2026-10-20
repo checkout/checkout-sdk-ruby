@@ -39,31 +39,36 @@ module CheckoutSdk
       #   `paybybank`; the API ignores `pay_by_bank` without an error), a Hash with the keys documented
       #   on {PayByBankPaymentMethod}; you send :bank_id (the identifier of the bank the customer has
       #   selected for the payment).
-      #   :payment_methods may also include:
-      #   - :card - :token (a Hash with :id, the Checkout.com card token), :details (the card data:
-      #     :number, :expiry_month, :expiry_year, :name, :cvv, :stored (Boolean) and :allow_update
-      #     (Boolean)), :store_for_future_use (Boolean), :phone (:country_code and :number),
-      #     :account_holder (:type, one of "individual", "government" or "corporate", :first_name,
-      #     :last_name, :middle_name, :company_name and :account_name_inquiry (Boolean)) and
-      #     :preferred_scheme ("visa", "mastercard" or "cartes_bancaires"). The card data goes under
-      #     :details; the API ignores it at the top level of :card.
-      #   - :applepay - :token_data (:version, :data, :signature and :header, a Hash with
-      #     :ephemeral_public_key, :public_key_hash and :transaction_id), :token (a Hash with :id,
-      #     pattern ^(tok)_(\w{26})$, and :expires_on; a String token is not accepted),
-      #     :store_for_future_use (Boolean), :phone, :account_holder and :preferred_scheme ("visa",
-      #     "mastercard" or "cartes_bancaires"). Apple Pay has no :details.
-      #   - :googlepay - :token_data (:protocol_version, :signature, :signed_message and
-      #     :tokenization_key), :token, :store_for_future_use, :phone and :account_holder as on
-      #     :applepay, and :preferred_scheme ("visa" or "mastercard" only). Google Pay has no :details.
-      #   - :instrument - :id (the unique identifier of the instrument to use).
-      #   - :auto_confirm - The payment method that automatically confirms the payment when it is
-      #     ready, for example "card".
-      #   :settings may include :success_url and :failure_url (max 255 characters), :capture (Boolean,
-      #   whether to capture the payment immediately, default true) and :excluded_payment_methods
-      #   (Array of payment method names, for example ["klarna"]).
-      #   :order may include :sub_merchants, an Array of Hashes with :id, :product_category,
-      #   :number_of_sales (Integer; the API does not define number_of_trades) and :registration_date
-      #   (yyyy-MM-dd).
+      #   :payment_methods may also include (every key is optional unless marked required):
+      #   - :card - :token (a Hash with :id, String, the Checkout.com card token), :details (the card
+      #     data: :number (String, write-only), :expiry_month (Integer), :expiry_year (Integer), :name
+      #     (String, write-only), :cvv (String, write-only), :stored (Boolean, write-only) and
+      #     :allow_update (Boolean)), :store_for_future_use (Boolean, write-only), :phone
+      #     (:country_code, String, min 1 character, max 7 characters, and :number, String, min 6
+      #     characters, max 25 characters), :account_holder (:type, one of "individual", "government"
+      #     or "corporate", :first_name, :last_name, :middle_name, :company_name (Strings) and
+      #     :account_name_inquiry (Boolean)) and :preferred_scheme ("visa", "mastercard" or
+      #     "cartes_bancaires"). The card data goes under :details; the API ignores it at the top level
+      #     of :card.
+      #   - :applepay - :token_data (write-only: :version, :data and :signature (Strings) and :header,
+      #     a Hash with :ephemeral_public_key, :public_key_hash and :transaction_id (Strings)), :token (a
+      #     Hash with :id, String, required, pattern ^(tok)_(\w{26})$, and :expires_on, date-time,
+      #     ISO 8601; a String token is not accepted), :store_for_future_use (Boolean, write-only),
+      #     :phone and :account_holder as on :card, and :preferred_scheme ("visa", "mastercard" or
+      #     "cartes_bancaires"). Apple Pay has no :details.
+      #   - :googlepay - :token_data (write-only: :protocol_version, :signature, :signed_message and
+      #     :tokenization_key (Strings)), :token, :store_for_future_use, :phone and :account_holder as
+      #     on :applepay, and :preferred_scheme ("visa" or "mastercard" only). Google Pay has no
+      #     :details.
+      #   - :instrument - :id (String, the unique identifier of the instrument to use).
+      #   - :auto_confirm - String, the payment method that automatically confirms the payment when it
+      #     is ready, for example "card".
+      #   :settings may include :success_url and :failure_url (String, format uri, max 255
+      #   characters), :capture (Boolean, whether to capture the payment immediately, default true) and
+      #   :excluded_payment_methods (Array of Strings, payment method names, for example ["klarna"]).
+      #   :order may include :sub_merchants, an Array of Hashes with :id (String), :product_category
+      #   (String), :number_of_sales (Integer; the API does not define number_of_trades) and
+      #   :registration_date (String, format date, yyyy-MM-dd).
       #   :metadata - A Hash of key/value pairs to attach to the payment (max 20 keys); each value is a
       #   String (max 255 characters), a Number or a Boolean.
       #   :risk {PaymentSetupRisk} - Risk assessment settings for the Payment Setup: :enabled
@@ -94,8 +99,9 @@ module CheckoutSdk
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
       #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
       #   payment_methods.paybybank.action.banks. Card, Apple Pay and Google Pay return the read-only
-      #   :schemes (supported card scheme names) and card details :last4, :bin, :scheme and
-      #   :expires_on; instrument returns the read-only :type and :action.
+      #   :schemes (supported card scheme names; Google Pay never lists cartes_bancaires) and card
+      #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
+      #   read-only :type (String) and :action (:type, "set_instrument").
       def create_payment_setup(payment_setups_request)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH),
@@ -129,31 +135,36 @@ module CheckoutSdk
       #   `paybybank`; the API ignores `pay_by_bank` without an error), a Hash with the keys documented
       #   on {PayByBankPaymentMethod}; you send :bank_id (the identifier of the bank the customer has
       #   selected for the payment).
-      #   :payment_methods may also include:
-      #   - :card - :token (a Hash with :id, the Checkout.com card token), :details (the card data:
-      #     :number, :expiry_month, :expiry_year, :name, :cvv, :stored (Boolean) and :allow_update
-      #     (Boolean)), :store_for_future_use (Boolean), :phone (:country_code and :number),
-      #     :account_holder (:type, one of "individual", "government" or "corporate", :first_name,
-      #     :last_name, :middle_name, :company_name and :account_name_inquiry (Boolean)) and
-      #     :preferred_scheme ("visa", "mastercard" or "cartes_bancaires"). The card data goes under
-      #     :details; the API ignores it at the top level of :card.
-      #   - :applepay - :token_data (:version, :data, :signature and :header, a Hash with
-      #     :ephemeral_public_key, :public_key_hash and :transaction_id), :token (a Hash with :id,
-      #     pattern ^(tok)_(\w{26})$, and :expires_on; a String token is not accepted),
-      #     :store_for_future_use (Boolean), :phone, :account_holder and :preferred_scheme ("visa",
-      #     "mastercard" or "cartes_bancaires"). Apple Pay has no :details.
-      #   - :googlepay - :token_data (:protocol_version, :signature, :signed_message and
-      #     :tokenization_key), :token, :store_for_future_use, :phone and :account_holder as on
-      #     :applepay, and :preferred_scheme ("visa" or "mastercard" only). Google Pay has no :details.
-      #   - :instrument - :id (the unique identifier of the instrument to use).
-      #   - :auto_confirm - The payment method that automatically confirms the payment when it is
-      #     ready, for example "card".
-      #   :settings may include :success_url and :failure_url (max 255 characters), :capture (Boolean,
-      #   whether to capture the payment immediately, default true) and :excluded_payment_methods
-      #   (Array of payment method names, for example ["klarna"]).
-      #   :order may include :sub_merchants, an Array of Hashes with :id, :product_category,
-      #   :number_of_sales (Integer; the API does not define number_of_trades) and :registration_date
-      #   (yyyy-MM-dd).
+      #   :payment_methods may also include (every key is optional unless marked required):
+      #   - :card - :token (a Hash with :id, String, the Checkout.com card token), :details (the card
+      #     data: :number (String, write-only), :expiry_month (Integer), :expiry_year (Integer), :name
+      #     (String, write-only), :cvv (String, write-only), :stored (Boolean, write-only) and
+      #     :allow_update (Boolean)), :store_for_future_use (Boolean, write-only), :phone
+      #     (:country_code, String, min 1 character, max 7 characters, and :number, String, min 6
+      #     characters, max 25 characters), :account_holder (:type, one of "individual", "government"
+      #     or "corporate", :first_name, :last_name, :middle_name, :company_name (Strings) and
+      #     :account_name_inquiry (Boolean)) and :preferred_scheme ("visa", "mastercard" or
+      #     "cartes_bancaires"). The card data goes under :details; the API ignores it at the top level
+      #     of :card.
+      #   - :applepay - :token_data (write-only: :version, :data and :signature (Strings) and :header,
+      #     a Hash with :ephemeral_public_key, :public_key_hash and :transaction_id (Strings)), :token (a
+      #     Hash with :id, String, required, pattern ^(tok)_(\w{26})$, and :expires_on, date-time,
+      #     ISO 8601; a String token is not accepted), :store_for_future_use (Boolean, write-only),
+      #     :phone and :account_holder as on :card, and :preferred_scheme ("visa", "mastercard" or
+      #     "cartes_bancaires"). Apple Pay has no :details.
+      #   - :googlepay - :token_data (write-only: :protocol_version, :signature, :signed_message and
+      #     :tokenization_key (Strings)), :token, :store_for_future_use, :phone and :account_holder as
+      #     on :applepay, and :preferred_scheme ("visa" or "mastercard" only). Google Pay has no
+      #     :details.
+      #   - :instrument - :id (String, the unique identifier of the instrument to use).
+      #   - :auto_confirm - String, the payment method that automatically confirms the payment when it
+      #     is ready, for example "card".
+      #   :settings may include :success_url and :failure_url (String, format uri, max 255
+      #   characters), :capture (Boolean, whether to capture the payment immediately, default true) and
+      #   :excluded_payment_methods (Array of Strings, payment method names, for example ["klarna"]).
+      #   :order may include :sub_merchants, an Array of Hashes with :id (String), :product_category
+      #   (String), :number_of_sales (Integer; the API does not define number_of_trades) and
+      #   :registration_date (String, format date, yyyy-MM-dd).
       #   :metadata - A Hash of key/value pairs to attach to the payment (max 20 keys); each value is a
       #   String (max 255 characters), a Number or a Boolean.
       #   :risk {PaymentSetupRisk} - Risk assessment settings for the Payment Setup: :enabled
@@ -184,8 +195,9 @@ module CheckoutSdk
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
       #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
       #   payment_methods.paybybank.action.banks. Card, Apple Pay and Google Pay return the read-only
-      #   :schemes (supported card scheme names) and card details :last4, :bin, :scheme and
-      #   :expires_on; instrument returns the read-only :type and :action.
+      #   :schemes (supported card scheme names; Google Pay never lists cartes_bancaires) and card
+      #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
+      #   read-only :type (String) and :action (:type, "set_instrument").
       def update_payment_setup(id, payment_setups_request)
         api_client.invoke_put(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -202,8 +214,9 @@ module CheckoutSdk
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
       #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
       #   payment_methods.paybybank.action.banks. Card, Apple Pay and Google Pay return the read-only
-      #   :schemes (supported card scheme names) and card details :last4, :bin, :scheme and
-      #   :expires_on; instrument returns the read-only :type and :action.
+      #   :schemes (supported card scheme names; Google Pay never lists cartes_bancaires) and card
+      #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
+      #   read-only :type (String) and :action (:type, "set_instrument").
       def get_payment_setup(id)
         api_client.invoke_get(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id),
@@ -222,8 +235,9 @@ module CheckoutSdk
       #   payment_methods.cashapp.action.redirect_url, payment_methods.cashapp.reference and, once only,
       #   payment_methods.cashapp.customer_profile. For Pay by Bank, read
       #   payment_methods.paybybank.action.banks. Card, Apple Pay and Google Pay return the read-only
-      #   :schemes (supported card scheme names) and card details :last4, :bin, :scheme and
-      #   :expires_on; instrument returns the read-only :type and :action.
+      #   :schemes (supported card scheme names; Google Pay never lists cartes_bancaires) and card
+      #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
+      #   read-only :type (String) and :action (:type, "set_instrument").
       def confirm_payment_setup(id, payment_method_name)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_name),
