@@ -254,6 +254,18 @@ RSpec.describe CheckoutSdk::ApiClient do
       expect(captured['return-encrypted-cvv']).to eq('true')
     end
 
+    it 'sends an empty JSON object when a POST has no body, as revoke and suspend card do' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, body, _headers|
+        captured = body
+        response
+      end
+
+      api_client.invoke_post('issuing/cards/crd_1/revoke', auth)
+
+      expect(captured).to eq('{}')
+    end
+
     it 'omits the If-Match header when no headers container is passed' do
       captured = nil
       allow(http_client).to receive(:run_request) do |_method, _path, _body, headers|
