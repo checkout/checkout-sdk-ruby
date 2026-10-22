@@ -139,6 +139,7 @@ module CheckoutSdk
       # @param [String] card_id
       # @param [Hash, nil] revoke_request optional, may carry reason (expired, reported_lost,
       #   reported_stolen)
+      # @return [OpenStruct] the revoke-card-response, carrying _links with self and controls.
       def revoke_card(card_id, revoke_request = nil)
         api_client.invoke_post(build_path(ISSUING, CARDS, card_id, REVOKE), sdk_authorization, revoke_request)
       end
@@ -148,6 +149,8 @@ module CheckoutSdk
       # @param [String] card_id
       # @param [Hash, nil] suspend_request optional, may carry reason (suspected_lost,
       #   suspected_stolen)
+      # @return [OpenStruct] the suspend-card-response, carrying _links with self, activate,
+      #   revoke and controls.
       def suspend_card(card_id, suspend_request = nil)
         api_client.invoke_post(build_path(ISSUING, CARDS, card_id, SUSPEND), sdk_authorization, suspend_request)
       end

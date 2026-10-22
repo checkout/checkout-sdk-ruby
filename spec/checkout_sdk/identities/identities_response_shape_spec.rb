@@ -158,14 +158,13 @@ RSpec.describe 'Identities response shapes' do
     end
   end
 
-  # Part D: the API answers 422 with error code encryption_key_required when return-encrypted-cvv
-  # is set to "true" without an Encryption-Key header. parse_response raises for status >= 400, so
-  # the error body has to survive into the exception for a caller to act on it.
-  describe 'the card update 422' do
-    it 'raises CheckoutApiException carrying the encryption_key_required code' do
+  # Part D: an API error body has to survive into the exception for a caller to act on it.
+  # transition_invalid is what the API answers when activating a revoked card.
+  describe 'a card management 422' do
+    it 'raises CheckoutApiException carrying the error codes' do
       body = '{"request_id":"0HLHPN8802NUF:00000003",' \
-             '"error_type":"request_invalid",' \
-             '"error_codes":["encryption_key_required"]}'
+             '"error_type":"invalid_request",' \
+             '"error_codes":["transition_invalid"]}'
       response = double('Response', status: 422, body: body,
                                     headers: { 'Content-Type' => 'application/json' })
       allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).with(response).and_return(
@@ -175,26 +174,21 @@ RSpec.describe 'Identities response shapes' do
       expect { api_client.send(:parse_response, response) }
         .to raise_error(CheckoutSdk::CheckoutApiException) { |error|
           expect(error.http_metadata.status_code).to eq(422)
-          expect(error.error_details.error_type).to eq('request_invalid')
-          expect(error.error_details.error_codes).to include('encryption_key_required')
+          expect(error.error_details.error_type).to eq('invalid_request')
+          expect(error.error_details.error_codes).to include('transition_invalid')
         }
     end
   end
 
-  # The success counterpart: encrypted_cvv is returned only when the headers ask for it, so it is
-  # absent on an ordinary update.
+  # The update card response carries no encrypted credentials, with or without the deprecated
+  # headers.
   describe 'the card update response' do
-    it 'exposes encrypted_cvv when the headers requested it' do
-      response = parse('{"last_modified_date":"2026-06-01T10:00:00Z","encrypted_cvv":"oJMoNMEEUiQKYOsQ4Zd"}')
+    it 'parses the update response fields' do
+      response = parse('{"id":"crd_1","status":"active","last_modified_date":"2026-06-01T10:00:00Z"}')
 
-      expect(response.encrypted_cvv).to eq('oJMoNMEEUiQKYOsQ4Zd')
+      expect(response.id).to eq('crd_1')
+      expect(response.status).to eq('active')
       expect(response.last_modified_date).to eq('2026-06-01T10:00:00Z')
-    end
-
-    it 'leaves encrypted_cvv nil on an ordinary update' do
-      response = parse('{"last_modified_date":"2026-06-01T10:00:00Z"}')
-
-      expect(response.encrypted_cvv).to be_nil
     end
   end
 

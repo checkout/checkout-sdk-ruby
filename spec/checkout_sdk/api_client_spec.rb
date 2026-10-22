@@ -199,7 +199,8 @@ RSpec.describe CheckoutSdk::ApiClient do
 
       api_client.invoke_patch('issuing/cards/crd_1', auth, {}, extra)
 
-      # return-encrypted-cvv is lower case in the spec and Encryption-Key is title case. String
+      # The deprecated headers are still sent when set: return-encrypted-cvv is lower case and
+      # Encryption-Key is title case. String
       # keys are what preserves both; Symbol keys would have become Return-encrypted-cvv and
       # Encryption-key by the time Faraday wrote the request.
       expect(captured['return-encrypted-cvv']).to eq('true')
