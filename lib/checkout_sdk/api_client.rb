@@ -68,8 +68,9 @@ module CheckoutSdk
 
     # Attribute name to HTTP header name, for every typed headers container the SDK supports.
     #
-    # The header names are case sensitive in the spec: return-encrypted-cvv is lower case where a
-    # naive conversion would produce Return-Encrypted-Cvv.
+    # The header names are emitted with an exact spelling: return-encrypted-cvv (sent by the
+    # deprecated CardUpdateHeaders) is lower case where a naive conversion would produce
+    # Return-Encrypted-Cvv.
     #
     # The values are Strings, not Symbols, and that is load bearing. Faraday::Utils::Headers
     # preserves a String key verbatim but rewrites a Symbol key as

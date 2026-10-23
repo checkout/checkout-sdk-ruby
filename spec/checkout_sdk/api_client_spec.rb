@@ -199,7 +199,8 @@ RSpec.describe CheckoutSdk::ApiClient do
 
       api_client.invoke_patch('issuing/cards/crd_1', auth, {}, extra)
 
-      # return-encrypted-cvv is lower case in the spec and Encryption-Key is title case. String
+      # The deprecated headers are still sent when set: return-encrypted-cvv is lower case and
+      # Encryption-Key is title case. String
       # keys are what preserves both; Symbol keys would have become Return-encrypted-cvv and
       # Encryption-key by the time Faraday wrote the request.
       expect(captured['return-encrypted-cvv']).to eq('true')
@@ -252,6 +253,18 @@ RSpec.describe CheckoutSdk::ApiClient do
       api_client.invoke_patch('issuing/cards/crd_1', auth, {}, extra)
 
       expect(captured['return-encrypted-cvv']).to eq('true')
+    end
+
+    it 'sends an empty JSON object when a POST has no body, as revoke and suspend card do' do
+      captured = nil
+      allow(http_client).to receive(:run_request) do |_method, _path, body, _headers|
+        captured = body
+        response
+      end
+
+      api_client.invoke_post('issuing/cards/crd_1/revoke', auth)
+
+      expect(captured).to eq('{}')
     end
 
     it 'omits the If-Match header when no headers container is passed' do

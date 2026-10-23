@@ -27,6 +27,36 @@ RSpec.describe CheckoutSdk::Issuing do
     end
   end
 
+  describe '#revoke_card' do
+    it 'POSTs issuing/cards/{id}/revoke with no body' do
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/cards/crd_1/revoke', 'secret_key', nil).and_return('r')
+      expect(client.revoke_card('crd_1')).to eq('r')
+    end
+
+    it 'POSTs issuing/cards/{id}/revoke with a reason' do
+      req = { reason: 'reported_lost' }
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/cards/crd_1/revoke', 'secret_key', req).and_return('r')
+      expect(client.revoke_card('crd_1', req)).to eq('r')
+    end
+  end
+
+  describe '#suspend_card' do
+    it 'POSTs issuing/cards/{id}/suspend with no body' do
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/cards/crd_1/suspend', 'secret_key', nil).and_return('r')
+      expect(client.suspend_card('crd_1')).to eq('r')
+    end
+
+    it 'POSTs issuing/cards/{id}/suspend with a reason' do
+      req = { reason: 'suspected_stolen' }
+      expect(api_client_mock).to receive(:invoke_post)
+        .with('issuing/cards/crd_1/suspend', 'secret_key', req).and_return('r')
+      expect(client.suspend_card('crd_1', req)).to eq('r')
+    end
+  end
+
   describe '#renew_card' do
     it 'POSTs issuing/cards/{id}/renew' do
       expect(api_client_mock).to receive(:invoke_post)

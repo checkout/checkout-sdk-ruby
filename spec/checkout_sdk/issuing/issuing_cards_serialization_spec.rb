@@ -72,7 +72,7 @@ RSpec.describe 'Issuing cards serialization' do
   end
 
   describe CheckoutSdk::Issuing::CardUpdateHeaders do
-    it 'exposes the two headers the endpoint accepts' do
+    it 'still exposes the two deprecated headers' do
       headers = described_class.new
       expect(headers).to respond_to(:return_encrypted_cvv=)
       expect(headers).to respond_to(:encryption_key=)

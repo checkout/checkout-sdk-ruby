@@ -90,13 +90,13 @@ module CheckoutSdk
       #
       # @param [String] card_id
       # @param [Hash, UpdateCardRequest] update_card_request
-      # @param [CardUpdateHeaders, nil] headers the optional return-encrypted-cvv and
-      #   Encryption-Key HTTP headers. Setting return_encrypted_cvv without encryption_key returns
-      #   a 422 with error code encryption_key_required.
-      # @return [OpenStruct] the update response, carrying encrypted_cvv when requested. For a
-      #   virtual card the response may also carry is_single_use (boolean, default false),
-      #   specifying whether the card is set to expire after a single use. Physical cards never
-      #   send it.
+      # @param [CardUpdateHeaders, nil] headers deprecated. The API no longer documents these
+      #   headers; use the method without headers. Will be removed in the next major version.
+      #   When set, the return-encrypted-cvv and Encryption-Key headers are still sent unchanged.
+      # @return [OpenStruct] the update-card-response: the updated card details and _links. The
+      #   type field discriminates the variant; a virtual card response also carries
+      #   is_single_use (boolean, default false), whether the card expires after a single use.
+      #   Physical card responses never carry it.
       def update_card(card_id, update_card_request, headers = nil)
         api_client.invoke_patch(
           build_path(ISSUING, CARDS, card_id),
@@ -134,15 +134,24 @@ module CheckoutSdk
         api_client.invoke_get(build_path(ISSUING, CARDS, card_id, CREDENTIALS), sdk_authorization, query)
       end
 
+      # Revoke a card. POST /issuing/cards/{cardId}/revoke. The request body is optional; when
+      # omitted an empty JSON object is sent.
       # @param [String] card_id
-      # @param [Hash] revoke_request
-      def revoke_card(card_id, revoke_request)
+      # @param [Hash, nil] revoke_request optional, may carry reason (expired, reported_lost,
+      #   reported_stolen)
+      # @return [OpenStruct] the revoke-card-response, carrying _links with self and controls.
+      def revoke_card(card_id, revoke_request = nil)
         api_client.invoke_post(build_path(ISSUING, CARDS, card_id, REVOKE), sdk_authorization, revoke_request)
       end
 
+      # Suspend a card. POST /issuing/cards/{cardId}/suspend. The request body is optional; when
+      # omitted an empty JSON object is sent.
       # @param [String] card_id
-      # @param [Hash] suspend_request
-      def suspend_card(card_id, suspend_request)
+      # @param [Hash, nil] suspend_request optional, may carry reason (suspected_lost,
+      #   suspected_stolen)
+      # @return [OpenStruct] the suspend-card-response, carrying _links with self, activate,
+      #   revoke and controls.
+      def suspend_card(card_id, suspend_request = nil)
         api_client.invoke_post(build_path(ISSUING, CARDS, card_id, SUSPEND), sdk_authorization, suspend_request)
       end
 

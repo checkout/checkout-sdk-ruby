@@ -4,26 +4,25 @@ module CheckoutSdk
   module Issuing
     # The optional HTTP headers accepted when updating a card's details.
     #
+    # @deprecated The API no longer documents these headers; use the method without headers. Will
+    #   be removed in the next major version. Headers that are set are still sent unchanged.
+    #
     # Modelled as its own class rather than added to {CheckoutSdk::Common::Headers} because these
     # two headers belong to one endpoint, and Common::Headers is shared by every client.
     #
     # @!attribute return_encrypted_cvv
-    #   Set to "true" to retrieve the card's encrypted credentials in the response. Requires an
-    #   RSA public key in the Encryption-Key header, otherwise the API answers 422 with error code
-    #   encryption_key_required.
-    #
-    #   A String rather than a boolean: the value is emitted verbatim as an HTTP header, and "true"
-    #   is what the spec shows.
+    #   @deprecated The API no longer documents these headers; use the method without headers.
+    #     Will be removed in the next major version.
+    #   No longer documented by the API. Still sent unchanged as the return-encrypted-cvv HTTP
+    #   header when set.
     #   [Optional]
-    #   Maps to HTTP header return-encrypted-cvv.
-    #   Example: "true"
     #   @return [String]
     # @!attribute encryption_key
-    #   The RSA public key used to encrypt returned credentials. Required when
-    #   return_encrypted_cvv is set. Provide the public key with the BEGIN PUBLIC KEY and END
-    #   PUBLIC KEY headers and any newline characters removed, encoded as Base64.
+    #   @deprecated The API no longer documents these headers; use the method without headers.
+    #     Will be removed in the next major version.
+    #   No longer documented by the API. Still sent unchanged as the Encryption-Key HTTP header
+    #   when set.
     #   [Optional]
-    #   Maps to HTTP header Encryption-Key.
     #   @return [String]
     class CardUpdateHeaders
       attr_accessor :return_encrypted_cvv, :encryption_key
