@@ -13,15 +13,15 @@ module CheckoutSdk
     # @!attribute return_encrypted_cvv
     #   @deprecated The API no longer supports this header; use the method without headers. Will
     #     be removed in the next major version.
-    #   No longer documented by the API, which ignores it: the update response does not change
-    #   when it is set. Still sent unchanged as the return-encrypted-cvv HTTP header when set.
+    #   No longer documented by the API. Still sent unchanged as the return-encrypted-cvv HTTP
+    #   header when set.
     #   [Optional]
     #   @return [String]
     # @!attribute encryption_key
     #   @deprecated The API no longer supports this header; use the method without headers. Will
     #     be removed in the next major version.
-    #   No longer documented by the API, which ignores it. Still sent unchanged as the
-    #   Encryption-Key HTTP header when set.
+    #   No longer documented by the API. Still sent unchanged as the Encryption-Key HTTP header
+    #   when set.
     #   [Optional]
     #   @return [String]
     class CardUpdateHeaders

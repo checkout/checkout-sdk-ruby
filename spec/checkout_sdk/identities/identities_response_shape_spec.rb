@@ -159,7 +159,8 @@ RSpec.describe 'Identities response shapes' do
   end
 
   # Part D: an API error body has to survive into the exception for a caller to act on it.
-  # transition_invalid is what the API answers when activating a revoked card.
+  # transition_invalid is what the API answers when activating a revoked card. The error_type
+  # invalid_request matches what the live API returns.
   describe 'a card management 422' do
     it 'raises CheckoutApiException carrying the error codes' do
       body = '{"request_id":"0HLHPN8802NUF:00000003",' \
