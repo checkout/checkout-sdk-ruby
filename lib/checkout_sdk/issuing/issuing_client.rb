@@ -90,7 +90,7 @@ module CheckoutSdk
       #
       # @param [String] card_id
       # @param [Hash, UpdateCardRequest] update_card_request
-      # @param [CardUpdateHeaders, nil] headers deprecated, the API no longer supports these
+      # @param [CardUpdateHeaders, nil] headers deprecated. The API no longer documents these
       #   headers; use the method without headers. Will be removed in the next major version.
       #   When set, the return-encrypted-cvv and Encryption-Key headers are still sent unchanged.
       # @return [OpenStruct] the update-card-response: the updated card details and _links. The
