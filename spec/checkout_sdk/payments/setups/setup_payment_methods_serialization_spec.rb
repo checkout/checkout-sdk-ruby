@@ -30,6 +30,34 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
     end
   end
 
+  describe 'BacsPaymentMethod initialization' do
+    it 'sends each initialization constant under the initialization key' do
+      { 'DISABLED' => 'disabled', 'ENABLED' => 'enabled' }.each do |constant, value|
+        pm = CheckoutSdk::Payments::BacsPaymentMethod.new
+        pm.initialization = CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization.const_get(constant)
+
+        expect(CheckoutSdk::JsonSerializer.to_custom_hash(pm)).to eq({ 'initialization' => value })
+      end
+    end
+
+    it 'does not send initialization when it is not set, leaving the API default' do
+      pm = CheckoutSdk::Payments::BacsPaymentMethod.new
+      pm.account_number = '12345678'
+
+      expect(CheckoutSdk::JsonSerializer.to_custom_hash(pm)).to eq({ 'account_number' => '12345678' })
+    end
+
+    it 'is sent under the literal bacs key' do
+      pm = CheckoutSdk::Payments::BacsPaymentMethod.new
+      pm.initialization = CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization::ENABLED
+      request = { payment_methods: { bacs: CheckoutSdk::JsonSerializer.to_custom_hash(pm) } }
+
+      json = CheckoutSdk::JsonSerializer.to_custom_hash(request).to_json
+
+      expect(json).to eq('{"payment_methods":{"bacs":{"initialization":"enabled"}}}')
+    end
+  end
+
   describe CheckoutSdk::Payments::CardPresentPaymentMethod do
     it 'serializes its fields to their swagger keys' do
       pm = described_class.new
@@ -52,6 +80,16 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(hash['pin']).to eq({ 'key_set_id' => 'ks_1', 'block' => 'b', 'block_format' => 'iso0' })
       expect(hash['store_for_future_use']).to be(true)
       expect(hash['name']).to eq('John Smith')
+    end
+
+    it 'is still sent unchanged under the card_present key while deprecated' do
+      pm = described_class.new
+      pm.store_for_future_use = true
+      request = { payment_methods: { card_present: CheckoutSdk::JsonSerializer.to_custom_hash(pm) } }
+
+      json = CheckoutSdk::JsonSerializer.to_custom_hash(request).to_json
+
+      expect(json).to eq('{"payment_methods":{"card_present":{"store_for_future_use":true}}}')
     end
   end
 

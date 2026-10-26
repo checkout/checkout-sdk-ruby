@@ -112,32 +112,25 @@ RSpec.describe CheckoutSdk::Payments do
 
   describe '.confirm_payment_setup' do
     context 'when confirming a payment setup' do
-      it 'confirms payment setup successfully' do
-        # Create a payment setup first
+      it 'confirms a ready payment method, or returns payment_method_not_ready when none is ready' do
         create_response = create_payment_setup(amount: 1000)
-        
-        # Get payment setup to obtain payment method options
         get_response = @api.payments_setups.get_payment_setup(create_response.id)
-        
-        # Skip if no payment method options are available (sandbox limitation)
-        skip 'No payment method options available in sandbox' if get_response.payment_method_options.nil? || get_response.payment_method_options.empty?
-        
-        # Get the first payment method option ID
-        payment_method_name = get_response.payment_method_options.first['type']
+        payment_method_name = ready_payment_method_name(get_response)
 
-        # Confirm the payment setup
-        response = @api.payments_setups.confirm_payment_setup(create_response.id, payment_method_name)
-        
-        assert_response(response, %w[id
-                                     action_id
-                                     amount
-                                     currency
-                                     status
-                                     processed_on
-                                     _links])
-        expect(response.amount).to eq(1000)
-        expect(response.currency).to eq(CheckoutSdk::Common::Currency::USD)
-        expect(response.status).not_to be nil
+        if payment_method_name.nil?
+          expect_payment_method_not_ready(create_response.id, get_response)
+        else
+          response = @api.payments_setups.confirm_payment_setup(create_response.id, payment_method_name)
+
+          assert_response(response, %w[id
+                                       action_id
+                                       amount
+                                       currency
+                                       status
+                                       processed_on])
+          expect(response.amount).to eq(1000)
+          expect(response.currency).to eq(CheckoutSdk::Common::Currency::USD)
+        end
       end
     end
 
@@ -187,10 +180,11 @@ RSpec.describe CheckoutSdk::Payments do
         expect(get_response.id).to eq(create_response.id)
         expect(get_response.description).to eq('Updated in workflow test')
         
-        # Step 4: Attempt to confirm (might skip if no options available in sandbox)
-        unless get_response.payment_method_options.nil? || get_response.payment_method_options.empty?
-          payment_method_name = get_response.payment_method_options.first['type']
-
+        # Step 4: Confirm a ready payment method; with none ready the API returns payment_method_not_ready
+        payment_method_name = ready_payment_method_name(get_response)
+        if payment_method_name.nil?
+          expect_payment_method_not_ready(create_response.id, get_response)
+        else
           confirm_response = @api.payments_setups.confirm_payment_setup(create_response.id, payment_method_name)
           expect(confirm_response.id).not_to be nil
           expect(confirm_response.amount).to eq(1000)

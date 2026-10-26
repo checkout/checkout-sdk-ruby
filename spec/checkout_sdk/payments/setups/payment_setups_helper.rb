@@ -9,7 +9,7 @@ module PaymentSetupsHelper
       processing_channel_id: ENV.fetch('CHECKOUT_PROCESSING_CHANNEL_ID'),
       amount: amount,
       currency: currency,
-      payment_type: 'Regular',
+      payment_type: CheckoutSdk::Payments::PaymentSetupPaymentType::REGULAR,
       reference: "TEST-REF-#{SecureRandom.uuid[0..5]}",
       description: 'Integration test payment setup',
       payment_methods: {
@@ -65,7 +65,7 @@ module PaymentSetupsHelper
       processing_channel_id: processing_channel_id,
       amount: amount,
       currency: currency,
-      payment_type: 'Regular',
+      payment_type: CheckoutSdk::Payments::PaymentSetupPaymentType::REGULAR,
       reference: "TEST-REF-#{SecureRandom.uuid[0..5]}",
       payment_methods: {
         klarna: {
@@ -101,6 +101,26 @@ module PaymentSetupsHelper
     }
     request[:description] = description unless description.nil?
     request
+  end
+
+  # Returns the first name in available_payment_methods whose payment_methods entry has the status
+  # ready, or nil when no payment method is ready to confirm.
+  def ready_payment_method_name(payment_setup)
+    Array(payment_setup.available_payment_methods).find do |name|
+      method = payment_setup.payment_methods&.[](name)
+      method&.status == CheckoutSdk::Payments::PaymentSetupPaymentMethodStatus::READY
+    end
+  end
+
+  # Confirms the first available payment method of a setup that has none ready, and expects the
+  # API to answer 422 payment_method_not_ready.
+  def expect_payment_method_not_ready(id, payment_setup)
+    name = Array(payment_setup.available_payment_methods).first || 'card'
+    expect { default_sdk.payments_setups.confirm_payment_setup(id, name) }
+      .to raise_error(CheckoutSdk::CheckoutApiException) do |e|
+        expect(e.http_metadata.status_code).to eq(422)
+        expect(e.error_details[:error_codes]).to include('payment_method_not_ready')
+      end
   end
 
   def create_payment_setup(**opts)
