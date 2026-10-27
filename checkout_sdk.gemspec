@@ -32,7 +32,6 @@ sellers and service providers."
   spec.add_development_dependency 'rspec', '>= 3.0'
   spec.add_development_dependency 'rubocop', '~> 1.82'
   spec.add_development_dependency 'overcommit', '~> 0.60'
-  spec.add_dependency 'csv', '>= 3.0'
   spec.add_dependency 'faraday', '>= 2.0'
   spec.add_dependency 'faraday-follow_redirects', '~> 0.5'
   spec.add_dependency 'faraday-multipart', '~> 1.2'

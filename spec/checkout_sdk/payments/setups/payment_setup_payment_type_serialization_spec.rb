@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Payment Setups payment_type and account funding identification serialization' do
+RSpec.describe 'Payment Setups payment_type and account funding transaction serialization' do
   let(:api_client) do
     configuration = double('CheckoutConfiguration',
                            http_client: Faraday.new,
@@ -114,6 +114,44 @@ RSpec.describe 'Payment Setups payment_type and account funding identification s
       expect(read.type).to eq(CheckoutSdk::Payments::AccountFundingTransactionIdentificationType::DRIVING_LICENSE)
       expect(read.number).to eq('1234567890')
       expect(read.issuing_country).to eq('US')
+    end
+  end
+
+  describe CheckoutSdk::Payments::AccountFundingTransactionSender do
+    def sender
+      sender = described_class.new
+      sender.reference = '0fc88634-78c1-4286-9cb6-6ca358730c8c'
+      sender.date_of_birth = '2000-01-01'
+      sender
+    end
+
+    it 'serializes reference to the reference key' do
+      expect(wire(sender)).to eq({ 'reference' => '0fc88634-78c1-4286-9cb6-6ca358730c8c',
+                                   'date_of_birth' => '2000-01-01' })
+    end
+
+    it 'sends reference under account_funding_transaction.sender.reference' do
+      aft = CheckoutSdk::Payments::PaymentSetupAccountFundingTransaction.new
+      aft.sender = sender
+
+      expect(wire(aft).dig('sender', 'reference')).to eq('0fc88634-78c1-4286-9cb6-6ca358730c8c')
+    end
+
+    it 'round trips reference through the API client' do
+      response = parse_json(CheckoutSdk::JsonSerializer.to_custom_hash(sender).to_json)
+
+      expect(response.reference).to eq('0fc88634-78c1-4286-9cb6-6ca358730c8c')
+      expect(response.date_of_birth).to eq('2000-01-01')
+    end
+
+    it 'reads reference from the swagger example' do
+      body = '{"account_funding_transaction":{"sender":{"date_of_birth":"2000-01-01T00:00:00.0000000",' \
+             '"reference":"0fc88634-78c1-4286-9cb6-6ca358730c8c"}}}'
+
+      read = parse_json(body).account_funding_transaction.sender
+
+      expect(read.reference).to eq('0fc88634-78c1-4286-9cb6-6ca358730c8c')
+      expect(read.date_of_birth).to eq('2000-01-01T00:00:00.0000000')
     end
   end
 end

@@ -123,11 +123,11 @@ RSpec.describe CheckoutSdk::Payments do
           response = @api.payments_setups.confirm_payment_setup(create_response.id, payment_method_name)
 
           assert_response(response, %w[id
-                                       action_id
                                        amount
                                        currency
-                                       status
-                                       processed_on])
+                                       reference
+                                       payment_methods])
+          expect(response.id).to eq(create_response.id)
           expect(response.amount).to eq(1000)
           expect(response.currency).to eq(CheckoutSdk::Common::Currency::USD)
         end
@@ -186,9 +186,9 @@ RSpec.describe CheckoutSdk::Payments do
           expect_payment_method_not_ready(create_response.id, get_response)
         else
           confirm_response = @api.payments_setups.confirm_payment_setup(create_response.id, payment_method_name)
-          expect(confirm_response.id).not_to be nil
+          expect(confirm_response.id).to eq(create_response.id)
           expect(confirm_response.amount).to eq(1000)
-          expect(confirm_response.status).not_to be nil
+          expect(confirm_response.payment_methods).not_to be nil
         end
       end
     end

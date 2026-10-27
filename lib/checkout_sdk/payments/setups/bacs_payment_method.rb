@@ -19,8 +19,7 @@ module CheckoutSdk
       attr_accessor :flags
 
       # The initialization state of the payment method.
-      # When you create a Payment Setup, this defaults to `disabled`. On update the API replaces the
-      # payment methods, so send enabled again to keep the method enabled.
+      # When you create a Payment Setup, this defaults to `disabled`.
       # [Optional]
       # Enum: "disabled" "enabled"
       # Default: disabled

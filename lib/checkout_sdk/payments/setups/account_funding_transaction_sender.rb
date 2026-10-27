@@ -14,6 +14,10 @@ module CheckoutSdk
     #   @return [String] {CheckoutSdk::Common::Country}
     # @!attribute address
     #   @return [CheckoutSdk::Common::Address]
+    # @!attribute reference
+    #   The unique reference for the sender of the payment.
+    #   [Optional]
+    #   @return [String]
     # @!attribute identification
     #   @return [AccountFundingTransactionIdentification]
     class AccountFundingTransactionSender
@@ -23,6 +27,7 @@ module CheckoutSdk
                     :country_of_birth,
                     :nationality,
                     :address,
+                    :reference,
                     :identification
     end
   end
