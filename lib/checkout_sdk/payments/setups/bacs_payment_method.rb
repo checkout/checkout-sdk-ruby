@@ -20,6 +20,8 @@ module CheckoutSdk
 
       # The initialization state of the payment method.
       # When you create a Payment Setup, this defaults to `disabled`.
+      # On update the API replaces the payment methods, so send `enabled` again to keep the method enabled.
+      # The specification does not state this; it is the API's behaviour.
       # [Optional]
       # Enum: "disabled" "enabled"
       # Default: disabled
