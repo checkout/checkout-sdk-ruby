@@ -154,4 +154,30 @@ RSpec.describe 'Payment Setups payment_type and account funding transaction seri
       expect(read.date_of_birth).to eq('2000-01-01T00:00:00.0000000')
     end
   end
+
+  describe 'deprecated account funding transaction fields' do
+    it 'still serializes the deprecated sender fields under their keys, next to the spec fields' do
+      address = CheckoutSdk::Common::Address.new
+      address.city = 'London'
+      sender = CheckoutSdk::Payments::AccountFundingTransactionSender.new
+      sender.first_name = 'John'
+      sender.last_name = 'Smith'
+      sender.country_of_birth = CheckoutSdk::Common::Country::GB
+      sender.nationality = CheckoutSdk::Common::Country::GB
+      sender.address = address
+      sender.reference = 'sender-ref'
+
+      expect(wire(sender)).to eq({ 'first_name' => 'John', 'last_name' => 'Smith', 'country_of_birth' => 'GB',
+                                   'nationality' => 'GB', 'address' => { 'city' => 'London' },
+                                   'reference' => 'sender-ref' })
+    end
+
+    it 'still serializes the deprecated recipient account_type under its key, next to the spec fields' do
+      recipient = CheckoutSdk::Payments::AccountFundingTransactionRecipient.new
+      recipient.account_type = 'checking'
+      recipient.account_number = '5555554444'
+
+      expect(wire(recipient)).to eq({ 'account_type' => 'checking', 'account_number' => '5555554444' })
+    end
+  end
 end
