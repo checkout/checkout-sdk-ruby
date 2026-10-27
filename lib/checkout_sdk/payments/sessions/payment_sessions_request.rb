@@ -42,6 +42,13 @@ module CheckoutSdk
     #   @return [RiskRequest]
     # @!attribute retry
     #   @return [PaymentRetryRequest]
+    #   @deprecated Not part of the payment sessions specification. Please use {#customer_retry} instead.
+    #     This attribute will be removed in the next major version.
+    # @!attribute customer_retry
+    #   @return [CheckoutSdk::Common::CustomerRetry] [Optional] Configures the parameters for customer retries
+    #     performed by the customer on the checkout page. max_attempts is the maximum number of customer retry
+    #     attempts, excluding the initial payment attempt (minimum 0, maximum 5, default 5); it is required
+    #     when customer_retry is set.
     # @!attribute display_name
     #   @return [String]
     # @!attribute success_url
@@ -90,6 +97,7 @@ module CheckoutSdk
                     :amount_allocations,
                     :risk,
                     :retry,
+                    :customer_retry,
                     :display_name,
                     :success_url,
                     :failure_url,

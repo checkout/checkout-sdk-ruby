@@ -49,7 +49,8 @@ module CheckoutSdk
     # @!attribute risk
     #   @return [RiskRequest]
     # @!attribute customer_retry
-    #   @return [CheckoutSdk::Common::CustomerRetry]
+    #   @return [CheckoutSdk::Common::CustomerRetry] [Optional] Configures the parameters for customer retries
+    #     performed by the customer on the checkout page.
     # @!attribute sender
     #   @return [CheckoutSdk::Payments::Sender]
     # @!attribute return_url
