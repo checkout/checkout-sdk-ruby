@@ -82,7 +82,7 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(hash['name']).to eq('John Smith')
     end
 
-    it 'is still sent unchanged under the card_present key while deprecated' do
+    it 'is sent unchanged under the literal card_present key' do
       pm = described_class.new
       pm.store_for_future_use = true
       request = { payment_methods: { card_present: CheckoutSdk::JsonSerializer.to_custom_hash(pm) } }
