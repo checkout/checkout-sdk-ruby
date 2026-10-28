@@ -24,8 +24,8 @@ module CheckoutSdk
     #   The amount in minor currency.
     #   [Required]
     #   Format: int64
-    #   min 0
-    #   max 9007199254740991
+    #   min 1
+    #   max 9999999999
     #   @return [Integer]
     # @!attribute currency
     #   The three-letter ISO currency code of the payment.
