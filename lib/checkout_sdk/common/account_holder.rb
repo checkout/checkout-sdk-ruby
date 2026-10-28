@@ -19,7 +19,12 @@ module CheckoutSdk
     #   Enum: "individual" "corporate" "government"
     #   @return [String] {AccountHolderType}
     # @!attribute full_name
-    #   [Optional] Not declared by the payout or unreferenced refund destination schemas.
+    #   The account holder's full name.
+    #   [Optional]
+    #   @deprecated Not in the request schema of any account holder; the Klarna payment source account_holder
+    #     had it until the API removed it. Still returned in the PayPal payment details source account_holder.
+    #     Retained for backwards compatibility and will be removed in the next major version. There is no
+    #     replacement.
     #   @return [String]
     # @!attribute first_name
     #   The account holder's legal first name. The combination of first_name, middle_name and last_name
@@ -50,7 +55,12 @@ module CheckoutSdk
     #   max 255 characters
     #   @return [String]
     # @!attribute gender
-    #   [Optional] Not declared by the payout or unreferenced refund destination schemas.
+    #   The account holder's gender.
+    #   [Optional]
+    #   @deprecated Not in the request schema of any account holder; the Klarna payment source account_holder
+    #     had it until the API removed it. Still returned in the Klarna payment details source account_holder.
+    #     Retained for backwards compatibility and will be removed in the next major version. There is no
+    #     replacement.
     #   @return [String]
     # @!attribute company_name
     #   The legal name of the corporate or government account holder. A single character or all

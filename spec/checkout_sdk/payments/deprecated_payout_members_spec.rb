@@ -52,4 +52,17 @@ RSpec.describe CheckoutSdk::Payments::PayoutRequest do
     expect(wire(request)['destination']).to eq('type' => 'bank_account',
                                                'bank' => { 'name' => 'Lloyds TSB', 'branch' => 'Bournemouth' })
   end
+
+  it 'still serializes the deprecated account holder full_name and gender' do
+    account_holder = CheckoutSdk::Common::AccountHolder.new
+    account_holder.full_name = 'John Smith'
+    account_holder.gender = 'male'
+
+    expect(wire(account_holder)).to eq('full_name' => 'John Smith', 'gender' => 'male')
+  end
+
+  it 'exposes the residential status values of the spec' do
+    expect(CheckoutSdk::Common::ResidentialStatusType::RESIDENT).to eq('resident')
+    expect(CheckoutSdk::Common::ResidentialStatusType::NON_RESIDENT).to eq('non_resident')
+  end
 end
