@@ -137,6 +137,7 @@ require 'checkout_sdk/payments/sender/sender_information'
 
 # Destination
 require 'checkout_sdk/payments/destination/destination'
+require 'checkout_sdk/payments/destination/network_token_destination'
 require 'checkout_sdk/payments/destination/token_destination'
 require 'checkout_sdk/payments/destination/bank_account_destination'
 require 'checkout_sdk/payments/destination/card_destination'
