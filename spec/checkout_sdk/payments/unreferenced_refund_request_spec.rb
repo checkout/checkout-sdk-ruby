@@ -49,7 +49,7 @@ RSpec.describe CheckoutSdk::Payments::UnreferencedRefundRequest do
         'account_holder' => account_holder_json
       },
       'instruction' => { 'funds_transfer_type' => 'MI', 'purpose' => 'family_support' },
-      'amount' => 1000,
+      'amount' => 120,
       'currency' => 'GBP',
       'processing_channel_id' => 'pc_q4dbxom5jbgudnjzjpz7j2z6uq',
       'reference' => 'ORD-5023-4E89',
@@ -146,7 +146,7 @@ RSpec.describe CheckoutSdk::Payments::UnreferencedRefundRequest do
     request.source = source
     request.destination = card_destination
     request.instruction = instruction
-    request.amount = 1000
+    request.amount = 120
     request.currency = CheckoutSdk::Common::Currency::GBP
     request.processing_channel_id = 'pc_q4dbxom5jbgudnjzjpz7j2z6uq'
     request.reference = 'ORD-5023-4E89'
@@ -224,7 +224,7 @@ RSpec.describe CheckoutSdk::Payments::UnreferencedRefundRequest do
     request = described_class.new
     request.source = full_request.source
     request.destination = token_destination
-    request.amount = 1000
+    request.amount = 120
     request.currency = CheckoutSdk::Common::Currency::GBP
     request.processing_channel_id = 'pc_q4dbxom5jbgudnjzjpz7j2z6uq'
 
@@ -268,7 +268,8 @@ RSpec.describe CheckoutSdk::Payments::PaymentsClient do
 
   before do
     allow(configuration_mock).to receive(:credentials).and_return(credentials_mock)
-    allow(credentials_mock).to receive(:get_authorization).and_return('secret_key')
+    allow(credentials_mock).to receive(:get_authorization)
+      .with(CheckoutSdk::AuthorizationType::SECRET_KEY_OR_OAUTH).and_return('secret_key')
   end
 
   describe '#request_unreferenced_refund' do

@@ -17,7 +17,7 @@ RSpec.describe CheckoutSdk::Payments::PayoutRequest do
   let(:processing) do
     processing = CheckoutSdk::Payments::CardPayoutProcessing.new
     processing.affiliate_id = 'AFF123'
-    processing.affiliate_url = 'https://affiliate.example.com'
+    processing.affiliate_url = 'www.mycrypto.com'
     processing.processing_speed = 'fast'
     processing.purchase_country = CheckoutSdk::Common::Country::GB
     processing
@@ -25,9 +25,9 @@ RSpec.describe CheckoutSdk::Payments::PayoutRequest do
 
   let(:segment) do
     segment = CheckoutSdk::Payments::PaymentSegment.new
-    segment.brand = 'Acme'
-    segment.business_category = 'Retail'
-    segment.market = 'GB'
+    segment.brand = 'Acme Corporation'
+    segment.business_category = 'Inward Payments'
+    segment.market = 'UK'
     segment
   end
 
@@ -40,11 +40,11 @@ RSpec.describe CheckoutSdk::Payments::PayoutRequest do
 
     expect(wire(request)).to eq(
       'items' => [{ 'type' => 'digital', 'sub_type' => 'stablecoin' }],
-      'segment' => { 'brand' => 'Acme', 'business_category' => 'Retail', 'market' => 'GB' },
+      'segment' => { 'brand' => 'Acme Corporation', 'business_category' => 'Inward Payments', 'market' => 'UK' },
       'previous_payment_id' => 'pay_fun26akvvjjerahhctaq2uzhu4',
       'processing' => {
         'affiliate_id' => 'AFF123',
-        'affiliate_url' => 'https://affiliate.example.com',
+        'affiliate_url' => 'www.mycrypto.com',
         'processing_speed' => 'fast',
         'purchase_country' => 'GB'
       }
@@ -54,11 +54,15 @@ RSpec.describe CheckoutSdk::Payments::PayoutRequest do
   it 'round trips every new property through JSON' do
     request = described_class.new
     request.items = [item]
+    request.segment = segment
+    request.previous_payment_id = 'pay_fun26akvvjjerahhctaq2uzhu4'
     request.processing = processing
 
     json = wire(request)
 
     expect(json['items'].first).to eq('type' => item.type, 'sub_type' => item.sub_type)
+    %i[brand business_category market].each { |attr| expect(json['segment'][attr.to_s]).to eq(segment.public_send(attr)) }
+    expect(json['previous_payment_id']).to eq(request.previous_payment_id)
     %i[affiliate_id affiliate_url processing_speed purchase_country].each do |attr|
       expect(json['processing'][attr.to_s]).to eq(processing.public_send(attr))
     end
