@@ -2,7 +2,7 @@
 
 module CheckoutSdk
   module Payments
-    # A card payout destination.
+    # A card payout destination. Also the card destination of an unreferenced refund.
     #
     # @!attribute number
     #   The card number.
@@ -21,7 +21,7 @@ module CheckoutSdk
     #   4 digits
     #   @return [Integer]
     # @!attribute account_holder
-    #   The payout destination account holder.
+    #   The payout or unreferenced refund destination account holder.
     #   [Required]
     #   The type discriminates the accepted keys:
     #   - individual: type, first_name, middle_name, last_name, billing_address, phone,

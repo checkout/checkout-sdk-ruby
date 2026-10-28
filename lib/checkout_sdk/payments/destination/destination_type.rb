@@ -4,8 +4,9 @@ module CheckoutSdk
   module Payments
     # The payout destination type.
     #
-    # Two destination discriminators share these values:
+    # Three destination discriminators share these values:
     # - card payout destination: card, network_token, id, token
+    # - unreferenced refund destination: card, network_token, id, token
     # - bank payout destination: id, bank_account
     module DestinationType
       CARD = 'card'

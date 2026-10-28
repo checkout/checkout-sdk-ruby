@@ -2,7 +2,8 @@
 
 module CheckoutSdk
   module Payments
-    # A network token payout destination, used as the destination of a card payout.
+    # A network token payout destination, used as the destination of a card payout or of an
+    # unreferenced refund.
     #
     # @!attribute token
     #   The network token's Primary Account Number (PAN).
@@ -35,7 +36,7 @@ module CheckoutSdk
     #   max 2 characters
     #   @return [String]
     # @!attribute account_holder
-    #   The payout destination account holder.
+    #   The payout or unreferenced refund destination account holder.
     #   [Required]
     #   The type discriminates the accepted keys:
     #   - individual: type, first_name, middle_name, last_name, billing_address, phone,

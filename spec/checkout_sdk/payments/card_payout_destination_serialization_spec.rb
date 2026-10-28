@@ -157,8 +157,23 @@ RSpec.describe CheckoutSdk::Payments::NetworkTokenDestination do
     expect(json['token_type']).to eq(full_destination.token_type)
     expect(json['cryptogram']).to eq(full_destination.cryptogram)
     expect(json['eci']).to eq(full_destination.eci)
-    expect(json['account_holder']).to eq(CheckoutSdk::JsonSerializer.to_custom_hash(account_holder)
-                                           .then { |h| JSON.parse(JSON.generate(h)) })
+  end
+
+  it 'round trips every account holder property through JSON' do
+    holder = full_destination.account_holder
+    json = wire(full_destination)['account_holder']
+
+    %i[type first_name middle_name last_name email date_of_birth country_of_birth].each do |attr|
+      expect(json[attr.to_s]).to eq(holder.public_send(attr))
+    end
+    {
+      'billing_address' => %i[address_line1 address_line2 city state zip country],
+      'phone' => %i[country_code number],
+      'identification' => %i[type number issuing_country date_of_expiry]
+    }.each do |key, attrs|
+      nested = holder.public_send(key)
+      expect(json[key]).to eq(attrs.to_h { |attr| [attr.to_s, nested.public_send(attr)] })
+    end
   end
 
   it 'loads through require checkout_sdk alone' do
