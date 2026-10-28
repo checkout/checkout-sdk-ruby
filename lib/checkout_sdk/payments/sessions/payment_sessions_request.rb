@@ -75,7 +75,9 @@ module CheckoutSdk
     # @!attribute capture
     #   @return [TrueClass, FalseClass] [Optional] Specifies whether to capture the payment, if applicable.
     # @!attribute ip_address
-    #   @return [String] [Optional] The Customers IP address.
+    #   @return [String] [Optional] The Customers IP address. Only IPv4 and IPv6 addresses are accepted.
+    #   @deprecated The Customers IP address is deprecated in the API reference. Will be removed in the next
+    #     major version.
     # @!attribute capture_on
     #   @return [Time] [Optional] A timestamp specifying when to capture the payment, as an ISO 8601 code.
     # @!attribute tax_amount

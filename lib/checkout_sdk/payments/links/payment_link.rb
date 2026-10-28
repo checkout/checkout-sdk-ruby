@@ -15,6 +15,8 @@ module CheckoutSdk
     #     present (i.e., recurring or mail order / telephone order). Default: "Regular".
     # @!attribute payment_ip
     #   @return [String] [Optional] The Customers IP address. Only IPv4 and IPv6 addresses are accepted.
+    #   @deprecated The Customers IP address is deprecated in the API reference. Will be removed in the next
+    #     major version.
     # @!attribute billing_descriptor
     #   @return [BillingDescriptor] [Optional] An optional description that is displayed on the customer's statement
     #     identifying a purchase

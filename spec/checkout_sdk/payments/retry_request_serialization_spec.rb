@@ -86,7 +86,11 @@ RSpec.describe 'instruction and payment_method_configuration on payment links an
 
   it 'serializes payment_method_configuration on payment links' do
     request = CheckoutSdk::Payments::PaymentLink.new
+    card = CheckoutSdk::Payments::Card.new
+    card.store_payment_details = 'collect_consent'
     request.payment_method_configuration = CheckoutSdk::Payments::PaymentMethodConfiguration.new
-    expect(retry_to_json_hash(request)).to have_key('payment_method_configuration')
+    request.payment_method_configuration.card = card
+    expect(retry_to_json_hash(request)['payment_method_configuration'])
+      .to eq(JSON.parse('{"card":{"store_payment_details":"collect_consent"}}'))
   end
 end
