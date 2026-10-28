@@ -8,6 +8,7 @@ module CheckoutSdk
     #   The type of the bank account. Note that some beneficiary banks do not accept payouts to
     #   savings accounts.
     #   [Required]
+    #   Enum: "savings" "current" "cash"
     #   @return [String] {CheckoutSdk::Common::AccountType}
     # @!attribute account_number
     #   Number (which can contain letters) that identifies the local account.
@@ -46,9 +47,9 @@ module CheckoutSdk
     # @!attribute bank
     #   The bank details.
     #   [Optional]
-    #   @deprecated Not in the current specification of the bank account payout destination, so the
-    #     API does not define it. Retained for backwards compatibility and will be removed in a
-    #     future version.
+    #   @deprecated Not in the request schema of the bank account payout destination; bank only exists on the
+    #     Instruments bank account schemas. Retained for backwards compatibility and will be removed in the
+    #     next major version. There is no replacement.
     #   @return [CheckoutSdk::Common::BankDetails]
     class BankAccountDestination < Destination
       attr_accessor :account_type,

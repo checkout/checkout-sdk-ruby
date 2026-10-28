@@ -23,6 +23,7 @@ module CheckoutSdk
     # @!attribute token_type
     #   The network token type.
     #   [Required]
+    #   Enum: "vts" "mdes" "applepay" "googlepay"
     #   @return [String] {CheckoutSdk::Payments::NetworkTokenType}
     # @!attribute cryptogram
     #   The network token's Base64-encoded cryptographic identifier (TAVV).

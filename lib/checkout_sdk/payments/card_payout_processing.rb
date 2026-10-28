@@ -9,6 +9,7 @@ module CheckoutSdk
     #   Must only contain alphanumeric characters.
     #   If you're a Visa-registered ramp provider operating with affiliates, this field is required.
     #   [Optional]
+    #   ^[a-zA-Z0-9]{1,15}$
     #   max 15 characters
     #   @return [String]
     # @!attribute affiliate_url

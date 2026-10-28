@@ -24,6 +24,7 @@ module CheckoutSdk
     #   The three-letter ISO 4217 code for the currency you want to pay out to the recipient.
     #   For bank payouts, it should match the currency of the destination account.
     #   [Required]
+    #   min 3 characters, max 3 characters for bank payouts
     #   @return [String] {CheckoutSdk::Common::Currency}
     # @!attribute reference
     #   A custom reference to identify the payout. For example, an order number.
@@ -49,7 +50,7 @@ module CheckoutSdk
     #   The unique identifier for the processing channel.
     #   [Required]
     #   ^(pc)_(\w{26})$
-    #   29 characters
+    #   29 characters (min 29, max 29) for card payouts only
     #   @return [String]
     # @!attribute metadata
     #   Stores additional information about the transaction with custom fields. Card payouts only.

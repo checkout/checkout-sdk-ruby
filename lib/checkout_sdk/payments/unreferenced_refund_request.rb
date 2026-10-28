@@ -68,12 +68,12 @@ module CheckoutSdk
     class UnreferencedRefundRequest
       PAYMENT_TYPE = 'UnreferencedRefund'
 
+      attr_reader :payment_type
       attr_accessor :source,
                     :destination,
                     :instruction,
                     :amount,
                     :currency,
-                    :payment_type,
                     :processing_channel_id,
                     :reference,
                     :metadata,

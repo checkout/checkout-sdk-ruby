@@ -5,8 +5,9 @@ module CheckoutSdk
     # The payment scheme type of a bank payout instruction.
     # Enum: "local" "instant"
     class InstructionScheme
-      # @deprecated Not in the current specification, which only lists local and instant. Retained for
-      #   backwards compatibility and will be removed in a future version.
+      # @deprecated Not in the request schema, which only lists local and instant; still returned in
+      #   PayoutDetails (instruction.scheme). Retained for backwards compatibility and will be removed in the
+      #   next major version. There is no replacement.
       SWIFT = 'swift'
       LOCAL = 'local'
       INSTANT = 'instant'

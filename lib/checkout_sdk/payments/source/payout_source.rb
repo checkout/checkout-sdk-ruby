@@ -15,10 +15,10 @@ module CheckoutSdk
     # @!attribute amount
     #   The amount of the source.
     #   [Optional]
-    #   @deprecated Not in the current specification of any payout or unreferenced refund source, so the
-    #     API does not define it. Retained for backwards compatibility and will be removed in a future
-    #     version.
-    #   @return [String]
+    #   @deprecated Not in the request schema of any payout or unreferenced refund source; still returned in
+    #     PayoutDetails (source.amount). Retained for backwards compatibility and will be removed in the next
+    #     major version. There is no replacement.
+    #   @return [Integer]
     class PayoutSource
       attr_reader :type
       attr_accessor :id,
