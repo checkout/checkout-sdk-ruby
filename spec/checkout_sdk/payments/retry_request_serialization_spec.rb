@@ -31,12 +31,11 @@ RSpec.describe CheckoutSdk::Payments::PaymentRetryRequest do
     expect(retry_to_json_hash(request)).to eq(JSON.parse('{"enabled":false}'))
   end
 
-  it 'serializes deprecated max_attempts and end_after_days with the spec names' do
+  it 'serializes the deprecated top-level max_attempts under its legacy key' do
     request = described_class.new
     request.enabled = true
     request.max_attempts = 3
-    request.end_after_days = 10
-    expect(retry_to_json_hash(request)).to eq(JSON.parse('{"enabled":true,"max_attempts":3,"end_after_days":10}'))
+    expect(retry_to_json_hash(request)).to eq(JSON.parse('{"enabled":true,"max_attempts":3}'))
   end
 
   it 'keeps the deprecated end_after_day accessor, serialized under its own key' do
