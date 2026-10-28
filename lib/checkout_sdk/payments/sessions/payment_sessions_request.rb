@@ -7,7 +7,8 @@ module CheckoutSdk
     # @!attribute currency
     #   @return [String] {CheckoutSdk::Common::Currency} [Required] The three-letter ISO currency code.
     # @!attribute payment_type
-    #   @return [TrueClass, FalseClass] [Optional] Must be specified for card-not-present (CNP) payments.
+    #   @return [String] {PaymentType} [Optional] Must be specified for card-not-present (CNP) payments.
+    #     Enum: "Regular" "Recurring" "MOTO" "Installment" "Unscheduled". Default: "Regular".
     # @!attribute billing
     #   @return [BillingInformation] [Required] The billing details.
     # @!attribute billing_descriptor
@@ -47,8 +48,8 @@ module CheckoutSdk
     #   @return [RiskRequest] [Optional] Configures the risk assessment performed during payment processing.
     # @!attribute retry
     #   @return [PaymentRetryRequest] [Optional] Configuration of asynchronous retries.
-    #   @deprecated Not part of the payment sessions specification. Please use {#customer_retry} instead.
-    #     This attribute will be removed in the next major version.
+    #   @deprecated Not part of the payment sessions request; the API ignores it. Will be removed in the next
+    #     major version.
     # @!attribute customer_retry
     #   @return [CheckoutSdk::Common::CustomerRetry] [Optional] Configures the parameters for customer retries
     #     performed by the customer on the checkout page. max_attempts is the maximum number of customer retry
@@ -78,9 +79,12 @@ module CheckoutSdk
     # @!attribute capture_on
     #   @return [Time] [Optional] A timestamp specifying when to capture the payment, as an ISO 8601 code.
     # @!attribute tax_amount
-    #   @return [Integer] [Optional] The total tax amount, in the minor currency unit.
+    #   @return [Integer] [Optional] The total tax amount, in the minor currency unit. Not in the
+    #     payment sessions request specification.
     # @!attribute authorization_type
     #   @return [String] [Optional] {AuthorizationType} Enum: "Final" "Estimated". Default: "Final".
+    # @!attribute instruction
+    #   @return [HostedPaymentInstruction] [Optional] Details about the payment instruction.
     # @!attribute payment_plan
     #   @return [PaymentPlan] [Optional] The information to process a recurring payment request.
     #     To be used when the payment_type is Recurring.
@@ -118,7 +122,8 @@ module CheckoutSdk
                     :capture_on,
                     :tax_amount,
                     :authorization_type,
-                    :payment_plan
+                    :payment_plan,
+                    :instruction
     end
   end
 end

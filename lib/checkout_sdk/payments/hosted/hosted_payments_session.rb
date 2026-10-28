@@ -17,12 +17,12 @@ module CheckoutSdk
     #   @return [String] [Required] For redirect payment methods, this overrides the default failure redirect URL
     #     configured on your account
     # @!attribute amount
-    #   @return [Integer] [Optional] The payment amount.
+    #   @return [Integer] [Optional] The payment amount. Minimum 0.
     # @!attribute payment_type
     #   @return [String] {PaymentType} [Optional] This must be specified for card payments where the cardholder is not
     #     present (i.e., recurring or mail order / telephone order)
     # @!attribute payment_ip
-    #   @return [String] [Optional] The Customers IP address.
+    #   @return [String] [Optional] The Customers IP address. Only IPv4 and IPv6 addresses are accepted.
     # @!attribute billing_descriptor
     #   @return [BillingDescriptor] [Optional] An optional description that is displayed on the customer's statement
     #     identifying a purchase

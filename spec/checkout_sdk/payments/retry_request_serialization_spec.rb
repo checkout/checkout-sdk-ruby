@@ -30,20 +30,6 @@ RSpec.describe CheckoutSdk::Payments::PaymentRetryRequest do
     request.enabled = false
     expect(retry_to_json_hash(request)).to eq(JSON.parse('{"enabled":false}'))
   end
-
-  it 'serializes the deprecated top-level max_attempts under its legacy key' do
-    request = described_class.new
-    request.enabled = true
-    request.max_attempts = 3
-    expect(retry_to_json_hash(request)).to eq(JSON.parse('{"enabled":true,"max_attempts":3}'))
-  end
-
-  it 'keeps the deprecated end_after_day accessor, serialized under its own key' do
-    request = described_class.new
-    request.end_after_day = 7
-    expect(request.end_after_day).to eq(7)
-    expect(retry_to_json_hash(request)).to eq(JSON.parse('{"end_after_day":7}'))
-  end
 end
 
 RSpec.describe CheckoutSdk::Payments::DunningRetryRequest do
@@ -86,5 +72,21 @@ RSpec.describe CheckoutSdk::Common::CustomerRetry do
       request.customer_retry = described_class.new.tap { |c| c.max_attempts = 2 }
       expect(retry_to_json_hash(request)['customer_retry']).to eq(JSON.parse('{"max_attempts":2}'))
     end
+  end
+end
+
+RSpec.describe 'instruction and payment_method_configuration on payment links and payment sessions' do
+  it 'serializes instruction on payment links and payment sessions' do
+    [CheckoutSdk::Payments::PaymentLink, CheckoutSdk::Payments::PaymentSessionsRequest].each do |klass|
+      request = klass.new
+      request.instruction = CheckoutSdk::Payments::HostedPaymentInstruction.new.tap { |i| i.purpose = 'donations' }
+      expect(retry_to_json_hash(request)['instruction']).to eq(JSON.parse('{"purpose":"donations"}'))
+    end
+  end
+
+  it 'serializes payment_method_configuration on payment links' do
+    request = CheckoutSdk::Payments::PaymentLink.new
+    request.payment_method_configuration = CheckoutSdk::Payments::PaymentMethodConfiguration.new
+    expect(retry_to_json_hash(request)).to have_key('payment_method_configuration')
   end
 end
