@@ -3,7 +3,8 @@
 module CheckoutSdk
   module Payments
     # Additional details about the instruction of a payout or an unreferenced refund.
-    # Card payouts and unreferenced refunds use purpose and funds_transfer_type; bank payouts use scheme.
+    # Card payouts and unreferenced refunds use purpose and funds_transfer_type; bank payouts use scheme and
+    # remittance.
     #
     # @!attribute purpose
     #   The purpose of the card payout or unreferenced refund.
@@ -30,6 +31,10 @@ module CheckoutSdk
     #   [Optional]
     #   Enum: "local" "instant"
     #   @return [String] {InstructionScheme}
+    # @!attribute remittance
+    #   The remittance details of a bank payout, used for reconciliation.
+    #   [Optional]
+    #   @return [InstructionRemittance]
     # @!attribute quote_id
     #   The FX quote identifier of a bank payout.
     #   [Optional]
@@ -59,6 +64,7 @@ module CheckoutSdk
                     :charge_bearer,
                     :repair,
                     :scheme,
+                    :remittance,
                     :quote_id,
                     :skip_expiry,
                     :funds_transfer_type,
