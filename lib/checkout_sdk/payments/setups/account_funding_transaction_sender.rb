@@ -6,16 +6,16 @@ module CheckoutSdk
     # Maps swagger `PaymentSetup.account_funding_transaction.sender`.
     #
     # @!attribute first_name
-    #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
-    #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
     #   The sender's first name.
     #   [Optional]
-    #   @return [String]
-    # @!attribute last_name
     #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
     #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
+    #   @return [String]
+    # @!attribute last_name
     #   The sender's last name.
     #   [Optional]
+    #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
+    #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
     #   @return [String]
     # @!attribute date_of_birth
     #   Date of birth of the sender (yyyy-mm-dd).
@@ -23,22 +23,22 @@ module CheckoutSdk
     #   Format: date
     #   @return [String]
     # @!attribute country_of_birth
-    #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
-    #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
     #   The sender's country of birth, as an ISO 3166-1 alpha-2 code.
     #   [Optional]
+    #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
+    #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
     #   @return [String] {CheckoutSdk::Common::Country}
     # @!attribute nationality
-    #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
-    #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
     #   The sender's nationality, as an ISO 3166-1 alpha-2 code.
     #   [Optional]
-    #   @return [String] {CheckoutSdk::Common::Country}
-    # @!attribute address
     #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
     #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
+    #   @return [String] {CheckoutSdk::Common::Country}
+    # @!attribute address
     #   The sender's address.
     #   [Optional]
+    #   @deprecated Not part of the Sender schema of the Payment Setups account funding transaction; the
+    #     API ignores it on requests. There is no replacement. Will be removed in the next major version.
     #   @return [CheckoutSdk::Common::Address]
     # @!attribute reference
     #   The unique reference for the sender of the payment.

@@ -18,7 +18,6 @@ module CheckoutSdk
       # The payment method status.
       # [Optional]
       # Read only.
-      # Enum: "unavailable" "action_required" "ready" "initialization_required" "invalid"
       # @return [String] One of {PaymentSetupPaymentMethodStatus}.
       attr_accessor :status
 
@@ -33,8 +32,7 @@ module CheckoutSdk
       # On update the API replaces the payment methods, so send `enabled` again to keep the method enabled.
       # The specification does not state this; it is the API's behaviour.
       # [Optional]
-      # Default: "disabled"
-      # Enum: "disabled" "enabled"
+      # Default: disabled
       # @return [String] One of {PaymentSetupPaymentMethodInitialization}.
       attr_accessor :initialization
 
