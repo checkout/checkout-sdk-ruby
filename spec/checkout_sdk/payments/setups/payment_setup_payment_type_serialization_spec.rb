@@ -153,6 +153,112 @@ RSpec.describe 'Payment Setups payment_type and account funding transaction seri
       expect(read.reference).to eq('0fc88634-78c1-4286-9cb6-6ca358730c8c')
       expect(read.date_of_birth).to eq('2000-01-01T00:00:00.0000000')
     end
+
+    it 'round trips all eight attributes through the API client' do
+      address = CheckoutSdk::Common::Address.new
+      address.city = 'London'
+      identification = CheckoutSdk::Payments::AccountFundingTransactionIdentification.new
+      identification.type = CheckoutSdk::Payments::AccountFundingTransactionIdentificationType::PASSPORT
+      identification.number = '1234567890'
+      identification.issuing_country = CheckoutSdk::Common::Country::US
+      full = described_class.new
+      full.first_name = 'John'
+      full.last_name = 'Smith'
+      full.date_of_birth = '2000-01-01'
+      full.country_of_birth = CheckoutSdk::Common::Country::GB
+      full.nationality = CheckoutSdk::Common::Country::GB
+      full.address = address
+      full.reference = '0fc88634-78c1-4286-9cb6-6ca358730c8c'
+      full.identification = identification
+
+      read = parse_json(CheckoutSdk::JsonSerializer.to_custom_hash(full).to_json)
+
+      expect(read.first_name).to eq('John')
+      expect(read.last_name).to eq('Smith')
+      expect(read.date_of_birth).to eq('2000-01-01')
+      expect(read.country_of_birth).to eq('GB')
+      expect(read.nationality).to eq('GB')
+      expect(read.address.city).to eq('London')
+      expect(read.reference).to eq('0fc88634-78c1-4286-9cb6-6ca358730c8c')
+      expect(read.identification.type).to eq('passport')
+      expect(read.identification.number).to eq('1234567890')
+      expect(read.identification.issuing_country).to eq('US')
+    end
+
+    it 'reads the full swagger example of the sender' do
+      body = '{"account_funding_transaction":{"sender":{"date_of_birth":"2000-01-01T00:00:00.0000000",' \
+             '"reference":"0fc88634-78c1-4286-9cb6-6ca358730c8c",' \
+             '"identification":{"number":"1234567890","issuing_country":"US"}}}}'
+
+      read = parse_json(body).account_funding_transaction.sender
+
+      expect(read.date_of_birth).to eq('2000-01-01T00:00:00.0000000')
+      expect(read.reference).to eq('0fc88634-78c1-4286-9cb6-6ca358730c8c')
+      expect(read.identification.number).to eq('1234567890')
+      expect(read.identification.issuing_country).to eq('US')
+    end
+  end
+
+  describe CheckoutSdk::Payments::AccountFundingTransactionRecipient do
+    def recipient
+      address = CheckoutSdk::Common::Address.new
+      address.address_line1 = '10 Canterbury Road'
+      address.address_line2 = 'Flat 2'
+      address.city = 'London'
+      address.state = 'Greater London'
+      address.zip = 'NE1 1KO'
+      address.country = CheckoutSdk::Common::Country::GB
+      recipient = described_class.new
+      recipient.first_name = 'John'
+      recipient.last_name = 'Smith'
+      recipient.account_number = '5555554444'
+      recipient.account_type = 'checking'
+      recipient.date_of_birth = '2000-01-01'
+      recipient.address = address
+      recipient
+    end
+
+    it 'serializes all six attributes to their swagger keys' do
+      expect(wire(recipient)).to eq({ 'first_name' => 'John', 'last_name' => 'Smith',
+                                      'account_number' => '5555554444', 'account_type' => 'checking',
+                                      'date_of_birth' => '2000-01-01',
+                                      'address' => { 'address_line1' => '10 Canterbury Road',
+                                                     'address_line2' => 'Flat 2', 'city' => 'London',
+                                                     'state' => 'Greater London', 'zip' => 'NE1 1KO',
+                                                     'country' => 'GB' } })
+    end
+
+    it 'round trips all six attributes through the API client' do
+      read = parse_json(CheckoutSdk::JsonSerializer.to_custom_hash(recipient).to_json)
+
+      expect(read.first_name).to eq('John')
+      expect(read.last_name).to eq('Smith')
+      expect(read.account_number).to eq('5555554444')
+      expect(read.account_type).to eq('checking')
+      expect(read.date_of_birth).to eq('2000-01-01')
+      expect(read.address.address_line1).to eq('10 Canterbury Road')
+      expect(read.address.address_line2).to eq('Flat 2')
+      expect(read.address.city).to eq('London')
+      expect(read.address.state).to eq('Greater London')
+      expect(read.address.zip).to eq('NE1 1KO')
+      expect(read.address.country).to eq('GB')
+    end
+
+    it 'reads the swagger example values of the recipient' do
+      body = '{"account_funding_transaction":{"recipient":{"date_of_birth":"2000-01-01T00:00:00.0000000",' \
+             '"address":{"address_line1":"10 Canterbury Road","address_line2":"Flat 2","city":"London",' \
+             '"state":"Greater London","zip":"NE1 1KO","country":"GB"}}}}'
+
+      read = parse_json(body).account_funding_transaction.recipient
+
+      expect(read.date_of_birth).to eq('2000-01-01T00:00:00.0000000')
+      expect(read.address.address_line1).to eq('10 Canterbury Road')
+      expect(read.address.address_line2).to eq('Flat 2')
+      expect(read.address.city).to eq('London')
+      expect(read.address.state).to eq('Greater London')
+      expect(read.address.zip).to eq('NE1 1KO')
+      expect(read.address.country).to eq('GB')
+    end
   end
 
   describe 'deprecated account funding transaction fields' do
