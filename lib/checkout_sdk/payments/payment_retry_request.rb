@@ -2,16 +2,18 @@
 
 module CheckoutSdk
   module Payments
+    # Configuration of asynchronous retries (POST /payments).
+    #
     # @!attribute enabled
-    #   @return [TrueClass, FalseClass]
-    # @!attribute max_attempts
-    #   @return [Integer]
-    # @!attribute end_after_days
-    #   @return [Integer]
+    #   @return [TrueClass, FalseClass] [Required] Indicates whether asynchronous retries are enabled for the payment.
+    # @!attribute dunning
+    #   @return [DunningRetryRequest] [Optional] Configuration of asynchronous Dunning retries.
+    # @!attribute downtime
+    #   @return [DowntimeRetryRequest] [Optional] Configuration of asynchronous Downtime retries.
     class PaymentRetryRequest
       attr_accessor :enabled,
-                    :max_attempts,
-                    :end_after_day
+                    :dunning,
+                    :downtime
     end
   end
 end

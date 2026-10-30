@@ -62,7 +62,7 @@ module CheckoutSdk
     # @!attribute items
     #   @return [Array(Product)]
     # @!attribute retry
-    #   @return [PaymentRetryRequest]
+    #   @return [PaymentRetryRequest] [Optional] Configuration of asynchronous retries.
     # @!attribute metadata
     #   @return [Hash{String => Object}]
     # @!attribute instruction

@@ -78,7 +78,7 @@ def create_hosted_payments_request
   billing_descriptor.name = "The Jewelry Shop"
   billing_descriptor.reference = "ORD-123A"
 
-  customer_retry = CheckoutSdk::Payments::PaymentRetryRequest.new
+  customer_retry = CheckoutSdk::Common::CustomerRetry.new
   customer_retry.max_attempts = 2
 
   sender = CheckoutSdk::Payments::InstrumentSender.new
