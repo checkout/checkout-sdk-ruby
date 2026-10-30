@@ -21,8 +21,8 @@ module CheckoutSdk
     # @!attribute full_name
     #   The account holder's full name.
     #   [Optional]
-    #   @deprecated Not in the request schema of any account holder; the Klarna payment source account_holder
-    #     had it until the API removed it. Still returned in the PayPal payment details source account_holder.
+    #   @deprecated Not in the request schema of any account holder. Still returned in the PayPal payment
+    #     details source account_holder.
     #     Retained for backwards compatibility and will be removed in the next major version. There is no
     #     replacement.
     #   @return [String]
@@ -30,9 +30,10 @@ module CheckoutSdk
     #   The account holder's legal first name. The combination of first_name, middle_name and last_name
     #   should exceed 3 letters in length for card payouts. A single character or all non-alphabetic
     #   characters return a field validation error.
-    #   [Required] for individual card payout and bank payout destinations; not required for card payout id
-    #   and token destinations when the name is already stored with the token or instrument; [Optional] for
-    #   unreferenced refunds
+    #   [Required] for individual account holders in card payouts, bank payouts and the unreferenced refund
+    #   card and network_token destinations; [Optional] for the unreferenced refund id and token
+    #   destinations. In the card payout id and token destinations it is not required if the first name is
+    #   already stored with the token or instrument.
     #   max 50 characters (card payouts and unreferenced refunds)
     #   @return [String]
     # @!attribute middle_name
@@ -44,9 +45,10 @@ module CheckoutSdk
     #   The account holder's legal last name. The combination of first_name, middle_name and last_name
     #   should exceed 3 letters in length for card payouts. A single character or all non-alphabetic
     #   characters return a field validation error.
-    #   [Required] for individual card payout and bank payout destinations; not required for card payout id
-    #   and token destinations when the name is already stored with the token or instrument; [Optional] for
-    #   unreferenced refunds
+    #   [Required] for individual account holders in card payouts, bank payouts and the unreferenced refund
+    #   card and network_token destinations; [Optional] for the unreferenced refund id and token
+    #   destinations. In the card payout id and token destinations it is not required if the last name is
+    #   already stored with the token or instrument.
     #   max 50 characters (card payouts and unreferenced refunds)
     #   @return [String]
     # @!attribute email
@@ -57,8 +59,8 @@ module CheckoutSdk
     # @!attribute gender
     #   The account holder's gender.
     #   [Optional]
-    #   @deprecated Not in the request schema of any account holder; the Klarna payment source account_holder
-    #     had it until the API removed it. Still returned in the Klarna payment details source account_holder.
+    #   @deprecated Not in the request schema of any account holder. Still returned in the Klarna payment
+    #     details source account_holder.
     #     Retained for backwards compatibility and will be removed in the next major version. There is no
     #     replacement.
     #   @return [String]
