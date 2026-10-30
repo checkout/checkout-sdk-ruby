@@ -2,41 +2,77 @@
 
 module CheckoutSdk
   module Payments
-    # Bacs payment method configuration on a Payment Setup. Maps swagger `Bacs`.
-    #
-    # @!attribute status
-    #   @return [String] (response-only) Payment method status, one of
-    #     {PaymentSetupPaymentMethodStatus} (e.g. "ready").
-    # @!attribute flags
-    #   @return [Array(String)] (response-only) Diagnostic flags returned by the API.
-    # @!attribute initialization
-    #   @return [String] The initialization type for the payment method.
-    # @!attribute instrument_id
-    #   @return [String] (response-only) The ID of the Bacs instrument used for the payment.
-    # @!attribute account_holder
-    #   @return [Hash] The account holder details (`type`, `first_name`, `last_name`,
-    #     `company_name`, `email`).
-    # @!attribute account_number
-    #   @return [String] The account number of the Bacs Direct Debit account.
-    # @!attribute bank_code
-    #   @return [String] The bank code (sort code) of the Bacs Direct Debit account.
-    # @!attribute country
-    #   @return [String] {CheckoutSdk::Common::Country}
-    # @!attribute currency
-    #   @return [String] {CheckoutSdk::Common::Currency}
-    # @!attribute allow_partial_match
-    #   @return [TrueClass, FalseClass] Whether to allow a partial match of the account holder details.
+    # The Bacs payment method's details and configuration on a Payment Setup. Maps swagger `Bacs`.
+    # Sent under the `payment_methods.bacs` key.
     class BacsPaymentMethod
-      attr_accessor :status,
-                    :flags,
-                    :initialization,
-                    :instrument_id,
-                    :account_holder,
-                    :account_number,
-                    :bank_code,
-                    :country,
-                    :currency,
-                    :allow_partial_match
+      # The payment method status.
+      # [Optional]
+      # Read only.
+      # @return [String] One of {PaymentSetupPaymentMethodStatus}.
+      attr_accessor :status
+
+      # The list of error codes or indicators that highlight missing or invalid information.
+      # [Optional]
+      # Read only.
+      # @return [Array(String)]
+      attr_accessor :flags
+
+      # The initialization state of the payment method.
+      # When you create a Payment Setup, this defaults to `disabled`.
+      # On update the API replaces the payment methods, so send `enabled` again to keep the method enabled.
+      # The specification does not state this; it is the API's behaviour.
+      # [Optional]
+      # Default: disabled
+      # @return [String] One of {PaymentSetupPaymentMethodInitialization}.
+      attr_accessor :initialization
+
+      # The ID of the Bacs instrument used for the payment.
+      # [Optional]
+      # Read only.
+      # @return [String]
+      attr_accessor :instrument_id
+
+      # The account holder details.
+      # [Optional]
+      # Keys:
+      # - `type` (String): The type of account holder. Enum: "individual" "corporate".
+      # - `first_name` (String): The first name of the account holder.
+      # - `last_name` (String): The last name of the account holder.
+      # - `company_name` (String): The legal name of a registered company that holds the account.
+      # - `email` (String): The email address of the account holder.
+      # @return [Hash]
+      attr_accessor :account_holder
+
+      # The account number of the Bacs Direct Debit account.
+      # [Optional]
+      # Write only.
+      # @return [String]
+      attr_accessor :account_number
+
+      # The sort code of the Bacs Direct Debit account.
+      # [Optional]
+      # Write only.
+      # @return [String]
+      attr_accessor :bank_code
+
+      # The account's country, as an ISO 3166-1 alpha-2 code.
+      # [Optional]
+      # min 2 characters, max 2 characters
+      # @return [String] {CheckoutSdk::Common::Country}
+      attr_accessor :country
+
+      # The account holder's account currency.
+      # [Optional]
+      # @return [String] {CheckoutSdk::Common::Currency}
+      attr_accessor :currency
+
+      # Indicates whether the Bacs instrument is created when account validation returns a partial
+      # match. When `true`, the instrument is created on a partial match; when `false`, instrument
+      # creation fails on a partial match.
+      # [Optional]
+      # Default: false
+      # @return [TrueClass, FalseClass]
+      attr_accessor :allow_partial_match
     end
   end
 end

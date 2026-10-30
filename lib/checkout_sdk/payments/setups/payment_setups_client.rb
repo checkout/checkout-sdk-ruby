@@ -32,6 +32,11 @@ module CheckoutSdk
       #   {PaymentSetupRisk}), convert it first with
       #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
       #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
+      #   :payment_type - String, the type of payment, one of {PaymentSetupPaymentType} (lowercase,
+      #   unlike {PaymentType}): "regular", "recurring", "moto", "installment", "pay_later" or
+      #   "unscheduled". Default "regular". You must provide it for card payments in which the
+      #   cardholder is not present, for example a recurring payment or a mail order/telephone order
+      #   (MOTO) payment.
       #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
       #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
       #   "enabled") and :customer_profile_sharing (Boolean).
@@ -128,6 +133,11 @@ module CheckoutSdk
       #   {PaymentSetupRisk}), convert it first with
       #   CheckoutSdk::JsonSerializer.to_custom_hash(object); a typed object nested directly in the
       #   Hash is not serialized and is sent as "#<CheckoutSdk::...>".
+      #   :payment_type - String, the type of payment, one of {PaymentSetupPaymentType} (lowercase,
+      #   unlike {PaymentType}): "regular", "recurring", "moto", "installment", "pay_later" or
+      #   "unscheduled". Default "regular". You must provide it for card payments in which the
+      #   cardholder is not present, for example a recurring payment or a mail order/telephone order
+      #   (MOTO) payment.
       #   :payment_methods may include :cashapp (the key is the single lowercase word `cashapp`), a Hash
       #   with the keys documented on {CashAppPaymentMethod}; you send :initialization ("disabled" or
       #   "enabled") and :customer_profile_sharing (Boolean).

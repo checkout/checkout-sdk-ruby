@@ -28,6 +28,91 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(hash['currency']).to eq('GBP')
       expect(hash['allow_partial_match']).to be(true)
     end
+
+    describe 'response parsing' do
+      let(:api_client) do
+        configuration = double('CheckoutConfiguration',
+                               http_client: Faraday.new,
+                               multipart_http_client: Faraday.new,
+                               logger: Logger.new(nil))
+        CheckoutSdk::ApiClient.new(configuration, 'https://api.sandbox.checkout.com')
+      end
+
+      def parse_json(body)
+        response = double('Response', status: 200, body: body, headers: { 'Content-Type' => 'application/json' })
+        api_client.send(:parse_response, response)
+      end
+
+      it 'round trips every field through the API client' do
+        pm = described_class.new
+        pm.status = CheckoutSdk::Payments::PaymentSetupPaymentMethodStatus::READY
+        pm.flags = %w[flag_a]
+        pm.initialization = CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization::ENABLED
+        pm.instrument_id = 'src_wkq7552u245upl5h75x24554xy'
+        pm.account_holder = { 'type' => 'individual', 'first_name' => 'John', 'last_name' => 'Smith',
+                              'company_name' => 'Example Ltd', 'email' => 'john.smith@example.com' }
+        pm.account_number = '12345678'
+        pm.bank_code = '200000'
+        pm.country = CheckoutSdk::Common::Country::GB
+        pm.currency = CheckoutSdk::Common::Currency::GBP
+        pm.allow_partial_match = true
+
+        read = parse_json(CheckoutSdk::JsonSerializer.to_custom_hash(pm).to_json)
+
+        expect(read.status).to eq('ready')
+        expect(read.flags).to eq(%w[flag_a])
+        expect(read.initialization).to eq('enabled')
+        expect(read.instrument_id).to eq('src_wkq7552u245upl5h75x24554xy')
+        expect(read.account_holder.type).to eq('individual')
+        expect(read.account_holder.first_name).to eq('John')
+        expect(read.account_holder.last_name).to eq('Smith')
+        expect(read.account_holder.company_name).to eq('Example Ltd')
+        expect(read.account_holder.email).to eq('john.smith@example.com')
+        expect(read.account_number).to eq('12345678')
+        expect(read.bank_code).to eq('200000')
+        expect(read.country).to eq('GB')
+        expect(read.currency).to eq('GBP')
+        expect(read.allow_partial_match).to be(true)
+      end
+
+      it 'reads the swagger example values from a Payment Setup response' do
+        body = '{"payment_methods":{"bacs":{"instrument_id":"src_wkq7552u245upl5h75x24554xy",' \
+               '"account_holder":{"email":"john.smith@example.com"}}}}'
+
+        read = parse_json(body).payment_methods.bacs
+
+        expect(read.instrument_id).to eq('src_wkq7552u245upl5h75x24554xy')
+        expect(read.account_holder.email).to eq('john.smith@example.com')
+      end
+    end
+  end
+
+  describe 'BacsPaymentMethod initialization' do
+    it 'sends each initialization constant under the initialization key' do
+      { 'DISABLED' => 'disabled', 'ENABLED' => 'enabled' }.each do |constant, value|
+        pm = CheckoutSdk::Payments::BacsPaymentMethod.new
+        pm.initialization = CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization.const_get(constant)
+
+        expect(CheckoutSdk::JsonSerializer.to_custom_hash(pm)).to eq({ 'initialization' => value })
+      end
+    end
+
+    it 'does not send initialization when it is not set, leaving the API default' do
+      pm = CheckoutSdk::Payments::BacsPaymentMethod.new
+      pm.account_number = '12345678'
+
+      expect(CheckoutSdk::JsonSerializer.to_custom_hash(pm)).to eq({ 'account_number' => '12345678' })
+    end
+
+    it 'is sent under the literal bacs key' do
+      pm = CheckoutSdk::Payments::BacsPaymentMethod.new
+      pm.initialization = CheckoutSdk::Payments::PaymentSetupPaymentMethodInitialization::ENABLED
+      request = { payment_methods: { bacs: CheckoutSdk::JsonSerializer.to_custom_hash(pm) } }
+
+      json = CheckoutSdk::JsonSerializer.to_custom_hash(request).to_json
+
+      expect(json).to eq('{"payment_methods":{"bacs":{"initialization":"enabled"}}}')
+    end
   end
 
   describe CheckoutSdk::Payments::CardPresentPaymentMethod do
@@ -52,6 +137,16 @@ RSpec.describe 'Payment Setups payment-method configs serialization' do
       expect(hash['pin']).to eq({ 'key_set_id' => 'ks_1', 'block' => 'b', 'block_format' => 'iso0' })
       expect(hash['store_for_future_use']).to be(true)
       expect(hash['name']).to eq('John Smith')
+    end
+
+    it 'is sent unchanged under the literal card_present key' do
+      pm = described_class.new
+      pm.store_for_future_use = true
+      request = { payment_methods: { card_present: CheckoutSdk::JsonSerializer.to_custom_hash(pm) } }
+
+      json = CheckoutSdk::JsonSerializer.to_custom_hash(request).to_json
+
+      expect(json).to eq('{"payment_methods":{"card_present":{"store_for_future_use":true}}}')
     end
   end
 

@@ -2,14 +2,15 @@
 
 module CheckoutSdk
   module Payments
-    # Identification document type used by the sender of an Account Funding Transaction
-    # on a Payment Setup.
+    # The type of identification used to identify the sender of an Account Funding Transaction on a
+    # Payment Setup. Maps swagger `PaymentSetup.account_funding_transaction.sender.identification.type`.
     module AccountFundingTransactionIdentificationType
+      # A driving license.
       DRIVING_LICENSE = 'driving_license'
+      # A passport.
       PASSPORT = 'passport'
+      # A national identity document.
       NATIONAL_ID = 'national_id'
-      TAX_ID = 'tax_id'
-      OTHER = 'other'
     end
   end
 end

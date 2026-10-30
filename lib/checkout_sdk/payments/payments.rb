@@ -240,6 +240,7 @@ require 'checkout_sdk/payments/setups/payment_setup_device_client'
 require 'checkout_sdk/payments/setups/payment_setup_device_os'
 require 'checkout_sdk/payments/setups/payment_setup_payment_method_initialization'
 require 'checkout_sdk/payments/setups/payment_setup_payment_method_status'
+require 'checkout_sdk/payments/setups/payment_setup_payment_type'
 require 'checkout_sdk/payments/setups/stablecoin_payment_method'
 require 'checkout_sdk/payments/setups/payment_setups_client'
 
