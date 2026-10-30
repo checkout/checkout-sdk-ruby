@@ -27,6 +27,16 @@ module CheckoutSdk
                                idempotency_key)
       end
 
+      # @param [Hash, UnreferencedRefundRequest] unreferenced_refund_request
+      # @param [String, nil] idempotency_key
+      # @return [Hash]
+      def request_unreferenced_refund(unreferenced_refund_request, idempotency_key = nil)
+        api_client.invoke_post(PAYMENTS_PATH,
+                               sdk_authorization,
+                               unreferenced_refund_request,
+                               idempotency_key)
+      end
+
       # @param [String] payment_id
       # @param [Hash, CaptureRequest] capture_request
       # @param [String, nil] idempotency_key
