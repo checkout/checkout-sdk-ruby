@@ -291,4 +291,87 @@ RSpec.describe CheckoutSdk::ApiClient do
       expect(captured).not_to have_key(:'If-Match')
     end
   end
+
+  describe 'request logging' do
+    let(:log_output) { StringIO.new }
+    let(:logging_configuration) do
+      double(
+        'CheckoutConfiguration',
+        http_client: Faraday.new,
+        multipart_http_client: Faraday.new,
+        logger: Logger.new(log_output)
+      )
+    end
+    let(:logging_client) { CheckoutSdk::ApiClient.new(logging_configuration, 'https://api.sandbox.checkout.com') }
+    let(:auth) { double('auth', authorization_header: 'Bearer xxx') }
+    let(:response) { double('Response', status: 200, body: '{}', headers: { 'Content-Type' => 'application/json' }) }
+
+    before do
+      allow(CheckoutSdk::CheckoutUtils).to receive(:map_to_http_metadata).and_return(
+        OpenStruct.new(status_code: 200, body: '{}')
+      )
+      allow(logging_client.client).to receive(:run_request).and_return(response)
+    end
+
+    it 'writes one log line for an id with line breaks' do
+      logging_client.invoke_get("payments/pay_1\nI, [2026] INFO -- : extra\r\nline", auth)
+
+      expect(log_output.string.lines.size).to eq(1)
+      expect(log_output.string).to include('get: /payments/pay_1\\nI, [2026] INFO -- : extra\\r\\nline')
+    end
+
+    it 'logs the path without the query string' do
+      logging_client.invoke_get('events', auth, { reference: 'order-1' })
+
+      expect(log_output.string).to include('get: /events')
+      expect(log_output.string).not_to include('order-1')
+      expect(logging_client.client).to have_received(:run_request)
+        .with(:get, 'events?reference=order-1', anything, anything)
+    end
+  end
+
+  describe 'error data' do
+    let(:secret_key) { 'sk_sbox_m73dzbpy7cf3gfd46xr4yj5xo4e' }
+    let(:auth) { double('auth', authorization_header: secret_key) }
+
+    def client_answering(status)
+      stubs = Faraday::Adapter::Test::Stubs.new do |stub|
+        stub.post('/payments') { [status, { 'Content-Type' => 'application/json' }, '{"error_type":"failure"}'] }
+      end
+      http_client = Faraday.new do |f|
+        f.response :raise_error
+        f.adapter :test, stubs
+      end
+      configuration = double('CheckoutConfiguration', http_client: http_client, multipart_http_client: Faraday.new,
+                                                      logger: Logger.new(StringIO.new))
+      CheckoutSdk::ApiClient.new(configuration, 'https://api.sandbox.checkout.com')
+    end
+
+    def expect_no_request_data(error)
+      [error.message, error.inspect, error.full_message].each do |text|
+        expect(text).not_to include(secret_key)
+        expect(text).not_to include('card_number')
+      end
+      expect(error.cause).to be_nil
+    end
+
+    it 'client error omits request data' do
+      expect { client_answering(422).invoke_post('payments', auth, { card_number: '4242' }) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) do |error|
+          expect_no_request_data(error)
+          expect(error.http_metadata.status_code).to eq(422)
+          expect(error.error_details.error_type).to eq('failure')
+        end
+    end
+
+    it 'server error keeps its class and response but omits request data' do
+      expect { client_answering(500).invoke_post('payments', auth, { card_number: '4242' }) }
+        .to raise_error(Faraday::ServerError) do |error|
+          expect_no_request_data(error)
+          expect(error.response).not_to have_key(:request)
+          expect(error.response_status).to eq(500)
+          expect(error.response_body).to eq('{"error_type":"failure"}')
+        end
+    end
+  end
 end

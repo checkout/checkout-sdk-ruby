@@ -65,17 +65,7 @@ module CheckoutSdk
         scope: @scopes.join(' ')
       }
 
-      headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
-      body = URI.encode_www_form data
-
-      begin
-        @log.info "post: #{authorization_uri}"
-        response = @oauth_http_client.run_request(:post, @authorization_uri, body, headers)
-      rescue Faraday::ClientError => e
-        raise CheckoutAuthorizationException, e.response
-      rescue Faraday::ConnectionFailed => e
-        raise CheckoutArgumentException, e.wrapped_exception
-      end
+      response = request_access_token(URI.encode_www_form(data))
 
       if !response.body.nil? && response.body != ''
         oauth_response = JSON.parse(response.body, object_class: OpenStruct)
@@ -89,6 +79,22 @@ module CheckoutSdk
     end
 
     private
+
+    # @param [String] body
+    # @return [Faraday::Response]
+    def request_access_token(body)
+      headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
+      @log.info "post: #{CheckoutUtils.loggable_path(authorization_uri)}"
+      @oauth_http_client.run_request(:post, @authorization_uri, body, headers)
+    rescue Faraday::ClientError, Faraday::ServerError => e
+      raise if e.response.nil?
+
+      metadata = CheckoutUtils.map_to_http_metadata(e.response)
+      raise CheckoutAuthorizationException.token_request_failed(metadata.status_code, metadata.headers,
+                                                                metadata.body), cause: nil
+    rescue Faraday::ConnectionFailed => e
+      raise CheckoutArgumentException, e.wrapped_exception
+    end
 
     # @param [String] client_id
     # @param [String] client_secret
