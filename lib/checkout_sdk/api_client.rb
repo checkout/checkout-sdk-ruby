@@ -52,10 +52,12 @@ module CheckoutSdk
       json_body = CheckoutSdk::JsonSerializer.to_custom_hash(body).to_json
 
       begin
-        @log.info "#{method}: /#{path}"
+        @log.info "#{method}: /#{CheckoutUtils.loggable_path(path)}"
         response = @client.run_request(method, path, json_body, headers)
       rescue Faraday::ClientError => e
-        raise CheckoutApiException, e.response
+        raise CheckoutApiException.new(e.response), cause: nil
+      rescue Faraday::Error => e
+        raise CheckoutUtils.without_request_data(e), cause: nil
       end
 
       parse_response(response)
@@ -140,10 +142,12 @@ module CheckoutSdk
         form = build_multipart_request(file_request, file)
 
         begin
-          @log.info "post: /#{path}"
+          @log.info "post: /#{CheckoutUtils.loggable_path(path)}"
           response = @multipart_client.run_request(:post, path, form, headers)
         rescue Faraday::ClientError => e
-          raise CheckoutApiException, e.response
+          raise CheckoutApiException.new(e.response), cause: nil
+        rescue Faraday::Error => e
+          raise CheckoutUtils.without_request_data(e), cause: nil
         end
 
         parse_response(response)

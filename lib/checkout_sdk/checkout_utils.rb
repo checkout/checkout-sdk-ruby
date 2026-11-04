@@ -21,11 +21,86 @@ module CheckoutSdk
       http_metadata
     end
 
+    MAX_MESSAGE_DETAILS_LENGTH = 256
+    private_constant :MAX_MESSAGE_DETAILS_LENGTH
+
+    # Returns the request path in a form safe for a single log line: the query string is left out
+    # and control characters are escaped.
+    #
+    # @param [String, nil] path
+    # @return [String]
+    def self.loggable_path(path)
+      escape_control_characters(utf8_text(path).split('?', 2).first.to_s)
+    end
+
+    # Builds an exception message from a prefix and a response body. A JSON object body adds its
+    # "key: value" pairs as details; any other non-empty body is added as is only when
+    # include_text_body is true. Details are shortened and their control characters escaped.
+    #
+    # @param [String] prefix
+    # @param [String, nil] body
+    # @param [Boolean] include_text_body
+    # @return [String]
+    def self.error_message(prefix, body, include_text_body: false)
+      text = utf8_text(body).strip
+      parsed = json_object(text)
+      details = parsed&.map { |key, value| "#{key}: #{value}" }&.join(', ')
+      details = text if details.nil? && include_text_body
+      return prefix if details.nil? || details.empty?
+
+      details = "#{details[0, MAX_MESSAGE_DETAILS_LENGTH]}..." if details.length > MAX_MESSAGE_DETAILS_LENGTH
+      "#{prefix} Details: #{escape_control_characters(details)}."
+    end
+
+    # Returns a copy of the Faraday error, of the same class and with the same backtrace and wrapped
+    # exception, that keeps only the response status, headers and body and whose message names the
+    # method and URL without the query string. Errors without a response are returned unchanged.
+    #
+    # @param [Faraday::Error] error
+    # @return [Faraday::Error]
+    def self.without_request_data(error)
+      return error if error.response.nil?
+
+      metadata = map_to_http_metadata(error.response)
+      rebuilt = error.exception(response_error_message(metadata.status_code, error.response))
+      rebuilt.instance_variable_set(:@response,
+                                    { status: metadata.status_code, headers: metadata.headers, body: metadata.body })
+      rebuilt
+    end
+
+    def self.response_error_message(status, response)
+      message = "the server responded with status #{status}"
+      request = response.is_a?(Hash) ? response[:request] : nil
+      return message unless request.is_a?(Hash) && request[:url]
+
+      "#{message} for #{request[:method].to_s.upcase} #{loggable_path(request[:url].to_s)}"
+    end
+    private_class_method :response_error_message
+
+    def self.json_object(text)
+      parsed = JSON.parse(text)
+      parsed.is_a?(Hash) ? parsed : nil
+    rescue JSON::ParserError
+      nil
+    end
+    private_class_method :json_object
+
+    # Escapes control characters and Unicode line and paragraph separators in UTF-8 text.
+    def self.escape_control_characters(text)
+      text.gsub(/[[:cntrl:]\p{Zl}\p{Zp}]/) { |char| char.dump[1..-2] }
+    end
+    private_class_method :escape_control_characters
+
+    def self.utf8_text(text)
+      text.to_s.dup.force_encoding(Encoding::UTF_8).scrub
+    end
+    private_class_method :utf8_text
+
     # @return [Faraday::Connection]
     def self.build_multipart_client
       Faraday.new do |f|
         f.request :multipart
-        f.response :raise_error
+        f.response :raise_error, include_request: false
       end
     end
 
@@ -33,7 +108,7 @@ module CheckoutSdk
     def self.build_default_client
       Faraday.new do |f|
         f.response :follow_redirects
-        f.response :raise_error
+        f.response :raise_error, include_request: false
       end
     end
   end

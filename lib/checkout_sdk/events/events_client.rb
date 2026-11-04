@@ -20,7 +20,7 @@ module CheckoutSdk
 
         # @param [String,nil] version
         def retrieve_all_event_types(version = nil)
-          query = "version=#{version}" unless version.nil?
+          query = URI.encode_www_form(version: version) unless version.nil?
           api_client.invoke_get(EVENT_TYPES, sdk_authorization, query)
         end
 
