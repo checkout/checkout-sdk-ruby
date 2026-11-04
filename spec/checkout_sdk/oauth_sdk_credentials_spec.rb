@@ -67,6 +67,16 @@ RSpec.describe CheckoutSdk::OAuthSdkCredentials do
         end
     end
 
+    it 'shortens a long JSON body in the message' do
+      body = { error: 'x' * 2000 }.to_json
+
+      expect { build_credentials(token_stubs(400, body)) }
+        .to raise_error(CheckoutSdk::CheckoutAuthorizationException) do |error|
+          expect(error.message.length).to be < 400
+          expect(error.http_metadata.body).to eq(body)
+        end
+    end
+
     it 'builds the message from status and body' do
       expect { build_credentials(token_stubs(401, '{"error":"invalid_client"}')) }
         .to raise_error(CheckoutSdk::CheckoutAuthorizationException,
@@ -86,6 +96,22 @@ RSpec.describe CheckoutSdk::OAuthSdkCredentials do
           expect(error.http_metadata.status_code).to eq(429)
           expect(error.http_metadata.headers['Content-Type']).to eq('application/json')
           expect(error.http_metadata.body).to eq('{"error":"rate_limited"}')
+        end
+    end
+  end
+
+  context 'when the token request fails without a response' do
+    it 'raises an authorization error that keeps the original as cause' do
+      stubs = Faraday::Adapter::Test::Stubs.new do |stub|
+        stub.post('/connect/token') { raise Faraday::ClientError, 'proxy refused' }
+      end
+
+      expect { build_credentials(stubs) }
+        .to raise_error(CheckoutSdk::CheckoutAuthorizationException,
+                        'The OAuth token request failed without a response.') do |error|
+          expect(error.http_metadata).to be_nil
+          expect(error.cause).to be_a(Faraday::ClientError)
+          expect(error.cause.message).to eq('proxy refused')
         end
     end
   end

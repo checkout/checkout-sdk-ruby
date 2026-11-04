@@ -29,28 +29,16 @@ module CheckoutSdk
     # @param [CheckoutSdk::HttpMetadata] http_metadata
     # @return [CheckoutSdk::CheckoutAuthorizationException]
     def self.token_request_failed(http_metadata)
-      new(token_error_message(http_metadata), http_metadata)
+      prefix = "The OAuth token response status code (#{http_metadata.status_code}) does not indicate success."
+      new(CheckoutUtils.error_message(prefix, http_metadata.body, include_text_body: true), http_metadata)
     end
 
-    def self.token_error_message(http_metadata)
-      message = "The OAuth token response status code (#{http_metadata.status_code}) does not indicate success."
-      body = http_metadata.body.to_s.strip
-      return message if body.empty?
-
-      parsed = parse_json(body)
-      return message if parsed.is_a?(Hash) && parsed.empty?
-
-      details = parsed.is_a?(Hash) ? CheckoutUtils.format_error_details(parsed) : CheckoutUtils.message_body(body)
-      "#{message} Details: #{details}."
+    # Builds the error for an OAuth token request that failed without a response.
+    #
+    # @return [CheckoutSdk::CheckoutAuthorizationException]
+    def self.token_request_without_response
+      new('The OAuth token request failed without a response.')
     end
-
-    def self.parse_json(body)
-      JSON.parse(body)
-    rescue JSON::ParserError, TypeError
-      nil
-    end
-    private_class_method :parse_json
-    private_class_method :token_error_message
   end
 
   class CheckoutApiException < CheckoutException
@@ -73,11 +61,8 @@ module CheckoutSdk
     end
 
     def build_error_message
-      message = "The API response status code (#{http_metadata.status_code}) does not indicate success."
-      if @error_details && !@error_details.to_h.empty?
-        message += " Details: #{CheckoutUtils.format_error_details(@error_details.to_h)}."
-      end
-      message
+      prefix = "The API response status code (#{http_metadata.status_code}) does not indicate success."
+      CheckoutUtils.error_message(prefix, http_metadata.body)
     end
   end
 end

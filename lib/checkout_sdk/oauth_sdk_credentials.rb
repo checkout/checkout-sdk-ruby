@@ -87,6 +87,8 @@ module CheckoutSdk
       @log.info "post: #{CheckoutUtils.loggable_path(authorization_uri)}"
       @oauth_http_client.run_request(:post, @authorization_uri, body, headers)
     rescue Faraday::ClientError => e
+      raise CheckoutAuthorizationException.token_request_without_response if e.response.nil?
+
       raise CheckoutAuthorizationException.token_request_failed(CheckoutUtils.map_to_http_metadata(e.response)),
             cause: nil
     rescue Faraday::ConnectionFailed => e

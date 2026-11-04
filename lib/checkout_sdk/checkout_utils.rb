@@ -21,17 +21,8 @@ module CheckoutSdk
       http_metadata
     end
 
-    MAX_MESSAGE_BODY_LENGTH = 256
-    private_constant :MAX_MESSAGE_BODY_LENGTH
-
-    # Returns the text in a form safe for a single log line: control characters and Unicode line
-    # and paragraph separators are escaped, invalid byte sequences are replaced.
-    #
-    # @param [String, nil] text
-    # @return [String]
-    def self.escape_control_characters(text)
-      utf8_text(text).gsub(/[[:cntrl:]\p{Zl}\p{Zp}]/) { |char| char.dump[1..-2] }
-    end
+    MAX_MESSAGE_DETAILS_LENGTH = 256
+    private_constant :MAX_MESSAGE_DETAILS_LENGTH
 
     # Returns the request path in a form safe for a single log line: the query string is left out
     # and control characters are escaped.
@@ -39,29 +30,30 @@ module CheckoutSdk
     # @param [String, nil] path
     # @return [String]
     def self.loggable_path(path)
-      escape_control_characters(utf8_text(path).split('?', 2).first)
+      escape_control_characters(utf8_text(path).split('?', 2).first.to_s)
     end
 
-    # Formats error details as "key: value" pairs for an exception message.
+    # Builds an exception message from a prefix and a response body. A JSON object body adds its
+    # "key: value" pairs as details; any other non-empty body is added as is only when
+    # include_text_body is true. Details are shortened and their control characters escaped.
     #
-    # @param [Hash] details
-    # @return [String]
-    def self.format_error_details(details)
-      escape_control_characters(details.map { |key, value| "#{key}: #{value}" }.join(', '))
-    end
-
-    # Shortens a response body for an exception message and escapes its control characters.
-    #
+    # @param [String] prefix
     # @param [String, nil] body
+    # @param [Boolean] include_text_body
     # @return [String]
-    def self.message_body(body)
+    def self.error_message(prefix, body, include_text_body: false)
       text = utf8_text(body).strip
-      text = "#{text[0, MAX_MESSAGE_BODY_LENGTH]}..." if text.length > MAX_MESSAGE_BODY_LENGTH
-      escape_control_characters(text)
+      parsed = json_object(text)
+      details = parsed&.map { |key, value| "#{key}: #{value}" }&.join(', ')
+      details = text if details.nil? && include_text_body
+      return prefix if details.nil? || details.empty?
+
+      details = "#{details[0, MAX_MESSAGE_DETAILS_LENGTH]}..." if details.length > MAX_MESSAGE_DETAILS_LENGTH
+      "#{prefix} Details: #{escape_control_characters(details)}."
     end
 
-    # Returns a Faraday error that keeps the class, the response status, headers and body and the
-    # backtrace of the given error, without the request data and with a message that names the
+    # Returns a copy of the Faraday error, of the same class and with the same backtrace and wrapped
+    # exception, that keeps only the response status, headers and body and whose message names the
     # method and URL without the query string. Errors without a response are returned unchanged.
     #
     # @param [Faraday::Error] error
@@ -70,14 +62,9 @@ module CheckoutSdk
       return error if error.response.nil?
 
       metadata = map_to_http_metadata(error.response)
-      response = { status: metadata.status_code, headers: metadata.headers, body: metadata.body }
-      message = response_error_message(metadata.status_code, error.response)
-      rebuilt = begin
-        error.class.new(message, response)
-      rescue StandardError
-        Faraday::Error.new(message, response)
-      end
-      rebuilt.set_backtrace(error.backtrace)
+      rebuilt = error.exception(response_error_message(metadata.status_code, error.response))
+      rebuilt.instance_variable_set(:@response,
+                                    { status: metadata.status_code, headers: metadata.headers, body: metadata.body })
       rebuilt
     end
 
@@ -89,6 +76,20 @@ module CheckoutSdk
       "#{message} for #{request[:method].to_s.upcase} #{loggable_path(request[:url].to_s)}"
     end
     private_class_method :response_error_message
+
+    def self.json_object(text)
+      parsed = JSON.parse(text)
+      parsed.is_a?(Hash) ? parsed : nil
+    rescue JSON::ParserError
+      nil
+    end
+    private_class_method :json_object
+
+    # Escapes control characters and Unicode line and paragraph separators in UTF-8 text.
+    def self.escape_control_characters(text)
+      text.gsub(/[[:cntrl:]\p{Zl}\p{Zp}]/) { |char| char.dump[1..-2] }
+    end
+    private_class_method :escape_control_characters
 
     def self.utf8_text(text)
       text.to_s.dup.force_encoding(Encoding::UTF_8).scrub

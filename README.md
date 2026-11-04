@@ -173,7 +173,8 @@ api = CheckoutSdk.builder
 ```
 
 If your connection uses the `raise_error` middleware, configure it as the default client does:
-`conn.response :raise_error, include_request: false`.
+`conn.response :raise_error, include_request: false` (the option needs Faraday 2.7.11 or later;
+the SDK leaves the request data out of the errors it raises in any case).
 
 You don't need to specify the URL for Faraday constructor the SDK grabs the belong URI from `CheckoutSdk::Environment`
 however if you want to

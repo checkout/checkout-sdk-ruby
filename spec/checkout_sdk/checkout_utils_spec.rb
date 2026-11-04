@@ -28,23 +28,35 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
     end
   end
 
-  describe '.format_error_details' do
-    it 'joins key and value pairs on one line' do
-      details = { error_type: 'request_invalid', error_codes: "a\nb" }
+  describe '.error_message' do
+    let(:prefix) { 'Request failed.' }
 
-      expect(described_class.format_error_details(details)).to eq('error_type: request_invalid, error_codes: a\nb')
+    it 'adds the key and value pairs of a JSON object on one line' do
+      body = '{"error_type":"request_invalid","error_codes":["card_invalid"],"message":"a\\nb","source":{"a":1}}'
+      source = { 'a' => 1 }
+
+      expect(described_class.error_message(prefix, body))
+        .to eq('Request failed. Details: error_type: request_invalid, error_codes: ["card_invalid"], ' \
+               "message: a#{backslash}nb, source: #{source}.")
     end
-  end
 
-  describe '.message_body' do
-    it 'keeps a short body' do
-      expect(described_class.message_body(" Bad Request \n")).to eq('Bad Request')
+    it 'returns the prefix alone for an empty body or an empty JSON object' do
+      expect(described_class.error_message(prefix, nil)).to eq(prefix)
+      expect(described_class.error_message(prefix, " {} \n", include_text_body: true)).to eq(prefix)
     end
 
-    it 'shortens a long body and escapes it' do
-      result = described_class.message_body("#{'x' * 300}\n")
+    it 'adds a body that is not a JSON object only when asked to' do
+      expect(described_class.error_message(prefix, '[1,2]')).to eq(prefix)
+      expect(described_class.error_message(prefix, " Bad Request \n", include_text_body: true))
+        .to eq('Request failed. Details: Bad Request.')
+    end
 
-      expect(result).to eq("#{'x' * 256}...")
+    it 'shortens long details and escapes them' do
+      text_body = described_class.error_message(prefix, "a\n#{'x' * 300}", include_text_body: true)
+      json_body = described_class.error_message(prefix, { error: 'x' * 300 }.to_json)
+
+      expect(text_body).to eq("Request failed. Details: a#{backslash}n#{'x' * 254}....")
+      expect(json_body).to eq("Request failed. Details: error: #{'x' * 249}....")
     end
   end
 
@@ -88,17 +100,19 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
       expect(result.message).to eq('the server responded with status 500')
     end
 
-    it 'falls back to Faraday::Error for a class with another constructor' do
+    it 'keeps the class and wrapped exception for a class with another constructor' do
       custom = Class.new(Faraday::ServerError) do
-        def initialize(response)
-          super('custom', response)
+        def initialize(code, response)
+          super(code.to_s, response)
         end
       end
-      original = custom.new({ status: 500, request: request })
+      original = custom.new(500, { status: 500, request: request })
+      original.instance_variable_set(:@wrapped_exception, IOError.new('closed'))
 
       result = described_class.without_request_data(original)
 
-      expect(result).to be_a(Faraday::Error)
+      expect(result).to be_a(custom)
+      expect(result.wrapped_exception).to be_a(IOError)
       expect_clean(result)
     end
 

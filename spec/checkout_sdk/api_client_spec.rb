@@ -334,11 +334,15 @@ RSpec.describe CheckoutSdk::ApiClient do
     let(:secret_key) { 'sk_sbox_m73dzbpy7cf3gfd46xr4yj5xo4e' }
     let(:auth) { double('auth', authorization_header: secret_key) }
 
-    def client_answering(status)
+    def client_answering(status, body = '{"error_type":"failure"}')
       stubs = Faraday::Adapter::Test::Stubs.new do |stub|
-        stub.post('/payments') { [status, { 'Content-Type' => 'application/json' }, '{"error_type":"failure"}'] }
+        stub.post('/payments') { [status, { 'Content-Type' => 'application/json' }, body] }
         stub.get('/events') { [status, {}, ''] }
       end
+      client_with(stubs)
+    end
+
+    def client_with(stubs)
       http_client = Faraday.new do |f|
         f.response :raise_error
         f.adapter :test, stubs
@@ -381,6 +385,46 @@ RSpec.describe CheckoutSdk::ApiClient do
           expect(error.message).to eq('the server responded with status 503 for GET https://api.sandbox.checkout.com/events')
           expect(error.full_message).not_to include('order-1')
         end
+    end
+
+    it 'client error message renders nested values and accepts a JSON array body' do
+      source = { 'type' => 'card' }
+
+      expect { client_answering(422, { error_type: 'failure', source: source }.to_json).invoke_post('payments', auth) }
+        .to raise_error(CheckoutSdk::CheckoutApiException,
+                        'The API response status code (422) does not indicate success. ' \
+                        "Details: error_type: failure, source: #{source}.")
+      expect { client_answering(422, '[1,2]').invoke_post('payments', auth) }
+        .to raise_error(CheckoutSdk::CheckoutApiException,
+                        'The API response status code (422) does not indicate success.')
+    end
+
+    it 'client error message shortens a long body' do
+      body = { error_type: 'x' * 2000 }.to_json
+
+      expect { client_answering(422, body).invoke_post('payments', auth) }
+        .to raise_error(CheckoutSdk::CheckoutApiException) do |error|
+          expect(error.message.length).to be < 400
+          expect(error.http_metadata.body).to eq(body)
+        end
+    end
+
+    low_level_errors = { Faraday::TimeoutError => Net::ReadTimeout, Faraday::ConnectionFailed => Errno::ECONNREFUSED }
+    low_level_errors.each do |error_class, low_level|
+      it "#{error_class} keeps its cause and wrapped exception" do
+        stubs = Faraday::Adapter::Test::Stubs.new do |stub|
+          stub.get('/events') do
+            raise low_level
+          rescue low_level => e
+            raise error_class, e
+          end
+        end
+
+        expect { client_with(stubs).invoke_get('events', auth) }.to raise_error(error_class) do |error|
+          expect(error.cause).to be_a(low_level)
+          expect(error.wrapped_exception).to be_a(low_level)
+        end
+      end
     end
   end
 end
