@@ -29,7 +29,7 @@ RSpec.describe CheckoutSdk::OAuthSdkCredentials do
   end
 
   context 'when the token response does not indicate success' do
-    [400, 401, 429, 500].each do |status|
+    [400, 401, 429].each do |status|
       it "error message omits credentials for status #{status}" do
         expect { build_credentials(token_stubs(status, '{"error":"invalid_client"}')) }
           .to raise_error(CheckoutSdk::CheckoutAuthorizationException) do |error|
@@ -40,6 +40,31 @@ RSpec.describe CheckoutSdk::OAuthSdkCredentials do
             expect(error.cause).to be_nil
           end
       end
+    end
+
+    it 'server error keeps its class and omits request data' do
+      expect { build_credentials(token_stubs(500, '{"error":"server_error"}')) }
+        .to raise_error(Faraday::ServerError) do |error|
+          [error.message, error.inspect, error.full_message].each do |text|
+            expect(text).not_to include(client_secret)
+            expect(text).not_to include('grant_type=')
+          end
+          expect(error.response).not_to have_key(:request)
+          expect(error.response_status).to eq(500)
+          expect(error.cause).to be_nil
+        end
+    end
+
+    it 'shortens a long body that is not JSON to one line' do
+      html = "<html>\n#{'x' * 600}\n</html>"
+
+      expect { build_credentials(token_stubs(403, html)) }
+        .to raise_error(CheckoutSdk::CheckoutAuthorizationException) do |error|
+          expect(error.message.lines.size).to eq(1)
+          expect(error.message.length).to be < 400
+          expect(error.message).to end_with('....')
+          expect(error.http_metadata.body).to eq(html)
+        end
     end
 
     it 'builds the message from status and body' do

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe CheckoutSdk::CheckoutUtils do
+  let(:backslash) { '\\' }
+
   describe '.loggable_path' do
     it 'keeps a plain path unchanged' do
       expect(described_class.loggable_path('payments/pay_123/captures')).to eq('payments/pay_123/captures')
@@ -14,13 +16,110 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
       expect(described_class.loggable_path("payments/a\nb\rc\td\e")).to eq('payments/a\nb\rc\td\e')
     end
 
-    it 'escapes unicode line separators' do
-      expect(described_class.loggable_path("payments/a\u2028b\u2029c")).to eq('payments/a\u2028b\u2029c')
+    it 'escapes unicode line and paragraph separators' do
+      expected = "payments/a#{backslash}u2028b#{backslash}u2029c"
+
+      expect(described_class.loggable_path("payments/a\u{2028}b\u{2029}c")).to eq(expected)
     end
 
     it 'accepts invalid byte sequences and nil' do
-      expect(described_class.loggable_path("payments/\xFF\n".b)).to eq("payments/\uFFFD\\n")
+      expect(described_class.loggable_path("payments/\xFF\n".b)).to eq("payments/\u{FFFD}#{backslash}n")
       expect(described_class.loggable_path(nil)).to eq('')
+    end
+  end
+
+  describe '.format_error_details' do
+    it 'joins key and value pairs on one line' do
+      details = { error_type: 'request_invalid', error_codes: "a\nb" }
+
+      expect(described_class.format_error_details(details)).to eq('error_type: request_invalid, error_codes: a\nb')
+    end
+  end
+
+  describe '.message_body' do
+    it 'keeps a short body' do
+      expect(described_class.message_body(" Bad Request \n")).to eq('Bad Request')
+    end
+
+    it 'shortens a long body and escapes it' do
+      result = described_class.message_body("#{'x' * 300}\n")
+
+      expect(result).to eq("#{'x' * 256}...")
+    end
+  end
+
+  describe '.without_request_data' do
+    let(:request) { { method: :get, url: URI('https://api.example.com/events?reference=order-1'), headers: { 'Authorization' => 'secret-value' } } }
+
+    def expect_clean(error)
+      expect(error.inspect).not_to include('secret-value')
+      expect(error.message).to eq('the server responded with status 500 for GET https://api.example.com/events')
+    end
+
+    it 'keeps the class, response and backtrace' do
+      original = Faraday::ServerError.new({ status: 500, headers: { 'Cko-Request-Id' => 'id' }, body: '{}', request: request })
+      original.set_backtrace(%w[frame_one frame_two])
+
+      result = described_class.without_request_data(original)
+
+      expect(result).to be_a(Faraday::ServerError)
+      expect(result.response).to eq(status: 500, headers: { 'Cko-Request-Id' => 'id' }, body: '{}')
+      expect(result.backtrace).to eq(%w[frame_one frame_two])
+      expect_clean(result)
+    end
+
+    it 'handles a frozen response' do
+      original = Faraday::ServerError.new({ status: 500, body: '{}', request: request }.freeze)
+
+      result = described_class.without_request_data(original)
+
+      expect(result.response).not_to have_key(:request)
+      expect_clean(result)
+    end
+
+    it 'handles a Faraday::Response' do
+      env = Faraday::Env.from(status: 500, body: '{}', response_headers: {}, request_headers: { 'Authorization' => 'secret-value' })
+      original = Faraday::ServerError.new('failed', Faraday::Response.new(env))
+
+      result = described_class.without_request_data(original)
+
+      expect(result.inspect).not_to include('secret-value')
+      expect(result.response).to eq(status: 500, headers: {}, body: '{}')
+      expect(result.message).to eq('the server responded with status 500')
+    end
+
+    it 'falls back to Faraday::Error for a class with another constructor' do
+      custom = Class.new(Faraday::ServerError) do
+        def initialize(response)
+          super('custom', response)
+        end
+      end
+      original = custom.new({ status: 500, request: request })
+
+      result = described_class.without_request_data(original)
+
+      expect(result).to be_a(Faraday::Error)
+      expect_clean(result)
+    end
+
+    it 'returns an error without response unchanged' do
+      original = Faraday::TimeoutError.new
+
+      expect(described_class.without_request_data(original)).to be(original)
+    end
+  end
+
+  describe 'default clients' do
+    %i[build_default_client build_multipart_client].each do |builder|
+      it "#{builder} raises errors without request data" do
+        stubs = Faraday::Adapter::Test::Stubs.new { |stub| stub.get('/payments') { [500, {}, ''] } }
+        client = described_class.public_send(builder)
+        client.builder.adapter :test, stubs
+
+        expect { client.get('/payments') }.to raise_error(Faraday::ServerError) do |error|
+          expect(error.response).not_to have_key(:request)
+        end
+      end
     end
   end
 end

@@ -86,14 +86,13 @@ module CheckoutSdk
       headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
       @log.info "post: #{CheckoutUtils.loggable_path(authorization_uri)}"
       @oauth_http_client.run_request(:post, @authorization_uri, body, headers)
-    rescue Faraday::ClientError, Faraday::ServerError => e
-      raise if e.response.nil?
-
-      metadata = CheckoutUtils.map_to_http_metadata(e.response)
-      raise CheckoutAuthorizationException.token_request_failed(metadata.status_code, metadata.headers,
-                                                                metadata.body), cause: nil
+    rescue Faraday::ClientError => e
+      raise CheckoutAuthorizationException.token_request_failed(CheckoutUtils.map_to_http_metadata(e.response)),
+            cause: nil
     rescue Faraday::ConnectionFailed => e
       raise CheckoutArgumentException, e.wrapped_exception
+    rescue Faraday::Error => e
+      raise CheckoutUtils.without_request_data(e), cause: nil
     end
 
     # @param [String] client_id

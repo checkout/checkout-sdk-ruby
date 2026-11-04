@@ -9,6 +9,13 @@ module CheckoutSdk
     # @return [CheckoutSdk::HttpMetadata, nil] response status, headers and body when raised for an OAuth token response
     attr_reader :http_metadata
 
+    # @param [String, nil] message
+    # @param [CheckoutSdk::HttpMetadata, nil] http_metadata
+    def initialize(message = nil, http_metadata = nil)
+      @http_metadata = http_metadata
+      super(message)
+    end
+
     def self.invalid_authorization(authorization_type)
       new("Operation requires #{authorization_type} authorization type.")
     end
@@ -19,27 +26,21 @@ module CheckoutSdk
 
     # Builds the error for an unsuccessful OAuth token response from the response data only.
     #
-    # @param [Integer, nil] status
-    # @param [Hash, nil] headers
-    # @param [String, nil] body
+    # @param [CheckoutSdk::HttpMetadata] http_metadata
     # @return [CheckoutSdk::CheckoutAuthorizationException]
-    def self.token_request_failed(status, headers, body)
-      http_metadata = CheckoutSdk::HttpMetadata.new
-      http_metadata.status_code = status
-      http_metadata.headers = headers
-      http_metadata.body = body
-
-      error = new(token_error_message(status, body))
-      error.instance_variable_set(:@http_metadata, http_metadata)
-      error
+    def self.token_request_failed(http_metadata)
+      new(token_error_message(http_metadata), http_metadata)
     end
 
-    def self.token_error_message(status, body)
-      message = "The OAuth token response status code (#{status}) does not indicate success."
-      return message if body.nil? || body.to_s.strip.empty?
+    def self.token_error_message(http_metadata)
+      message = "The OAuth token response status code (#{http_metadata.status_code}) does not indicate success."
+      body = http_metadata.body.to_s.strip
+      return message if body.empty?
 
       parsed = parse_json(body)
-      details = parsed.is_a?(Hash) ? parsed.map { |key, value| "#{key}: #{value}" }.join(', ') : body.to_s.strip
+      return message if parsed.is_a?(Hash) && parsed.empty?
+
+      details = parsed.is_a?(Hash) ? CheckoutUtils.format_error_details(parsed) : CheckoutUtils.message_body(body)
       "#{message} Details: #{details}."
     end
 
@@ -74,8 +75,7 @@ module CheckoutSdk
     def build_error_message
       message = "The API response status code (#{http_metadata.status_code}) does not indicate success."
       if @error_details && !@error_details.to_h.empty?
-        details = @error_details.to_h.map { |key, value| "#{key}: #{value}" }.join(', ')
-        message += " Details: #{details}."
+        message += " Details: #{CheckoutUtils.format_error_details(@error_details.to_h)}."
       end
       message
     end

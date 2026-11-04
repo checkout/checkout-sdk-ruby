@@ -57,7 +57,7 @@ module CheckoutSdk
       rescue Faraday::ClientError => e
         raise CheckoutApiException.new(e.response), cause: nil
       rescue Faraday::Error => e
-        raise_without_request_data(e)
+        raise CheckoutUtils.without_request_data(e), cause: nil
       end
 
       parse_response(response)
@@ -147,18 +147,11 @@ module CheckoutSdk
         rescue Faraday::ClientError => e
           raise CheckoutApiException.new(e.response), cause: nil
         rescue Faraday::Error => e
-          raise_without_request_data(e)
+          raise CheckoutUtils.without_request_data(e), cause: nil
         end
 
         parse_response(response)
       end
-    end
-
-    # Re-raises a Faraday error unchanged except that the request data attached by the raise_error
-    # middleware is removed; the response status, headers and body stay available.
-    def raise_without_request_data(error)
-      error.response.delete(:request) if error.response.is_a?(Hash) && !error.response.frozen?
-      raise error
     end
 
     def parse_response(response)

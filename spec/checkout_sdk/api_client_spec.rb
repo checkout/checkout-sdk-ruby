@@ -314,10 +314,10 @@ RSpec.describe CheckoutSdk::ApiClient do
     end
 
     it 'writes one log line for an id with line breaks' do
-      logging_client.invoke_get("payments/pay_1\nI, [2026] INFO -- : extra\r\nline", auth)
+      logging_client.invoke_get("payments/pay_1\nsecond\r\nthird", auth)
 
       expect(log_output.string.lines.size).to eq(1)
-      expect(log_output.string).to include('get: /payments/pay_1\\nI, [2026] INFO -- : extra\\r\\nline')
+      expect(log_output.string).to include('get: /payments/pay_1\\nsecond\\r\\nthird')
     end
 
     it 'logs the path without the query string' do
@@ -337,6 +337,7 @@ RSpec.describe CheckoutSdk::ApiClient do
     def client_answering(status)
       stubs = Faraday::Adapter::Test::Stubs.new do |stub|
         stub.post('/payments') { [status, { 'Content-Type' => 'application/json' }, '{"error_type":"failure"}'] }
+        stub.get('/events') { [status, {}, ''] }
       end
       http_client = Faraday.new do |f|
         f.response :raise_error
@@ -371,6 +372,14 @@ RSpec.describe CheckoutSdk::ApiClient do
           expect(error.response).not_to have_key(:request)
           expect(error.response_status).to eq(500)
           expect(error.response_body).to eq('{"error_type":"failure"}')
+        end
+    end
+
+    it 'server error message names the path without the query string' do
+      expect { client_answering(503).invoke_get('events', auth, { reference: 'order-1' }) }
+        .to raise_error(Faraday::ServerError) do |error|
+          expect(error.message).to eq('the server responded with status 503 for GET https://api.sandbox.checkout.com/events')
+          expect(error.full_message).not_to include('order-1')
         end
     end
   end
