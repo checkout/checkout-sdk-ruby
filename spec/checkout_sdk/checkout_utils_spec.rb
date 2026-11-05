@@ -40,11 +40,21 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
       expect(described_class.encode_path_segment('ab'.encode(Encoding::UTF_16LE))).to eq('ab')
     end
 
+    it 'accepts binary text that holds only ASCII characters' do
+      expect(described_class.encode_path_segment('pay_1'.b)).to eq('pay_1')
+    end
+
+    it 'percent-encodes control characters outside ASCII' do
+      expect(described_class.encode_path_segment("a\u0085b")).to eq('a%C2%85b')
+    end
+
     invalid_values = [nil, '', '.', '..', :'..', 'a/b', 'a\\b', "a\nb", "a\rb", "a\u0000b", "a\u007Fb",
                       '..'.encode(Encoding::UTF_16LE), '.'.encode(Encoding::UTF_32LE),
-                      '..'.dup.force_encoding(Encoding::UTF_7), 'a/b'.encode(Encoding::UTF_16BE)]
+                      '..'.dup.force_encoding(Encoding::UTF_7), 'a/b'.encode(Encoding::UTF_16BE),
+                      "a\xFFb".dup.force_encoding(Encoding::UTF_8), "\xC3\xA9".b]
     invalid_values.each do |value|
-      it "raises CheckoutArgumentException for #{value.inspect} (#{value.is_a?(String) ? value.encoding : value.class})" do
+      label = value.is_a?(String) ? value.encoding : value.class
+      it "raises CheckoutArgumentException for #{value.inspect} (#{label})" do
         expect { described_class.encode_path_segment(value) }
           .to raise_error(CheckoutSdk::CheckoutArgumentException, /\AInvalid path segment/)
       end
@@ -82,6 +92,11 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
     it 'accepts invalid byte sequences and nil' do
       expect(described_class.loggable_path("payments/\xFF\n".b)).to eq("payments/\u{FFFD}#{backslash}n")
       expect(described_class.loggable_path(nil)).to eq('')
+    end
+
+    it 'converts text in another encoding to UTF-8' do
+      expect(described_class.loggable_path("payments/\u00E9\n".encode(Encoding::UTF_16LE)))
+        .to eq("payments/\u00E9#{backslash}n")
     end
   end
 

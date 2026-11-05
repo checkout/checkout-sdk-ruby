@@ -54,25 +54,27 @@ module CheckoutSdk
 
     INVALID_PATH_SEGMENTS = ['', '.', '..'].freeze
     FORBIDDEN_PATH_SEGMENT_BYTES = %r{[/\\\x00-\x1F\x7F]}n.freeze
-    INVALID_PATH_SEGMENT_MESSAGE = "Invalid path segment: it must not be nil, empty, '.' or '..', " \
-                                   "and must not contain '/', '\\' or control characters"
+    INVALID_PATH_SEGMENT_MESSAGE = "Invalid path segment: it must be valid text, not nil, empty, '.' or '..', " \
+                                   "and must not contain '/', '\\' or ASCII control characters"
     private_constant :INVALID_PATH_SEGMENTS, :FORBIDDEN_PATH_SEGMENT_BYTES, :INVALID_PATH_SEGMENT_MESSAGE
 
-    # Encodes a value as one RFC 3986 path segment. Every byte of its UTF-8 form outside the
-    # unreserved set (A-Z, a-z, 0-9, "-", ".", "_", "~") is percent-encoded, so the value always
-    # stays a single segment of the request path. Values are validated after conversion to UTF-8,
-    # whatever their original encoding.
+    # Encodes a value as one RFC 3986 path segment. The value is converted to UTF-8 and every byte
+    # outside the unreserved set (A-Z, a-z, 0-9, "-", ".", "_", "~") is percent-encoded, so the value
+    # always stays a single segment of the request path. The checks run on the converted text.
     #
     # @param [String, Symbol, Integer] value
     # @return [String]
-    # @raise [CheckoutArgumentException] when the value is nil, empty, "." or "..", contains "/",
-    #   "\" or a control character, or its to_s does not return a String
+    # @raise [CheckoutArgumentException] when the value is nil, empty, "." or "..", cannot be converted
+    #   to valid UTF-8, contains "/", "\" or an ASCII control character (U+0000 to U+001F, U+007F), or
+    #   its to_s does not return a String
     def self.encode_path_segment(value)
       text = value.nil? ? '' : value.to_s
       raise CheckoutArgumentException, INVALID_PATH_SEGMENT_MESSAGE unless text.is_a?(String)
 
-      bytes = utf8_bytes(text)
-      raise CheckoutArgumentException, INVALID_PATH_SEGMENT_MESSAGE if FORBIDDEN_PATH_SEGMENT_BYTES.match?(bytes)
+      bytes = to_valid_utf8(text)&.b
+      if bytes.nil? || FORBIDDEN_PATH_SEGMENT_BYTES.match?(bytes)
+        raise CheckoutArgumentException, INVALID_PATH_SEGMENT_MESSAGE
+      end
 
       encoded = bytes.gsub(/[^A-Za-z0-9\-._~]/n) { |byte| format('%%%02X', byte.ord) }
                      .force_encoding(Encoding::UTF_8)
@@ -80,13 +82,6 @@ module CheckoutSdk
 
       encoded
     end
-
-    def self.utf8_bytes(text)
-      text.encode(Encoding::UTF_8).b
-    rescue EncodingError
-      text.b
-    end
-    private_class_method :utf8_bytes
 
     # Returns a copy of the Faraday error, of the same class and with the same backtrace and wrapped
     # exception, that keeps only the response status, headers and body and whose message names the
@@ -127,8 +122,21 @@ module CheckoutSdk
     end
     private_class_method :escape_control_characters
 
+    # Converts text to UTF-8, transcoding from its own encoding. Returns nil when the text cannot be
+    # converted or the result is not valid UTF-8.
+    def self.to_valid_utf8(text)
+      converted = text.encode(Encoding::UTF_8)
+      converted.valid_encoding? ? converted : nil
+    rescue EncodingError
+      nil
+    end
+    private_class_method :to_valid_utf8
+
+    # Lenient form of to_valid_utf8 for log and message text: bytes that cannot be converted are read
+    # as UTF-8 and invalid sequences are replaced.
     def self.utf8_text(text)
-      text.to_s.dup.force_encoding(Encoding::UTF_8).scrub
+      text = text.to_s
+      (to_valid_utf8(text) || text.dup.force_encoding(Encoding::UTF_8)).scrub
     end
     private_class_method :utf8_text
 

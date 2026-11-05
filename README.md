@@ -153,7 +153,8 @@ encapsulates the `http_metadata` and a map of `error_details`, if available.
 
 Identifiers passed to client methods (for example a payment id) are sent as single, percent-encoded path
 segments: pass them unencoded. A `CheckoutSdk::CheckoutArgumentException` is raised before any request is sent
-when an identifier is `nil`, empty, `.` or `..`, or contains `/`, `\` or a control character.
+when an identifier is `nil`, empty, `.` or `..`, cannot be converted to valid UTF-8, or contains `/`, `\` or an
+ASCII control character (U+0000 to U+001F, U+007F).
 
 ## Custom Http Client
 

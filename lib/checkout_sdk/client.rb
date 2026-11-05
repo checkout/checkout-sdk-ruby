@@ -28,8 +28,8 @@ module CheckoutSdk
     #
     # @param [Array<String, Symbol, Integer>] args
     # @return [String]
-    # @raise [CheckoutArgumentException] when an argument is nil, empty, "." or "..", or contains "/",
-    #   "\" or a control character
+    # @raise [CheckoutArgumentException] when an argument is not a valid path segment (see
+    #   CheckoutUtils.encode_path_segment)
     def build_path(*args)
       args.map { |segment| CheckoutUtils.encode_path_segment(segment) }.join('/')
     end

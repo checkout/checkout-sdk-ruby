@@ -68,19 +68,20 @@ RSpec.describe CheckoutSdk::Payments do
       expect(client.confirm_payment_setup('ps_1', 'cashapp')).to eq('response')
     end
 
-    it 'accepts names with underscores and digits, any case, or a Symbol' do
-      { 'alipay_cn' => 'alipay_cn', 'p24' => 'p24', 'Card' => 'Card', klarna: 'klarna' }.each do |name, segment|
+    it 'sends any payment method name as one segment, unchanged when it holds only unreserved characters' do
+      { 'alipay_cn' => 'alipay_cn', 'p24' => 'p24', 'Card' => 'Card', klarna: 'klarna',
+        'a-b' => 'a-b', 'a.b' => 'a.b', 'a~b' => 'a~b', 'a?b' => 'a%3Fb', 'a b' => 'a%20b' }.each do |name, segment|
         expect(api_client_mock).to receive(:invoke_post)
           .with("payments/setups/ps_1/confirm/#{segment}", 'secret_key').and_return('response')
         expect(client.confirm_payment_setup('ps_1', name)).to eq('response')
       end
     end
 
-    [nil, '', 'a/b', '../x', 'a?b', 'a#b', 'a b', 'a.b', 'a-b'].each do |name|
-      it "raises CheckoutArgumentException for #{name.inspect} without sending a request" do
+    [nil, '', '.', '..', 'a/b', '../x'].each do |name|
+      it "raises CheckoutArgumentException for the payment method name #{name.inspect} without sending a request" do
         expect(api_client_mock).not_to receive(:invoke_post)
         expect { client.confirm_payment_setup('ps_1', name) }
-          .to raise_error(CheckoutSdk::CheckoutArgumentException, 'Invalid payment method name')
+          .to raise_error(CheckoutSdk::CheckoutArgumentException, /\AInvalid path segment/)
       end
     end
 

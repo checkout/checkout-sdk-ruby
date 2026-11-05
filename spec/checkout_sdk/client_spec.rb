@@ -26,7 +26,8 @@ RSpec.describe CheckoutSdk::Client do
     end
 
     [nil, '', '.', '..', '../x', 'a/b', 'a\\b', '..'.encode(Encoding::UTF_16LE)].each do |value|
-      it "raises CheckoutArgumentException for #{value.inspect} (#{value.is_a?(String) ? value.encoding : value.class})" do
+      label = value.is_a?(String) ? value.encoding : value.class
+      it "raises CheckoutArgumentException for #{value.inspect} (#{label})" do
         expect { build_path('payments', value) }.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end
     end
@@ -67,10 +68,15 @@ RSpec.describe CheckoutSdk::Client do
       expect(url.fragment).to be_nil
     end
 
-    it 'raises before any request for an invalid payment method name' do
+    it 'raises before any request for a payment method name that is not a single segment' do
       expect { api.payments_setups.confirm_payment_setup('ps_x', '../../x/y') }
-        .to raise_error(CheckoutSdk::CheckoutArgumentException)
+        .to raise_error(CheckoutSdk::CheckoutArgumentException, /\AInvalid path segment/)
       expect(requests).to be_empty
+    end
+
+    it 'sends a payment method name with unreserved punctuation unchanged' do
+      api.payments_setups.confirm_payment_setup('ps_1', 'pay-by.bank')
+      expect(requests.map(&:path)).to eq(['/payments/setups/ps_1/confirm/pay-by.bank'])
     end
 
     ['', '../x', '..'.encode(Encoding::UTF_16LE)].each do |value|
@@ -103,6 +109,17 @@ RSpec.describe CheckoutSdk::Client do
       expect(api_client).to receive(:invoke_post)
         .with('apms/bacs/notifications', 'auth', request).and_return('response')
       expect(bacs.send_notification(request)).to eq('response')
+    end
+
+    it 'keeps the risk assessment paths' do
+      risk = CheckoutSdk::Risk::RiskClient.new(api_client, configuration)
+      request = double('request')
+      expect(api_client).to receive(:invoke_post)
+        .with('risk/assessments/pre-authentication', 'auth', request).and_return('pre_authentication')
+      expect(api_client).to receive(:invoke_post)
+        .with('risk/assessments/pre-capture', 'auth', request).and_return('pre_capture')
+      expect(risk.pre_authentication_scan(request)).to eq('pre_authentication')
+      expect(risk.pre_capture_scan(request)).to eq('pre_capture')
     end
 
     it 'keeps the SEPA mandate paths' do
