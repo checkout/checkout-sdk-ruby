@@ -14,8 +14,7 @@ RSpec.describe CheckoutSdk::Client do
     end
 
     it 'keeps every argument as a single segment' do
-      expect(build_path('payments', '../x')).to eq('payments/..%2Fx')
-      expect(build_path('payments', '../../../x/y')).to eq('payments/..%2F..%2F..%2Fx%2Fy')
+      expect(build_path('payments', 'a b%c')).to eq('payments/a%20b%25c')
     end
 
     it 'encodes query and fragment delimiters' do
@@ -26,8 +25,8 @@ RSpec.describe CheckoutSdk::Client do
       expect(build_path('reports', 123, :files)).to eq('reports/123/files')
     end
 
-    [nil, '', '.', '..'].each do |value|
-      it "raises CheckoutArgumentException for #{value.inspect}" do
+    [nil, '', '.', '..', '../x', 'a/b', 'a\\b', '..'.encode(Encoding::UTF_16LE)].each do |value|
+      it "raises CheckoutArgumentException for #{value.inspect} (#{value.is_a?(String) ? value.encoding : value.class})" do
         expect { build_path('payments', value) }.to raise_error(CheckoutSdk::CheckoutArgumentException)
       end
     end
@@ -56,8 +55,8 @@ RSpec.describe CheckoutSdk::Client do
     end
 
     it 'keeps an identifier inside its own segment' do
-      api.payments_setups.confirm_payment_setup('../../x', 'klarna')
-      expect(requests.map(&:path)).to eq(['/payments/setups/..%2F..%2Fx/confirm/klarna'])
+      api.payments_setups.confirm_payment_setup('ps 1%', 'klarna')
+      expect(requests.map(&:path)).to eq(['/payments/setups/ps%201%25/confirm/klarna'])
     end
 
     it 'sends no query or fragment taken from an identifier' do
@@ -74,9 +73,13 @@ RSpec.describe CheckoutSdk::Client do
       expect(requests).to be_empty
     end
 
-    it 'raises before any request for an empty identifier' do
-      expect { api.payments.get_payment_details('') }.to raise_error(CheckoutSdk::CheckoutArgumentException)
-      expect(requests).to be_empty
+    ['', '../x', '..'.encode(Encoding::UTF_16LE)].each do |value|
+      it "raises before any request for the identifier #{value.inspect} (#{value.encoding})" do
+        expect { api.payments.get_payment_details(value) }.to raise_error(CheckoutSdk::CheckoutArgumentException)
+        expect { api.payments_setups.confirm_payment_setup(value, 'klarna') }
+          .to raise_error(CheckoutSdk::CheckoutArgumentException)
+        expect(requests).to be_empty
+      end
     end
   end
 
@@ -92,6 +95,27 @@ RSpec.describe CheckoutSdk::Client do
       expect(api_client).to receive(:invoke_get)
         .with('validation/bank-accounts/GB/GBP', 'auth', query).and_return('response')
       expect(instruments.get_bank_account_field_formatting('GB', 'GBP', query)).to eq('response')
+    end
+
+    it 'keeps the Bacs notification path' do
+      bacs = CheckoutSdk::Apm::BacsClient.new(api_client, configuration)
+      request = double('request')
+      expect(api_client).to receive(:invoke_post)
+        .with('apms/bacs/notifications', 'auth', request).and_return('response')
+      expect(bacs.send_notification(request)).to eq('response')
+    end
+
+    it 'keeps the SEPA mandate paths' do
+      sepa = CheckoutSdk::Previous::Apm::SepaClient.new(api_client, configuration)
+      expect(api_client).to receive(:invoke_get).with('sepa/mandates/src_1', 'auth').and_return('get')
+      expect(api_client).to receive(:invoke_post).with('sepa/mandates/src_1/cancel', 'auth').and_return('cancel')
+      expect(api_client).to receive(:invoke_get).with('apms/ppro/sepa/mandates/src_1', 'auth').and_return('ppro_get')
+      expect(api_client).to receive(:invoke_post)
+        .with('apms/ppro/sepa/mandates/src_1/cancel', 'auth').and_return('ppro_cancel')
+      expect(sepa.get_mandate('src_1')).to eq('get')
+      expect(sepa.cancel_mandate('src_1')).to eq('cancel')
+      expect(sepa.get_mandate_via_ppro('src_1')).to eq('ppro_get')
+      expect(sepa.cancel_mandate_via_ppro('src_1')).to eq('ppro_cancel')
     end
   end
 end

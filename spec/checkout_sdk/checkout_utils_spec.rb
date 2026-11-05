@@ -10,8 +10,8 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
     end
 
     it 'percent-encodes reserved characters with upper-case hex' do
-      expect(described_class.encode_path_segment('a/b?c#d%e f;g:h@i&j=k+l'))
-        .to eq('a%2Fb%3Fc%23d%25e%20f%3Bg%3Ah%40i%26j%3Dk%2Bl')
+      expect(described_class.encode_path_segment('a?b#c%d e;f:g@h&i=j+k'))
+        .to eq('a%3Fb%23c%25d%20e%3Bf%3Ag%40h%26i%3Dj%2Bk')
     end
 
     it 'percent-encodes non-ASCII text as UTF-8 bytes' do
@@ -20,10 +20,6 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
 
     it 'percent-encodes text in another encoding as UTF-8 bytes' do
       expect(described_class.encode_path_segment('é'.encode(Encoding::ISO_8859_1))).to eq('%C3%A9')
-    end
-
-    it 'percent-encodes control characters' do
-      expect(described_class.encode_path_segment("a\r\nb\u0000")).to eq('a%0D%0Ab%00')
     end
 
     it 'keeps dots that are not a whole segment' do
@@ -40,12 +36,27 @@ RSpec.describe CheckoutSdk::CheckoutUtils do
       expect(described_class.encode_path_segment('é').encoding).to eq(Encoding::UTF_8)
     end
 
-    [nil, '', '.', '..', :'..'].each do |value|
-      it "raises CheckoutArgumentException for #{value.inspect}" do
+    it 'validates text in an encoding that is not ASCII compatible after converting it' do
+      expect(described_class.encode_path_segment('ab'.encode(Encoding::UTF_16LE))).to eq('ab')
+    end
+
+    invalid_values = [nil, '', '.', '..', :'..', 'a/b', 'a\\b', "a\nb", "a\rb", "a\u0000b", "a\u007Fb",
+                      '..'.encode(Encoding::UTF_16LE), '.'.encode(Encoding::UTF_32LE),
+                      '..'.dup.force_encoding(Encoding::UTF_7), 'a/b'.encode(Encoding::UTF_16BE)]
+    invalid_values.each do |value|
+      it "raises CheckoutArgumentException for #{value.inspect} (#{value.is_a?(String) ? value.encoding : value.class})" do
         expect { described_class.encode_path_segment(value) }
-          .to raise_error(CheckoutSdk::CheckoutArgumentException,
-                          "Invalid path segment: it must not be nil, empty, '.' or '..'")
+          .to raise_error(CheckoutSdk::CheckoutArgumentException, /\AInvalid path segment/)
       end
+    end
+
+    it 'raises CheckoutArgumentException when to_s does not return a String' do
+      value = Object.new
+      def value.to_s
+        42
+      end
+      expect { described_class.encode_path_segment(value) }
+        .to raise_error(CheckoutSdk::CheckoutArgumentException, /\AInvalid path segment/)
     end
   end
 

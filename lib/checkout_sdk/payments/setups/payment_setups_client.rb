@@ -251,7 +251,7 @@ module CheckoutSdk
       #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
       #   read-only :type (String) and :action (:type, "set_instrument").
       # @raise [CheckoutArgumentException] when payment_method_name is not a payment method name
-      #   (letters, digits and underscores), or id is nil or empty
+      #   (letters, digits and underscores), or id is not a valid path segment (see Client#build_path)
       def confirm_payment_setup(id, payment_method_name)
         unless PAYMENT_METHOD_NAME_PATTERN.match?(payment_method_name.to_s)
           raise CheckoutArgumentException, 'Invalid payment method name'

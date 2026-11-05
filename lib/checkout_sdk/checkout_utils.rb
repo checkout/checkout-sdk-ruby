@@ -53,23 +53,32 @@ module CheckoutSdk
     end
 
     INVALID_PATH_SEGMENTS = ['', '.', '..'].freeze
-    private_constant :INVALID_PATH_SEGMENTS
+    FORBIDDEN_PATH_SEGMENT_BYTES = %r{[/\\\x00-\x1F\x7F]}n.freeze
+    INVALID_PATH_SEGMENT_MESSAGE = "Invalid path segment: it must not be nil, empty, '.' or '..', " \
+                                   "and must not contain '/', '\\' or control characters"
+    private_constant :INVALID_PATH_SEGMENTS, :FORBIDDEN_PATH_SEGMENT_BYTES, :INVALID_PATH_SEGMENT_MESSAGE
 
     # Encodes a value as one RFC 3986 path segment. Every byte of its UTF-8 form outside the
     # unreserved set (A-Z, a-z, 0-9, "-", ".", "_", "~") is percent-encoded, so the value always
-    # stays a single segment of the request path.
+    # stays a single segment of the request path. Values are validated after conversion to UTF-8,
+    # whatever their original encoding.
     #
     # @param [String, Symbol, Integer] value
     # @return [String]
-    # @raise [CheckoutArgumentException] when the value is nil, empty, "." or ".."
+    # @raise [CheckoutArgumentException] when the value is nil, empty, "." or "..", contains "/",
+    #   "\" or a control character, or its to_s does not return a String
     def self.encode_path_segment(value)
       text = value.nil? ? '' : value.to_s
-      if INVALID_PATH_SEGMENTS.include?(text)
-        raise CheckoutArgumentException, "Invalid path segment: it must not be nil, empty, '.' or '..'"
-      end
+      raise CheckoutArgumentException, INVALID_PATH_SEGMENT_MESSAGE unless text.is_a?(String)
 
-      utf8_bytes(text).gsub(/[^A-Za-z0-9\-._~]/n) { |byte| format('%%%02X', byte.ord) }
-                      .force_encoding(Encoding::UTF_8)
+      bytes = utf8_bytes(text)
+      raise CheckoutArgumentException, INVALID_PATH_SEGMENT_MESSAGE if FORBIDDEN_PATH_SEGMENT_BYTES.match?(bytes)
+
+      encoded = bytes.gsub(/[^A-Za-z0-9\-._~]/n) { |byte| format('%%%02X', byte.ord) }
+                     .force_encoding(Encoding::UTF_8)
+      raise CheckoutArgumentException, INVALID_PATH_SEGMENT_MESSAGE if INVALID_PATH_SEGMENTS.include?(encoded)
+
+      encoded
     end
 
     def self.utf8_bytes(text)

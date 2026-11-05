@@ -151,6 +151,10 @@ All the API responses that do not fall in the 2** status codes will cause a `Che
 exception
 encapsulates the `http_metadata` and a map of `error_details`, if available.
 
+Identifiers passed to client methods (for example a payment id) are sent as single, percent-encoded path
+segments: pass them unencoded. A `CheckoutSdk::CheckoutArgumentException` is raised before any request is sent
+when an identifier is `nil`, empty, `.` or `..`, or contains `/`, `\` or a control character.
+
 ## Custom Http Client
 
 Ruby SDK supports your own configuration for `http client` using `Faraday::Connection` object, you can pass
