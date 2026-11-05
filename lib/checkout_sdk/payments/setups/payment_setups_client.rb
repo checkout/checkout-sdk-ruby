@@ -8,6 +8,8 @@ module CheckoutSdk
       PAYMENTS_PATH = 'payments'
       SETUPS_PATH = 'setups'
       CONFIRM_PATH = 'confirm'
+      PAYMENT_METHOD_NAME_PATTERN = /\A[a-z0-9_]+\z/i.freeze
+      private_constant :PAYMENT_METHOD_NAME_PATTERN
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -248,7 +250,13 @@ module CheckoutSdk
       #   :schemes (supported card scheme names; Google Pay never lists cartes_bancaires) and card
       #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
       #   read-only :type (String) and :action (:type, "set_instrument").
+      # @raise [CheckoutArgumentException] when payment_method_name is not a payment method name
+      #   (letters, digits and underscores), or id is nil or empty
       def confirm_payment_setup(id, payment_method_name)
+        unless PAYMENT_METHOD_NAME_PATTERN.match?(payment_method_name.to_s)
+          raise CheckoutArgumentException, 'Invalid payment method name'
+        end
+
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_name),
           sdk_authorization

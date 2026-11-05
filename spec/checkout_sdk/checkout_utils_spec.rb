@@ -3,6 +3,52 @@
 RSpec.describe CheckoutSdk::CheckoutUtils do
   let(:backslash) { '\\' }
 
+  describe '.encode_path_segment' do
+    it 'keeps unreserved characters unchanged' do
+      value = 'AZaz09-._~'
+      expect(described_class.encode_path_segment(value)).to eq(value)
+    end
+
+    it 'percent-encodes reserved characters with upper-case hex' do
+      expect(described_class.encode_path_segment('a/b?c#d%e f;g:h@i&j=k+l'))
+        .to eq('a%2Fb%3Fc%23d%25e%20f%3Bg%3Ah%40i%26j%3Dk%2Bl')
+    end
+
+    it 'percent-encodes non-ASCII text as UTF-8 bytes' do
+      expect(described_class.encode_path_segment('é€')).to eq('%C3%A9%E2%82%AC')
+    end
+
+    it 'percent-encodes text in another encoding as UTF-8 bytes' do
+      expect(described_class.encode_path_segment('é'.encode(Encoding::ISO_8859_1))).to eq('%C3%A9')
+    end
+
+    it 'percent-encodes control characters' do
+      expect(described_class.encode_path_segment("a\r\nb\u0000")).to eq('a%0D%0Ab%00')
+    end
+
+    it 'keeps dots that are not a whole segment' do
+      expect(described_class.encode_path_segment('...')).to eq('...')
+      expect(described_class.encode_path_segment('a..b')).to eq('a..b')
+    end
+
+    it 'converts Integer and Symbol values' do
+      expect(described_class.encode_path_segment(42)).to eq('42')
+      expect(described_class.encode_path_segment(:files)).to eq('files')
+    end
+
+    it 'returns a UTF-8 string' do
+      expect(described_class.encode_path_segment('é').encoding).to eq(Encoding::UTF_8)
+    end
+
+    [nil, '', '.', '..', :'..'].each do |value|
+      it "raises CheckoutArgumentException for #{value.inspect}" do
+        expect { described_class.encode_path_segment(value) }
+          .to raise_error(CheckoutSdk::CheckoutArgumentException,
+                          "Invalid path segment: it must not be nil, empty, '.' or '..'")
+      end
+    end
+  end
+
   describe '.loggable_path' do
     it 'keeps a plain path unchanged' do
       expect(described_class.loggable_path('payments/pay_123/captures')).to eq('payments/pay_123/captures')

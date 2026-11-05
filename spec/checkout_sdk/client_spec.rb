@@ -1,0 +1,97 @@
+# frozen_string_literal: true
+
+RSpec.describe CheckoutSdk::Client do
+  let(:configuration) { double('configuration') }
+  let(:client) { CheckoutSdk::Client.send(:new, double('api_client'), configuration, 'SECRET_KEY') }
+
+  def build_path(*args)
+    client.send(:build_path, *args)
+  end
+
+  describe '#build_path' do
+    it 'joins plain segments with a slash' do
+      expect(build_path('payments', 'pay_123', 'captures')).to eq('payments/pay_123/captures')
+    end
+
+    it 'keeps every argument as a single segment' do
+      expect(build_path('payments', '../x')).to eq('payments/..%2Fx')
+      expect(build_path('payments', '../../../x/y')).to eq('payments/..%2F..%2F..%2Fx%2Fy')
+    end
+
+    it 'encodes query and fragment delimiters' do
+      expect(build_path('payments', 'a?b#c')).to eq('payments/a%3Fb%23c')
+    end
+
+    it 'accepts Integer and Symbol segments' do
+      expect(build_path('reports', 123, :files)).to eq('reports/123/files')
+    end
+
+    [nil, '', '.', '..'].each do |value|
+      it "raises CheckoutArgumentException for #{value.inspect}" do
+        expect { build_path('payments', value) }.to raise_error(CheckoutSdk::CheckoutArgumentException)
+      end
+    end
+  end
+
+  describe 'request path on the wire' do
+    let(:requests) { [] }
+    let(:api) do
+      stubs = Faraday::Adapter::Test::Stubs.new do |stub|
+        %i[get post].each do |verb|
+          stub.send(verb, /.*/) do |env|
+            requests << env.url
+            [200, { 'Content-Type' => 'application/json' }, '{}']
+          end
+        end
+      end
+      http_client = Faraday.new { |f| f.adapter :test, stubs }
+      CheckoutSdk.builder.static_keys
+                 .with_secret_key('sk_sbox_m73dzbpy7cf3gfd46xr4yj5xo4e')
+                 .with_environment(CheckoutSdk::Environment.sandbox)
+                 .with_environment_subdomain('abc123')
+                 .with_http_client(http_client)
+                 .with_multipart_http_client(http_client)
+                 .with_logger(Logger.new(StringIO.new))
+                 .build
+    end
+
+    it 'keeps an identifier inside its own segment' do
+      api.payments_setups.confirm_payment_setup('../../x', 'klarna')
+      expect(requests.map(&:path)).to eq(['/payments/setups/..%2F..%2Fx/confirm/klarna'])
+    end
+
+    it 'sends no query or fragment taken from an identifier' do
+      api.payments.get_payment_details('a?b#c')
+      url = requests.first
+      expect(url.path).to eq('/payments/a%3Fb%23c')
+      expect(url.query).to be_nil
+      expect(url.fragment).to be_nil
+    end
+
+    it 'raises before any request for an invalid payment method name' do
+      expect { api.payments_setups.confirm_payment_setup('ps_x', '../../x/y') }
+        .to raise_error(CheckoutSdk::CheckoutArgumentException)
+      expect(requests).to be_empty
+    end
+
+    it 'raises before any request for an empty identifier' do
+      expect { api.payments.get_payment_details('') }.to raise_error(CheckoutSdk::CheckoutArgumentException)
+      expect(requests).to be_empty
+    end
+  end
+
+  describe 'paths built from several constant segments' do
+    let(:api_client) { double('api_client') }
+    let(:credentials) { double('credentials', get_authorization: 'auth') }
+
+    before { allow(configuration).to receive(:credentials).and_return(credentials) }
+
+    it 'keeps the bank account field formatting path' do
+      instruments = CheckoutSdk::Instruments::InstrumentsClient.new(api_client, configuration)
+      query = double('query')
+      expect(api_client).to receive(:invoke_get)
+        .with('validation/bank-accounts/GB/GBP', 'auth', query).and_return('response')
+      expect(instruments.get_bank_account_field_formatting('GB', 'GBP', query)).to eq('response')
+    end
+  end
+end

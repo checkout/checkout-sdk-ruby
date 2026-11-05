@@ -52,6 +52,33 @@ module CheckoutSdk
       "#{prefix} Details: #{escape_control_characters(details)}."
     end
 
+    INVALID_PATH_SEGMENTS = ['', '.', '..'].freeze
+    private_constant :INVALID_PATH_SEGMENTS
+
+    # Encodes a value as one RFC 3986 path segment. Every byte of its UTF-8 form outside the
+    # unreserved set (A-Z, a-z, 0-9, "-", ".", "_", "~") is percent-encoded, so the value always
+    # stays a single segment of the request path.
+    #
+    # @param [String, Symbol, Integer] value
+    # @return [String]
+    # @raise [CheckoutArgumentException] when the value is nil, empty, "." or ".."
+    def self.encode_path_segment(value)
+      text = value.nil? ? '' : value.to_s
+      if INVALID_PATH_SEGMENTS.include?(text)
+        raise CheckoutArgumentException, "Invalid path segment: it must not be nil, empty, '.' or '..'"
+      end
+
+      utf8_bytes(text).gsub(/[^A-Za-z0-9\-._~]/n) { |byte| format('%%%02X', byte.ord) }
+                      .force_encoding(Encoding::UTF_8)
+    end
+
+    def self.utf8_bytes(text)
+      text.encode(Encoding::UTF_8).b
+    rescue EncodingError
+      text.b
+    end
+    private_class_method :utf8_bytes
+
     # Returns a copy of the Faraday error, of the same class and with the same backtrace and wrapped
     # exception, that keeps only the response status, headers and body and whose message names the
     # method and URL without the query string. Errors without a response are returned unchanged.

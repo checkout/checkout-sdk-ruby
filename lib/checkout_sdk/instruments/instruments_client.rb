@@ -3,8 +3,9 @@
 module CheckoutSdk
   module Instruments
     class InstrumentsClient < BaseInstrumentsClient
-      VALIDATION = 'validation/bank-accounts'
-      private_constant :VALIDATION
+      VALIDATION = 'validation'
+      BANK_ACCOUNTS = 'bank-accounts'
+      private_constant :VALIDATION, :BANK_ACCOUNTS
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -29,7 +30,7 @@ module CheckoutSdk
       # @param [String] currency {CheckoutSdk::Common::Currency}
       # @param [Hash, BankAccountFieldQuery] bank_account_field_query
       def get_bank_account_field_formatting(country, currency, bank_account_field_query)
-        api_client.invoke_get(build_path(VALIDATION, country, currency),
+        api_client.invoke_get(build_path(VALIDATION, BANK_ACCOUNTS, country, currency),
                               sdk_authorization(CheckoutSdk::AuthorizationType::OAUTH),
                               bank_account_field_query)
       end
