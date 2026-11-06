@@ -5,8 +5,9 @@ module CheckoutSdk
     # Bacs Direct Debit client.
     class BacsClient < Client
       APMS = 'apms'
-      BACS_NOTIFICATIONS = 'bacs/notifications'
-      private_constant :APMS, :BACS_NOTIFICATIONS
+      BACS = 'bacs'
+      NOTIFICATIONS = 'notifications'
+      private_constant :APMS, :BACS, :NOTIFICATIONS
 
       # @param [ApiClient] api_client
       # @param [CheckoutConfiguration] configuration
@@ -20,7 +21,7 @@ module CheckoutSdk
       # @param [Hash, BacsNotificationRequest] bacs_notification_request
       # @return [Hash] the BacsNotificationResponse, carrying event_id.
       def send_notification(bacs_notification_request)
-        api_client.invoke_post(build_path(APMS, BACS_NOTIFICATIONS),
+        api_client.invoke_post(build_path(APMS, BACS, NOTIFICATIONS),
                                sdk_authorization,
                                bacs_notification_request)
       end

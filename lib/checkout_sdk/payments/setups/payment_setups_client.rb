@@ -248,6 +248,8 @@ module CheckoutSdk
       #   :schemes (supported card scheme names; Google Pay never lists cartes_bancaires) and card
       #   details :last4, :bin, :scheme (Strings) and :expires_on (date-time); instrument returns the
       #   read-only :type (String) and :action (:type, "set_instrument").
+      # @raise [CheckoutArgumentException] when id or payment_method_name is not a valid path segment
+      #   (see Client#build_path)
       def confirm_payment_setup(id, payment_method_name)
         api_client.invoke_post(
           build_path(PAYMENTS_PATH, SETUPS_PATH, id, CONFIRM_PATH, payment_method_name),

@@ -23,9 +23,15 @@ module CheckoutSdk
       @configuration = configuration
     end
 
-    # @param [Array] args
+    # Joins the arguments into a request path. Each argument is one path segment and is
+    # percent-encoded, so it never adds segments, a query or a fragment.
+    #
+    # @param [Array<String, Symbol, Integer>] args
+    # @return [String]
+    # @raise [CheckoutArgumentException] when an argument is not a valid path segment (see
+    #   CheckoutUtils.encode_path_segment)
     def build_path(*args)
-      args.join('/')
+      args.map { |segment| CheckoutUtils.encode_path_segment(segment) }.join('/')
     end
 
     # @return [TrueClass, FalseClass]
