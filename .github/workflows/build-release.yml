@@ -6,9 +6,8 @@ name: build-release
 # the pre-release version given as input (for example 2.9.0.rc.1, never installed unless asked
 # for) and creates the GitHub release as a pre-release.
 #
-# Jobs: build (no secrets) -> test (sandbox secrets) -> publish (RubyGems trusted publishing,
-# environment "rubygems") -> release (gh release create). Only publish can obtain a RubyGems key,
-# and the key only exists inside its publish step.
+# Jobs: build -> test -> publish (RubyGems trusted publishing, environment "rubygems") -> release
+# (gh release create).
 on:
   push:
     branches:
@@ -116,9 +115,8 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: false
-      # Frozen: fails when Gemfile.lock is out of date with the Gemfile, the gemspec or the
-      # version, and when a downloaded gem does not match its checksum in the lock. No cache:
-      # every gem is downloaded and checked.
+      # Frozen install from Gemfile.lock: fails when the lock is out of date with the Gemfile, the
+      # gemspec or the version.
       - id: check-lockfile-checksums
         run: ruby .github/scripts/check_lockfile_checksums.rb Gemfile.lock
       - id: install-dependencies
@@ -143,35 +141,25 @@ jobs:
 
   publish:
     needs: [build, test]
-    # The image's own Ruby runs the publish step: no downloaded interpreter or action other than
-    # download-artifact runs in this job.
+    # Publishes with the runner image's Ruby.
     runs-on: ubuntu-24.04
-    # Protected environment: deployment branch rule "master" and the RubyGems trusted publisher
-    # are both bound to it.
+    # Deployment environment for publishing (also configured in the RubyGems trusted publisher).
     environment: rubygems
     permissions:
       id-token: write # OIDC token for RubyGems trusted publishing
     steps:
-      # No checkout and no bundle install: nothing from the repository or from RubyGems runs
-      # next to the publishing key. The gem is the artifact built and checked by the build job,
-      # and it must have the sha256 the build job recorded.
+      # Publishes the gem artifact from the build job after checking its sha256.
       - id: download-gem
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: gem
           path: dist
-      # RubyGems trusted publishing: the job's OIDC token is exchanged for a short-lived key scoped
-      # to this gem. The key is held only in this step's memory and the child gem process
-      # environment: never written to disk or to $GITHUB_ENV.
+      # RubyGems trusted publishing (OIDC).
       - id: publish-gem
         env:
           VERSION: ${{ needs.build.outputs.version }}
           EXPECTED_SHA256: ${{ needs.build.outputs.sha256 }}
-        # Only Ruby's own default libraries load, in an emptied environment: env -i with an explicit
-        # allowlist (no RUBYOPT, RUBYLIB, GEMRC, LD_PRELOAD, SSL_* from earlier steps), an empty HOME
-        # (no ~/.gemrc), --disable-gems and an empty GEM_HOME/GEM_PATH (the image installs newer
-        # json/net-http gems that would otherwise shadow the default ones). The gem push child
-        # inherits this environment.
+        # Runs with a minimal environment and Ruby's default libraries only.
         run: |
           set -euo pipefail
           empty_gem_dir="$(/usr/bin/mktemp -d)"

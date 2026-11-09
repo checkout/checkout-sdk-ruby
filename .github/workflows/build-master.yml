@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # setup-ruby would generate a fresh lock if none were committed: refuse instead.
+      # Requires the committed lockfile.
       - id: require-lockfile
         run: |
           if [ ! -f "${BUNDLE_GEMFILE}.lock" ]; then
@@ -42,10 +42,9 @@ jobs:
         uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          # No gem cache: a restored cache is not checked against the lock's checksums.
+          # Gems are installed fresh on every run.
           bundler-cache: false
-      # The Ruby 2.7 lock cannot carry checksums (Bundler 2.4): only legs that install from
-      # Gemfile.lock check them.
+      # Checksum check for the legs that install from Gemfile.lock.
       - id: check-lockfile-checksums
         if: env.BUNDLE_GEMFILE == 'Gemfile'
         run: ruby .github/scripts/check_lockfile_checksums.rb Gemfile.lock

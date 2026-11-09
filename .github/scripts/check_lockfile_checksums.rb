@@ -2,8 +2,7 @@
 
 # Fails unless the lockfile only uses rubygems.org and the local gemspec, and every gem from
 # rubygems.org has a sha256 in its CHECKSUMS section.
-# Bundler verifies downloads against CHECKSUMS but installs without complaint when the section or an
-# entry is missing, so CI checks the coverage first. Standard library only.
+# Run by CI before bundle install. Standard library only.
 # Usage: ruby .github/scripts/check_lockfile_checksums.rb Gemfile.lock
 
 def fail_check(message)
