@@ -5,6 +5,9 @@ on:
     branches:
       - "master"
 
+permissions:
+  contents: read
+
 jobs:
   build:
     if: "!contains(github.event.commits[0].message, 'Release')"
@@ -20,13 +23,34 @@ jobs:
             '3.3',
           ]
     name: Ruby ${{ matrix.ruby-version }}
+    env:
+      # Ruby 2.7 cannot install every gem in Gemfile.lock (resolved for Ruby 3.1): it has its own lock.
+      BUNDLE_GEMFILE: ${{ matrix.ruby-version == '2.7' && 'gemfiles/ruby_2_7.gemfile' || 'Gemfile' }}
+      BUNDLE_FROZEN: 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # setup-ruby would generate a fresh lock if none were committed: refuse instead.
+      - id: require-lockfile
+        run: |
+          if [ ! -f "${BUNDLE_GEMFILE}.lock" ]; then
+            echo "::error::${BUNDLE_GEMFILE}.lock is missing. Run .github/scripts/update-lockfiles.sh and commit it."
+            exit 1
+          fi
       - id: setup-ruby-and-bundle
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          # No gem cache: a restored cache is not checked against the lock's checksums.
+          bundler-cache: false
+      # The Ruby 2.7 lock cannot carry checksums (Bundler 2.4): only legs that install from
+      # Gemfile.lock check them.
+      - id: check-lockfile-checksums
+        if: env.BUNDLE_GEMFILE == 'Gemfile'
+        run: ruby .github/scripts/check_lockfile_checksums.rb Gemfile.lock
+      - id: install-dependencies
+        run: bundle install
       - id: begin-rubocop-scan
         run: bundle exec rubocop lib
       - id: build-and-analyse

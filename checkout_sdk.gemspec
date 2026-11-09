@@ -22,7 +22,8 @@ sellers and service providers."
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
-      (f == __FILE__) || f.match(%r{\A(?:(?:bin|test|spec|features)/|\.(?:git|travis|circleci)|appveyor)})
+      (f == __FILE__) || f == 'Gemfile.lock' ||
+        f.match(%r{\A(?:(?:bin|test|spec|features|gemfiles)/|\.(?:git|travis|circleci)|appveyor)})
     end
   end
   spec.bindir = 'exe'
@@ -33,7 +34,7 @@ sellers and service providers."
   spec.add_development_dependency 'rubocop', '~> 1.82'
   spec.add_development_dependency 'overcommit', '~> 0.60'
   spec.add_dependency 'csv', '>= 3.0'
-  spec.add_dependency 'faraday', '>= 2.0'
+  spec.add_dependency 'faraday', '>= 2.0', '< 3'
   spec.add_dependency 'faraday-follow_redirects', '~> 0.5'
   spec.add_dependency 'faraday-multipart', '~> 1.2'
   spec.add_dependency 'mime-types', '~> 3.0'
