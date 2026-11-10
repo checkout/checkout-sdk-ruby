@@ -1,26 +1,147 @@
 name: build-release
+
+# Publishes the gem when lib/checkout_sdk/version.rb changes on master.
+#
+# Manual run (workflow_dispatch, master only) is the dry run of the whole pipeline: it tests and
+# publishes the pre-release version given as input (for example 2.9.0.rc.1, never installed unless
+# asked for; it must be greater than the current version) and creates the GitHub release as a draft
+# pre-release, which has no git tag. Delete the draft afterwards.
+#
+# A failed run can be re-run: publishing skips a version already on RubyGems with the same sha256.
+#
+# Jobs: build -> test -> publish (RubyGems trusted publishing, environment "rubygems") -> release
+# (gh release create).
 on:
   push:
     branches:
       - master
     paths:
       - lib/checkout_sdk/version.rb
+  workflow_dispatch:
+    inputs:
+      prerelease-version:
+        description: 'Pre-release version to publish, for example 2.9.0.rc.1'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-release
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    # The repository's default GITHUB_TOKEN is read-only. create-release needs
-    # write access to contents to create the version tag and GitHub release.
-    permissions:
-      contents: write
+    # Builds with the runner image's Ruby, like the publish job.
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+      sha256: ${{ steps.build-gem.outputs.sha256 }}
     steps:
-      - uses: actions/checkout@v3
-      - id: setup-ruby-and-bundle
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ruby-version: 3.1
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          persist-credentials: false
+      - id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PRERELEASE_VERSION: ${{ inputs.prerelease-version }}
+        run: |
+          set -euo pipefail
+          release_pattern='^[0-9]+\.[0-9]+\.[0-9]+$'
+          prerelease_pattern='^[0-9]+\.[0-9]+\.[0-9]+\.(alpha|beta|rc|pre)\.?[0-9]+$'
+          read_version() { /usr/bin/ruby --disable-gems -e 'load "lib/checkout_sdk/version.rb"; print CheckoutSdk::VERSION'; }
+          if [ "$EVENT_NAME" = 'workflow_dispatch' ]; then
+            version="$PRERELEASE_VERSION"
+            if ! [[ "$version" =~ $prerelease_pattern ]]; then
+              echo '::error::A manual run only publishes a pre-release version such as 2.9.0.rc.1'
+              exit 1
+            fi
+            current="$(read_version)"
+            if ! [[ "$current" =~ $release_pattern || "$current" =~ $prerelease_pattern ]]; then
+              echo '::error::lib/checkout_sdk/version.rb does not hold a valid version'
+              exit 1
+            fi
+            if ! /usr/bin/ruby -e 'exit(Gem::Version.new(ARGV[0]) > Gem::Version.new(ARGV[1]))' "$version" "$current"; then
+              echo "::error::The pre-release version must be greater than the current version ${current}"
+              exit 1
+            fi
+            /usr/bin/ruby --disable-gems .github/scripts/set_version.rb "$version"
+          else
+            version="$(read_version)"
+            if ! [[ "$version" =~ $release_pattern || "$version" =~ $prerelease_pattern ]]; then
+              echo '::error::lib/checkout_sdk/version.rb does not hold a valid version'
+              exit 1
+            fi
+          fi
+          if [ "$(read_version)" != "$version" ]; then
+            echo '::error::lib/checkout_sdk/version.rb does not match the version to publish'
+            exit 1
+          fi
+          prerelease=false
+          if [[ "$version" =~ $prerelease_pattern ]]; then prerelease=true; fi
+          echo "Releasing $version (pre-release: $prerelease)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+      - id: build-gem
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        # Runs with a minimal environment and Ruby's default libraries only.
+        run: |
+          set -euo pipefail
+          empty_gem_dir="$(/usr/bin/mktemp -d)"
+          empty_home="$(/usr/bin/mktemp -d)"
+          isolated() {
+            /usr/bin/env -i PATH=/usr/bin:/bin LANG=C.UTF-8 HOME="$empty_home" \
+              GEM_HOME="$empty_gem_dir" GEM_PATH="$empty_gem_dir" "$@"
+          }
+          isolated /usr/bin/gem build checkout_sdk.gemspec --output "checkout_sdk-${VERSION}.gem"
+          isolated /usr/bin/ruby .github/scripts/verify_gem.rb "$VERSION"
+          sha256="$(sha256sum "checkout_sdk-${VERSION}.gem" | cut -d ' ' -f 1)"
+          echo "sha256 of checkout_sdk-${VERSION}.gem: $sha256"
+          echo "sha256=$sha256" >> "$GITHUB_OUTPUT"
+      - id: upload-gem
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: gem
+          path: checkout_sdk-${{ steps.version.outputs.version }}.gem
+          if-no-files-found: error
+          retention-days: 7
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_FROZEN: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: require-lockfile
+        run: |
+          if [ ! -f Gemfile.lock ]; then
+            echo '::error::Gemfile.lock is missing. Run .github/scripts/update-lockfiles.sh and commit it.'
+            exit 1
+          fi
+      - id: setup-ruby
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+        with:
+          ruby-version: '3.1'
+          bundler-cache: false
+      # A manual run tests the pre-release version it publishes.
+      - id: set-dry-run-version
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        run: ruby .github/scripts/set_version.rb "$VERSION"
+      # Frozen install from Gemfile.lock: fails when the lock is out of date with the Gemfile, the
+      # gemspec or the version.
+      - id: check-lockfile-checksums
+        run: ruby .github/scripts/check_lockfile_checksums.rb Gemfile.lock
+      - id: install-dependencies
+        run: bundle install
       - id: build-and-analyse
         env:
           CHECKOUT_PROCESSING_CHANNEL_ID: ${{ secrets.IT_CHECKOUT_PROCESSING_CHANNEL_ID }}
@@ -38,27 +159,154 @@ jobs:
           CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET: ${{ secrets.IT_CHECKOUT_DEFAULT_OAUTH_ISSUING_CLIENT_SECRET }}
           CHECKOUT_MERCHANT_SUBDOMAIN: ${{ secrets.IT_CHECKOUT_MERCHANT_SUBDOMAIN }}
         run: bundle exec rspec spec
-      - id: read-version
-        run: echo "CURRENT_VERSION=$( grep "VERSION"  lib/checkout_sdk/version.rb | awk '{ print $3 }' | tr -d "'")" >> $GITHUB_ENV
-      - id: print-version
-        run: echo "Releasing $CURRENT_VERSION"
-      - id: publish-gem
-        run: |
-          mkdir -p $HOME/.gem
-          touch $HOME/.gem/credentials
-          chmod 0600 $HOME/.gem/credentials
-          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
-          gem build *.gemspec
-          gem push *.gem
-        env:
-          GEM_HOST_API_KEY: "${{secrets.RUBYGEMS_AUTH_TOKEN}}"
-      - id: create-release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: [build, test]
+    # Publishes with the runner image's Ruby.
+    runs-on: ubuntu-24.04
+    # Deployment environment for publishing (also configured in the RubyGems trusted publisher).
+    environment: rubygems
+    permissions:
+      id-token: write # OIDC token for RubyGems trusted publishing
+    steps:
+      # Publishes the gem artifact from the build job after checking its sha256.
+      - id: download-gem
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          tag_name: ${{ env.CURRENT_VERSION }}
-          release_name: ${{ env.CURRENT_VERSION }}
-          body: ${{ github.event.head_commit.message }}
-          draft: false
-          prerelease: false
+          name: gem
+          path: dist
+      # RubyGems trusted publishing (OIDC).
+      - id: publish-gem
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+          EXPECTED_SHA256: ${{ needs.build.outputs.sha256 }}
+        # Runs with a minimal environment and Ruby's default libraries only.
+        run: |
+          set -euo pipefail
+          empty_gem_dir="$(/usr/bin/mktemp -d)"
+          empty_home="$(/usr/bin/mktemp -d)"
+          /usr/bin/env -i \
+            PATH=/usr/bin:/bin LANG=C.UTF-8 HOME="$empty_home" \
+            GEM_HOME="$empty_gem_dir" GEM_PATH="$empty_gem_dir" EMPTY_GEM_DIR="$empty_gem_dir" \
+            VERSION="$VERSION" EXPECTED_SHA256="$EXPECTED_SHA256" \
+            ACTIONS_ID_TOKEN_REQUEST_URL="${ACTIONS_ID_TOKEN_REQUEST_URL:-}" \
+            ACTIONS_ID_TOKEN_REQUEST_TOKEN="${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" \
+            /usr/bin/ruby --disable-gems <<'RUBY'
+            require 'digest'
+            require 'json'
+            require 'net/http'
+            require 'uri'
+
+            def json_field(response, field)
+              JSON.parse(response.body).fetch(field)
+            rescue JSON::ParserError, KeyError, TypeError
+              abort "Unexpected response body (HTTP #{response.code}); not printed"
+            end
+
+            # Network failures abort with the error class only.
+            def request(name)
+              yield
+            rescue StandardError => e
+              abort "#{name} failed (#{e.class})"
+            end
+
+            version = ENV.fetch('VERSION')
+            unless version.match?(/\A\d+\.\d+\.\d+(\.(alpha|beta|rc|pre)\.?\d+)?\z/)
+              abort 'Unexpected version from the build job'
+            end
+            gem_file = "dist/checkout_sdk-#{version}.gem"
+            unless Dir.glob('dist/*', File::FNM_DOTMATCH).reject { |f| %w[. ..].include?(File.basename(f)) } == [gem_file] &&
+                   File.file?(gem_file) && !File.symlink?(gem_file)
+              abort 'The build artifact must hold exactly the gem to publish'
+            end
+            expected_sha256 = ENV.fetch('EXPECTED_SHA256')
+            abort 'Missing sha256 from the build job' unless expected_sha256.match?(/\A[0-9a-f]{64}\z/)
+            actual_sha256 = Digest::SHA256.file(gem_file).hexdigest
+            abort "The gem is not the one the build job produced (sha256 #{actual_sha256})" unless actual_sha256 == expected_sha256
+            puts "sha256 of #{gem_file}: #{actual_sha256} (matches the build job)"
+
+            # Re-runs: a version already published with the same sha256 is not pushed again.
+            lookup = request('RubyGems version lookup') do
+              Net::HTTP.get_response(URI("https://rubygems.org/api/v2/rubygems/checkout_sdk/versions/#{version}.json"))
+            end
+            case lookup
+            when Net::HTTPNotFound
+              nil
+            when Net::HTTPSuccess
+              published_sha256 = json_field(lookup, 'sha')
+              abort "checkout_sdk #{version} is already on RubyGems with another sha256 (#{published_sha256})" \
+                unless published_sha256 == actual_sha256
+              puts "checkout_sdk #{version} is already on RubyGems with this sha256: nothing to push"
+              exit 0
+            else
+              abort "RubyGems version lookup failed (HTTP #{lookup.code})"
+            end
+
+            if ENV['ACTIONS_ID_TOKEN_REQUEST_URL'].to_s.empty? || ENV['ACTIONS_ID_TOKEN_REQUEST_TOKEN'].to_s.empty?
+              abort 'No OIDC token available: the publish job needs permissions id-token: write'
+            end
+            id_uri = URI("#{ENV.fetch('ACTIONS_ID_TOKEN_REQUEST_URL')}&audience=rubygems.org")
+            id_request = Net::HTTP::Get.new(id_uri)
+            id_request['Authorization'] = "Bearer #{ENV.fetch('ACTIONS_ID_TOKEN_REQUEST_TOKEN')}"
+            id_response = request('OIDC token request') do
+              Net::HTTP.start(id_uri.host, id_uri.port, use_ssl: true) { |http| http.request(id_request) }
+            end
+            abort "OIDC token request failed (HTTP #{id_response.code})" unless id_response.is_a?(Net::HTTPSuccess)
+            jwt = json_field(id_response, 'value')
+            puts "::add-mask::#{jwt}"
+
+            exchange_response = request('RubyGems trusted publisher exchange') do
+              Net::HTTP.post(
+                URI('https://rubygems.org/api/v1/oidc/trusted_publisher/exchange_token'),
+                JSON.generate(jwt: jwt),
+                'Content-Type' => 'application/json', 'Accept' => 'application/json'
+              )
+            end
+            unless exchange_response.is_a?(Net::HTTPSuccess)
+              abort "RubyGems trusted publisher exchange failed (HTTP #{exchange_response.code}). " \
+                    'Check the trusted publisher of checkout_sdk on rubygems.org.'
+            end
+            api_key = json_field(exchange_response, 'rubygems_api_key')
+            puts "::add-mask::#{api_key}"
+
+            gem_env = {
+              'GEM_HOST_API_KEY' => api_key, 'GEM_HOME' => ENV.fetch('EMPTY_GEM_DIR'), 'GEM_PATH' => ENV.fetch('EMPTY_GEM_DIR'),
+              'RUBYOPT' => nil, 'RUBYLIB' => nil
+            }
+            system(gem_env, '/usr/bin/gem', 'push', gem_file, '--host', 'https://rubygems.org', exception: true)
+          RUBY
+
+  release:
+    needs: [build, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the version tag and the GitHub release
+    steps:
+      - id: create-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          VERSION: ${{ needs.build.outputs.version }}
+          PRERELEASE: ${{ needs.build.outputs.prerelease }}
+          NOTES: ${{ github.event.head_commit.message }}
+        run: |
+          set -euo pipefail
+          # gh release create reuses an existing tag and ignores --target: the version tag must be
+          # absent or already point at this commit.
+          refs="$(gh api "repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/${VERSION}")"
+          tag="$(jq -c --arg ref "refs/tags/${VERSION}" '[.[] | select(.ref == $ref)] | first // empty' <<< "$refs")"
+          if [ -n "$tag" ]; then
+            tag_sha="$(jq -r '.object.sha' <<< "$tag")"
+            if [ "$(jq -r '.object.type' <<< "$tag")" = 'tag' ]; then
+              tag_sha="$(gh api "repos/${GITHUB_REPOSITORY}/git/tags/${tag_sha}" --jq '.object.sha')"
+            fi
+            if [ "$tag_sha" != "$GITHUB_SHA" ]; then
+              echo "::error::Tag ${VERSION} already exists at ${tag_sha}, not at ${GITHUB_SHA}"
+              exit 1
+            fi
+          fi
+          args=(--repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$VERSION" --notes "${NOTES:-Pre-release $VERSION}")
+          if [ "$PRERELEASE" = 'true' ]; then args+=(--prerelease); fi
+          # A manual run is a dry run: draft release, no git tag.
+          if [ "$EVENT_NAME" = 'workflow_dispatch' ]; then args+=(--draft); fi
+          gh release create "$VERSION" "${args[@]}"

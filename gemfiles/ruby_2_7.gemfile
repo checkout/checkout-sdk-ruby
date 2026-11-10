@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+# Used only by the Ruby 2.7 CI leg (BUNDLE_GEMFILE=gemfiles/ruby_2_7.gemfile). Same dependencies
+# as ../Gemfile, locked for Ruby 2.7 in ruby_2_7.gemfile.lock, because Gemfile.lock is resolved for
+# Ruby 3.1 and some of its gems need Ruby 3.0 or later. Regenerate both locks with
+# .github/scripts/update-lockfiles.sh.
+eval_gemfile File.expand_path('../Gemfile', __dir__)
