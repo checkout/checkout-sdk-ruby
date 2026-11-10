@@ -2,11 +2,12 @@ name: build-release
 
 # Publishes the gem when lib/checkout_sdk/version.rb changes on master.
 #
-# Manual run (workflow_dispatch, master only) is the dry run of the whole pipeline: it publishes
-# the pre-release version given as input (for example 2.9.0.rc.1, never installed unless asked
-# for) and creates the GitHub release as a pre-release. The input must be greater than the
-# current version. Its tag points at the master commit, whose version.rb still holds the current
-# version: only the built gem carries the pre-release version.
+# Manual run (workflow_dispatch, master only) is the dry run of the whole pipeline: it tests and
+# publishes the pre-release version given as input (for example 2.9.0.rc.1, never installed unless
+# asked for; it must be greater than the current version) and creates the GitHub release as a draft
+# pre-release, which has no git tag. Delete the draft afterwards.
+#
+# A failed run can be re-run: publishing skips a version already on RubyGems with the same sha256.
 #
 # Jobs: build -> test -> publish (RubyGems trusted publishing, environment "rubygems") -> release
 # (gh release create).
@@ -67,7 +68,7 @@ jobs:
               echo "::error::The pre-release version must be greater than the current version ${current}"
               exit 1
             fi
-            sed -i -E "s/^  VERSION = '[^']*'$/  VERSION = '${version}'/" lib/checkout_sdk/version.rb
+            /usr/bin/ruby --disable-gems .github/scripts/set_version.rb "$version"
           else
             version="$(read_version)"
             if ! [[ "$version" =~ $release_pattern || "$version" =~ $prerelease_pattern ]]; then
@@ -129,6 +130,12 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: false
+      # A manual run tests the pre-release version it publishes.
+      - id: set-dry-run-version
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        run: ruby .github/scripts/set_version.rb "$VERSION"
       # Frozen install from Gemfile.lock: fails when the lock is out of date with the Gemfile, the
       # gemspec or the version.
       - id: check-lockfile-checksums
@@ -218,6 +225,23 @@ jobs:
             abort "The gem is not the one the build job produced (sha256 #{actual_sha256})" unless actual_sha256 == expected_sha256
             puts "sha256 of #{gem_file}: #{actual_sha256} (matches the build job)"
 
+            # Re-runs: a version already published with the same sha256 is not pushed again.
+            lookup = request('RubyGems version lookup') do
+              Net::HTTP.get_response(URI("https://rubygems.org/api/v2/rubygems/checkout_sdk/versions/#{version}.json"))
+            end
+            case lookup
+            when Net::HTTPNotFound
+              nil
+            when Net::HTTPSuccess
+              published_sha256 = json_field(lookup, 'sha')
+              abort "checkout_sdk #{version} is already on RubyGems with another sha256 (#{published_sha256})" \
+                unless published_sha256 == actual_sha256
+              puts "checkout_sdk #{version} is already on RubyGems with this sha256: nothing to push"
+              exit 0
+            else
+              abort "RubyGems version lookup failed (HTTP #{lookup.code})"
+            end
+
             if ENV['ACTIONS_ID_TOKEN_REQUEST_URL'].to_s.empty? || ENV['ACTIONS_ID_TOKEN_REQUEST_TOKEN'].to_s.empty?
               abort 'No OIDC token available: the publish job needs permissions id-token: write'
             end
@@ -261,6 +285,7 @@ jobs:
       - id: create-release
         env:
           GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
           VERSION: ${{ needs.build.outputs.version }}
           PRERELEASE: ${{ needs.build.outputs.prerelease }}
           NOTES: ${{ github.event.head_commit.message }}
@@ -282,4 +307,6 @@ jobs:
           fi
           args=(--repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$VERSION" --notes "${NOTES:-Pre-release $VERSION}")
           if [ "$PRERELEASE" = 'true' ]; then args+=(--prerelease); fi
+          # A manual run is a dry run: draft release, no git tag.
+          if [ "$EVENT_NAME" = 'workflow_dispatch' ]; then args+=(--draft); fi
           gh release create "$VERSION" "${args[@]}"

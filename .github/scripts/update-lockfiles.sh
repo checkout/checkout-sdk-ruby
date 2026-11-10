@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Regenerates the committed lockfiles in linux/amd64 containers, so they resolve for the CI
-# runners and not for the local machine. Needs Docker.
+# runners and not for the local machine. Needs Docker, except with --version-only.
 #
 #   Gemfile.lock                    Ruby 3.1, Bundler 2.6.9, with gem checksums.
 #                                   Ruby 3.1 and 3.3 CI legs and the release workflow.
@@ -12,7 +12,10 @@
 # gem's own version). Without arguments it keeps every locked version that still satisfies the
 # Gemfile; `--update` re-resolves all gems to the newest allowed versions.
 #
-# Usage: .github/scripts/update-lockfiles.sh [--update]
+# After a version bump only, `--version-only` copies the version from lib/checkout_sdk/version.rb
+# into both lockfiles with any local Ruby, no Docker and no dependency resolve.
+#
+# Usage: .github/scripts/update-lockfiles.sh [--update | --version-only]
 set -euo pipefail
 
 cd "$(dirname "$0")/../.."
@@ -21,8 +24,19 @@ update=''
 case "${1:-}" in
   '') ;;
   --update) update='--update' ;;
-  *) echo "usage: $0 [--update]" >&2; exit 2 ;;
+  --version-only)
+    version="$(ruby -e 'load "lib/checkout_sdk/version.rb"; print CheckoutSdk::VERSION')"
+    ruby .github/scripts/set_version.rb "$version"
+    echo 'Lockfiles updated. Review the diff before committing: only checkout_sdk lines may change.'
+    exit 0
+    ;;
+  *) echo "usage: $0 [--update | --version-only]" >&2; exit 2 ;;
 esac
+
+if ! docker info > /dev/null 2>&1; then
+  echo 'Docker is not running. After a version bump only, use --version-only instead.' >&2
+  exit 1
+fi
 
 lock() {
   local ruby_version="$1"

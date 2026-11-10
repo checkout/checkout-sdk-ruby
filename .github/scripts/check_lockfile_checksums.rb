@@ -26,7 +26,9 @@ File.foreach(path, chomp: true) do |line|
 end
 
 foreign = sections.keys & ['GIT', 'PLUGIN SOURCE', 'GEM SOURCE']
-fail_check("#{path} has #{foreign.join(' and ')} sources; only rubygems.org and the local gemspec are allowed") unless foreign.empty?
+unless foreign.empty?
+  fail_check("#{path} has #{foreign.join(' and ')} sources; only rubygems.org and the local gemspec are allowed")
+end
 remotes = (sections['GEM'] + sections['PATH']).filter_map { |line| line[/\A  remote: (.+)\z/, 1] }
 fail_check("#{path} has unexpected remotes: #{remotes.inspect}") unless remotes.sort == ['.', 'https://rubygems.org/']
 
