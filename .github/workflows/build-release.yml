@@ -4,7 +4,9 @@ name: build-release
 #
 # Manual run (workflow_dispatch, master only) is the dry run of the whole pipeline: it publishes
 # the pre-release version given as input (for example 2.9.0.rc.1, never installed unless asked
-# for) and creates the GitHub release as a pre-release.
+# for) and creates the GitHub release as a pre-release. The input must be greater than the
+# current version. Its tag points at the master commit, whose version.rb still holds the current
+# version: only the built gem carries the pre-release version.
 #
 # Jobs: build -> test -> publish (RubyGems trusted publishing, environment "rubygems") -> release
 # (gh release create).
@@ -31,7 +33,8 @@ concurrency:
 jobs:
   build:
     if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
+    # Builds with the runner image's Ruby, like the publish job.
+    runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.version.outputs.version }}
       prerelease: ${{ steps.version.outputs.prerelease }}
@@ -40,11 +43,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - id: setup-ruby
-        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
-        with:
-          ruby-version: '3.1'
-          bundler: none
       - id: version
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -53,11 +51,20 @@ jobs:
           set -euo pipefail
           release_pattern='^[0-9]+\.[0-9]+\.[0-9]+$'
           prerelease_pattern='^[0-9]+\.[0-9]+\.[0-9]+\.(alpha|beta|rc|pre)\.?[0-9]+$'
-          read_version() { ruby -e 'load "lib/checkout_sdk/version.rb"; print CheckoutSdk::VERSION'; }
+          read_version() { /usr/bin/ruby --disable-gems -e 'load "lib/checkout_sdk/version.rb"; print CheckoutSdk::VERSION'; }
           if [ "$EVENT_NAME" = 'workflow_dispatch' ]; then
             version="$PRERELEASE_VERSION"
             if ! [[ "$version" =~ $prerelease_pattern ]]; then
               echo '::error::A manual run only publishes a pre-release version such as 2.9.0.rc.1'
+              exit 1
+            fi
+            current="$(read_version)"
+            if ! [[ "$current" =~ $release_pattern || "$current" =~ $prerelease_pattern ]]; then
+              echo '::error::lib/checkout_sdk/version.rb does not hold a valid version'
+              exit 1
+            fi
+            if ! /usr/bin/ruby -e 'exit(Gem::Version.new(ARGV[0]) > Gem::Version.new(ARGV[1]))' "$version" "$current"; then
+              echo "::error::The pre-release version must be greater than the current version ${current}"
               exit 1
             fi
             sed -i -E "s/^  VERSION = '[^']*'$/  VERSION = '${version}'/" lib/checkout_sdk/version.rb
@@ -80,10 +87,17 @@ jobs:
       - id: build-gem
         env:
           VERSION: ${{ steps.version.outputs.version }}
+        # Runs with a minimal environment and Ruby's default libraries only.
         run: |
           set -euo pipefail
-          gem build checkout_sdk.gemspec --output "checkout_sdk-${VERSION}.gem"
-          ruby .github/scripts/verify_gem.rb "$VERSION"
+          empty_gem_dir="$(/usr/bin/mktemp -d)"
+          empty_home="$(/usr/bin/mktemp -d)"
+          isolated() {
+            /usr/bin/env -i PATH=/usr/bin:/bin LANG=C.UTF-8 HOME="$empty_home" \
+              GEM_HOME="$empty_gem_dir" GEM_PATH="$empty_gem_dir" "$@"
+          }
+          isolated /usr/bin/gem build checkout_sdk.gemspec --output "checkout_sdk-${VERSION}.gem"
+          isolated /usr/bin/ruby .github/scripts/verify_gem.rb "$VERSION"
           sha256="$(sha256sum "checkout_sdk-${VERSION}.gem" | cut -d ' ' -f 1)"
           echo "sha256 of checkout_sdk-${VERSION}.gem: $sha256"
           echo "sha256=$sha256" >> "$GITHUB_OUTPUT"
@@ -182,6 +196,13 @@ jobs:
               abort "Unexpected response body (HTTP #{response.code}); not printed"
             end
 
+            # Network failures abort with the error class only.
+            def request(name)
+              yield
+            rescue StandardError => e
+              abort "#{name} failed (#{e.class})"
+            end
+
             version = ENV.fetch('VERSION')
             unless version.match?(/\A\d+\.\d+\.\d+(\.(alpha|beta|rc|pre)\.?\d+)?\z/)
               abort 'Unexpected version from the build job'
@@ -203,16 +224,20 @@ jobs:
             id_uri = URI("#{ENV.fetch('ACTIONS_ID_TOKEN_REQUEST_URL')}&audience=rubygems.org")
             id_request = Net::HTTP::Get.new(id_uri)
             id_request['Authorization'] = "Bearer #{ENV.fetch('ACTIONS_ID_TOKEN_REQUEST_TOKEN')}"
-            id_response = Net::HTTP.start(id_uri.host, id_uri.port, use_ssl: true) { |http| http.request(id_request) }
+            id_response = request('OIDC token request') do
+              Net::HTTP.start(id_uri.host, id_uri.port, use_ssl: true) { |http| http.request(id_request) }
+            end
             abort "OIDC token request failed (HTTP #{id_response.code})" unless id_response.is_a?(Net::HTTPSuccess)
             jwt = json_field(id_response, 'value')
             puts "::add-mask::#{jwt}"
 
-            exchange_response = Net::HTTP.post(
-              URI('https://rubygems.org/api/v1/oidc/trusted_publisher/exchange_token'),
-              JSON.generate(jwt: jwt),
-              'Content-Type' => 'application/json', 'Accept' => 'application/json'
-            )
+            exchange_response = request('RubyGems trusted publisher exchange') do
+              Net::HTTP.post(
+                URI('https://rubygems.org/api/v1/oidc/trusted_publisher/exchange_token'),
+                JSON.generate(jwt: jwt),
+                'Content-Type' => 'application/json', 'Accept' => 'application/json'
+              )
+            end
             unless exchange_response.is_a?(Net::HTTPSuccess)
               abort "RubyGems trusted publisher exchange failed (HTTP #{exchange_response.code}). " \
                     'Check the trusted publisher of checkout_sdk on rubygems.org.'
@@ -241,6 +266,20 @@ jobs:
           NOTES: ${{ github.event.head_commit.message }}
         run: |
           set -euo pipefail
+          # gh release create reuses an existing tag and ignores --target: the version tag must be
+          # absent or already point at this commit.
+          refs="$(gh api "repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/${VERSION}")"
+          tag="$(jq -c --arg ref "refs/tags/${VERSION}" '[.[] | select(.ref == $ref)] | first // empty' <<< "$refs")"
+          if [ -n "$tag" ]; then
+            tag_sha="$(jq -r '.object.sha' <<< "$tag")"
+            if [ "$(jq -r '.object.type' <<< "$tag")" = 'tag' ]; then
+              tag_sha="$(gh api "repos/${GITHUB_REPOSITORY}/git/tags/${tag_sha}" --jq '.object.sha')"
+            fi
+            if [ "$tag_sha" != "$GITHUB_SHA" ]; then
+              echo "::error::Tag ${VERSION} already exists at ${tag_sha}, not at ${GITHUB_SHA}"
+              exit 1
+            fi
+          fi
           args=(--repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "$VERSION" --notes "${NOTES:-Pre-release $VERSION}")
           if [ "$PRERELEASE" = 'true' ]; then args+=(--prerelease); fi
           gh release create "$VERSION" "${args[@]}"

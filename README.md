@@ -253,6 +253,19 @@ The execution of integration tests require the following environment variables s
 
 ## Development Setup
 
+### Lockfiles
+
+CI installs dependencies only from the committed lockfiles: `Gemfile.lock` (Ruby 3.1 and later)
+and `gemfiles/ruby_2_7.gemfile.lock` (Ruby 2.7). It fails when a lockfile is missing or out of date.
+After changing the `Gemfile`, the gemspec dependencies or `lib/checkout_sdk/version.rb`, regenerate
+both with Docker running:
+
+```bash
+.github/scripts/update-lockfiles.sh
+```
+
+Add `--update` to move every gem to the newest allowed version.
+
 ### Git Hooks with Overcommit
 
 This project uses [Overcommit](https://github.com/sds/overcommit) to manage Git hooks and ensure code quality.

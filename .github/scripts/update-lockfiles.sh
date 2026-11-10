@@ -24,12 +24,15 @@ case "${1:-}" in
   *) echo "usage: $0 [--update]" >&2; exit 2 ;;
 esac
 
-# ruby_version bundler_version gemfile extra_lock_args
 lock() {
+  local ruby_version="$1"
+  local bundler_version="$2"
+  local gemfile="$3"
+  local extra_lock_args="$4"
   docker run --rm --platform linux/amd64 \
     -v "$PWD:/src" -w /src \
-    -e BUNDLE_GEMFILE="$3" -e UPDATE="$update" -e BUNDLER_VERSION="$2" -e EXTRA="$4" \
-    "ruby:$1" bash -euc '
+    -e BUNDLE_GEMFILE="$gemfile" -e UPDATE="$update" -e BUNDLER_VERSION="$bundler_version" -e EXTRA="$extra_lock_args" \
+    "ruby:${ruby_version}" bash -euc '
       git config --global --add safe.directory /src
       gem install bundler -v "$BUNDLER_VERSION" --no-document --silent
       # shellcheck disable=SC2086
