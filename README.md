@@ -11,9 +11,9 @@
 ## Getting started
 
 > **Version 1.0.0 is here!**
-> <br/><br/>
-> We improved the initialization of SDK making it easier to understand the available options. <br/>
-> Now `NAS` accounts are the default instance for the SDK and `ABC` structure was moved to a `previous` prefixes. <br/>
+>
+> We improved the initialization of SDK making it easier to understand the available options.
+> Now `NAS` accounts are the default instance for the SDK and `ABC` structure was moved to a `previous` prefixes.
 
 ## Requirements
 
